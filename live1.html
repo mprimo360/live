@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PRO Rotator Strategy | Forex + Crypto + Gold | Live Data</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #fff;
+        }
+        .container { max-width: 1800px; margin: 0 auto; }
+        
+        .header { text-align: center; margin-bottom: 30px; }
+        .header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(90deg, #FFD700, #FF6B6B, #4ECDC4, #FFAA00);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .header p { color: #888; font-size: 0.9rem; }
+        
+        .status-bar {
+            background: rgba(0,0,0,0.5);
+            border-radius: 10px;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+            border: 1px solid #333;
+        }
+        .status-item { display: flex; align-items: center; gap: 10px; }
+        .status-label { color: #888; font-size: 0.85rem; }
+        .status-value { font-size: 1.2rem; font-weight: bold; }
+        .live-badge { background: #ff4444; padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; animation: pulse 1.5s infinite; }
+        .license-badge { background: #00aa44; padding: 5px 12px; border-radius: 20px; font-size: 0.7rem; }
+        .warning-badge { background: #ff8800; padding: 5px 12px; border-radius: 20px; font-size: 0.7rem; }
+        @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.5;} }
+        
+        .two-columns { display: grid; grid-template-columns: 1fr 1.2fr; gap: 20px; margin-bottom: 20px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 20px; margin-bottom: 20px; }
+        .card {
+            background: rgba(0,0,0,0.6);
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid #333;
+            backdrop-filter: blur(10px);
+        }
+        .card-title {
+            font-size: 1.1rem;
+            color: #FFD700;
+            margin-bottom: 15px;
+            border-left: 3px solid #FFD700;
+            padding-left: 10px;
+        }
+        
+        .scanner-table {
+            width: 100%;
+            font-size: 0.75rem;
+            border-collapse: collapse;
+        }
+        .scanner-table th, .scanner-table td {
+            padding: 8px 6px;
+            text-align: left;
+            border-bottom: 1px solid #333;
+        }
+        .scanner-table th { color: #FFD700; font-weight: bold; }
+        .scanner-row-buy { background: rgba(0,255,136,0.15); border-left: 3px solid #00ff88; }
+        .scanner-row-sell { background: rgba(255,68,68,0.15); border-left: 3px solid #ff4444; }
+        .scanner-row-neutral { background: rgba(255,215,0,0.05); }
+        
+        .badge-scanner {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.65rem;
+            font-weight: bold;
+        }
+        .badge-buy { background: #00aa44; color: white; }
+        .badge-sell { background: #ff4444; color: white; }
+        .badge-approaching { background: #ffaa00; color: black; }
+        .badge-wait { background: #333; color: #888; }
+        .badge-data-error { background: #ff8800; color: black; }
+        
+        .price-display { text-align: center; padding: 15px; }
+        .price-value { font-size: 2rem; font-weight: bold; font-family: monospace; color: #4ECDC4; }
+        
+        .meter-container { padding: 15px 0; }
+        .meter-scale {
+            background: linear-gradient(90deg, #00ff88, #FFD700, #ff4444);
+            height: 25px;
+            border-radius: 15px;
+            position: relative;
+            margin: 15px 0;
+        }
+        .meter-indicator {
+            position: absolute;
+            width: 8px;
+            height: 35px;
+            background: white;
+            border-radius: 4px;
+            top: -5px;
+            transform: translateX(-50%);
+            box-shadow: 0 0 10px white;
+        }
+        .meter-labels { display: flex; justify-content: space-between; font-size: 0.65rem; color: #888; margin-top: 5px; }
+        .z-value { text-align: center; font-size: 1.8rem; font-weight: bold; margin: 10px 0; }
+        
+        .signal-box { text-align: center; padding: 20px; border-radius: 15px; transition: all 0.3s ease; }
+        .signal-buy { background: linear-gradient(135deg, #00aa44, #008833); box-shadow: 0 0 30px rgba(0,255,68,0.3); }
+        .signal-sell { background: linear-gradient(135deg, #ff4444, #cc0000); box-shadow: 0 0 30px rgba(255,68,68,0.3); }
+        .signal-exit { background: linear-gradient(135deg, #ff8800, #cc6600); }
+        .signal-neutral { background: linear-gradient(135deg, #333, #222); }
+        .signal-text { font-size: 1.3rem; font-weight: bold; }
+        .signal-subtext { font-size: 0.7rem; margin-top: 8px; opacity: 0.9; }
+        
+        .dashboard-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #333; font-size: 0.8rem; }
+        .dashboard-label { color: #888; }
+        .dashboard-value { font-weight: bold; }
+        
+        .settings-panel { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; background: rgba(0,0,0,0.4); padding: 12px; border-radius: 10px; }
+        .setting-group { flex: 1; min-width: 90px; }
+        .setting-group label { display: block; font-size: 0.65rem; color: #888; margin-bottom: 3px; }
+        .setting-group select { width: 100%; padding: 6px; background: #2a2a3e; border: 1px solid #444; border-radius: 6px; color: #fff; cursor: pointer; font-size: 0.75rem; }
+        
+        button { background: #FFD700; color: #000; border: none; padding: 6px 15px; border-radius: 20px; cursor: pointer; font-weight: bold; font-size: 0.8rem; }
+        button:hover { transform: scale(1.02); }
+        
+        .footer { text-align: center; margin-top: 30px; padding: 20px; color: #555; font-size: 0.7rem; }
+        .badge { display: inline-block; padding: 2px 6px; border-radius: 10px; font-size: 0.6rem; font-weight: bold; }
+        .badge-buy { background: #00aa44; color: white; }
+        .badge-sell { background: #ff4444; color: white; }
+        .cooldown { font-size: 0.65rem; color: #ffaa00; margin-top: 5px; }
+        .scan-status { font-size: 0.65rem; color: #888; text-align: right; margin-top: 5px; }
+        
+        .telegram-settings {
+            background: #1a1a2e;
+            padding: 10px;
+            border-radius: 10px;
+            margin-top: 10px;
+        }
+        .telegram-settings input {
+            background: #2a2a3e;
+            border: 1px solid #444;
+            border-radius: 5px;
+            padding: 5px;
+            color: #fff;
+            width: 100%;
+            margin-top: 3px;
+            font-size: 0.7rem;
+        }
+        .telegram-status {
+            font-size: 0.65rem;
+            margin-top: 5px;
+            color: #888;
+        }
+        .telegram-status.configured { color: #00ff88; }
+        .telegram-status.not-configured { color: #ff8800; }
+        
+        .license-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.98);
+            z-index: 2000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(10px);
+        }
+        .license-card {
+            background: linear-gradient(135deg, #1a1a2e, #0a0a0a);
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 450px;
+            width: 90%;
+            text-align: center;
+            border: 1px solid #FFD700;
+        }
+        .license-card input { width: 100%; padding: 12px; margin: 15px 0; background: #2a2a3e; border: 1px solid #444; border-radius: 8px; color: #fff; text-align: center; }
+        .hidden { display: none !important; }
+        
+        .quality-bar { background: #333; border-radius: 10px; height: 4px; width: 100%; overflow: hidden; }
+        .quality-fill { height: 100%; border-radius: 10px; }
+        
+        .data-source-badge {
+            font-size: 0.6rem;
+            padding: 2px 6px;
+            border-radius: 10px;
+            background: #2a2a3e;
+            display: inline-block;
+        }
+        
+        @media (max-width: 1000px) { .two-columns { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+<!-- LICENSE OVERLAY -->
+<div id="licenseOverlay" class="license-overlay">
+    <div class="license-card">
+        <h1 style="color:#FFD700;">🔐 PRO Rotator Strategy</h1>
+        <p>Professional Trading Dashboard</p>
+        <div id="trialPanel">
+            <p style="margin:15px 0;">🎁 <strong>14 Days Free Trial</strong></p>
+            <button onclick="startTrial()" style="background:#00aa44;">🚀 Start 14-Day Trial</button>
+            <p style="margin:15px 0; color:#888;">- OR -</p>
+        </div>
+        <div id="licensePanel">
+            <p>Enter License Code:</p>
+            <input type="text" id="licenseInput" placeholder="PRO-XXXX-XXXX-XXXX">
+            <button onclick="activateLicense()">✅ Activate License</button>
+        </div>
+        <div id="expiredPanel" class="hidden">
+            <div style="color:#ff6666;">⚠️ Trial/License Expired</div>
+            <div class="contact-info" style="background:#1a1a2e; padding:15px; margin-top:15px; border-radius:10px;">
+                📧 <strong>Contact to Purchase:</strong><br>
+                Email: <span id="developerEmail">support@protrader.com</span><br>
+                Telegram: <span id="developerTelegram">@protrader</span>
+            </div>
+            <button onclick="showActivation()" style="margin-top:15px;">Enter License</button>
+        </div>
+    </div>
+</div>
+
+<!-- MAIN DASHBOARD -->
+<div id="mainDashboard" class="hidden">
+<div class="container">
+    <div class="header">
+        <h1>🔥 PRO ROTATOR STRATEGY 🔥</h1>
+        <p>Forex (13) + Crypto (7) + Gold (XAUUSD) | Live Data from Binance & Twelve Data</p>
+    </div>
+
+    <div class="status-bar">
+        <div class="status-item"><span class="status-label">Symbol:</span><span class="status-value" id="symbolDisplay">EUR/USD</span></div>
+        <div class="status-item"><span class="status-label">Timeframe:</span><span class="status-value" id="timeframeDisplay">1H</span></div>
+        <div class="status-item"><span class="status-label">Data Source:</span><span class="status-value" id="dataSourceDisplay">Binance ✓</span></div>
+        <div class="status-item"><span class="live-badge" id="liveBadge">🟢 LIVE</span></div>
+        <div class="status-item"><span id="licenseStatusBadge" class="license-badge">✅ Licensed</span></div>
+        <div class="status-item"><button onclick="refreshData()">⟳ Refresh</button></div>
+        <div class="status-item"><button onclick="scanAllMarkets()">🔍 Scan All (21)</button></div>
+        <div class="status-item"><button onclick="testAlert()">📱 Test Telegram Alert</button></div>
+    </div>
+
+    <div class="settings-panel">
+        <div class="setting-group"><label>📊 Symbol</label>
+            <select id="symbolSelect" onchange="refreshData()">
+                <optgroup label="💱 FOREX MAJORS (7)">
+                    <option value="EUR/USD">EUR/USD</option>
+                    <option value="GBP/USD">GBP/USD</option>
+                    <option value="USD/JPY">USD/JPY</option>
+                    <option value="USD/CHF">USD/CHF</option>
+                    <option value="USD/CAD">USD/CAD</option>
+                    <option value="AUD/USD">AUD/USD</option>
+                    <option value="NZD/USD">NZD/USD</option>
+                </optgroup>
+                <optgroup label="💱 FOREX MINORS (6)">
+                    <option value="EUR/GBP">EUR/GBP</option>
+                    <option value="EUR/JPY">EUR/JPY</option>
+                    <option value="GBP/JPY">GBP/JPY</option>
+                    <option value="AUD/JPY">AUD/JPY</option>
+                    <option value="CAD/JPY">CAD/JPY</option>
+                    <option value="CHF/JPY">CHF/JPY</option>
+                </optgroup>
+                <optgroup label="🪙 CRYPTO (7)">
+                    <option value="BTC/USD">BTC/USD</option>
+                    <option value="ETH/USD">ETH/USD</option>
+                    <option value="BNB/USD">BNB/USD</option>
+                    <option value="SOL/USD">SOL/USD</option>
+                    <option value="XRP/USD">XRP/USD</option>
+                    <option value="ADA/USD">ADA/USD</option>
+                    <option value="ETH/BTC">ETH/BTC</option>
+                </optgroup>
+                <optgroup label="🥇 COMMODITIES (1)">
+                    <option value="XAU/USD">XAU/USD (Gold)</option>
+                </optgroup>
+            </select>
+        </div>
+        <div class="setting-group"><label>⏱️ Timeframe</label>
+            <select id="timeframeSelect" onchange="refreshData()">
+                <option value="15min">15 Min</option>
+                <option value="1h" selected>1 Hour</option>
+                <option value="4h">4 Hours</option>
+                <option value="1day">Daily</option>
+            </select>
+        </div>
+        <div class="setting-group"><label>📊 Z-Period</label>
+            <select id="zPeriodSelect" onchange="refreshData()"><option value="50" selected>50</option><option value="30">30</option><option value="90">90</option></select>
+        </div>
+        <div class="setting-group"><label>🎯 Entry Z</label>
+            <select id="zEntrySelect" onchange="refreshData()"><option value="1.5" selected>1.5</option><option value="1.2">1.2</option><option value="1.0">1.0</option></select>
+        </div>
+        <div class="setting-group"><label>📈 RSI Period</label>
+            <select id="rsiPeriodSelect" onchange="refreshData()"><option value="14" selected>14</option><option value="7">7</option><option value="21">21</option></select>
+        </div>
+        <div class="setting-group"><label>📊 EMA Period</label>
+            <select id="emaPeriodSelect" onchange="refreshData()"><option value="50" selected>50</option><option value="20">20</option><option value="100">100</option></select>
+        </div>
+    </div>
+
+    <div class="two-columns">
+        <div class="card">
+            <div class="card-title">🔍 MARKET SCANNER (21 Instruments)</div>
+            <div style="max-height: 500px; overflow-y: auto;">
+                <table class="scanner-table" id="scannerTable">
+                    <thead>
+                        <tr><th>Pair</th><th>Price</th><th>Z-Score</th><th>Signal</th><th>RSI</th><th>vs EMA</th><th>Quality</th><th>Source</th></tr>
+                    </thead>
+                    <tbody id="scannerBody">
+                        <tr><td colspan="8" style="text-align:center;">Click "Scan All Markets"</td</tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="scan-status" id="scanStatus"></div>
+            <div style="margin-top:10px; font-size:0.65rem; color:#888; text-align:center;">
+                🟢 BUY: Z &lt; -1.5 + RSI 30-45 + Above EMA | 🔴 SELL: Z &gt; +1.5 + RSI 55-70 + Below EMA
+            </div>
+        </div>
+
+        <div>
+            <div class="card">
+                <div class="card-title">📊 PRICE + Z-SCORE METER</div>
+                <div class="price-display">
+                    <div class="price-value" id="priceValue">---</div>
+                    <div class="price-change" id="priceChange">EMA50: ---</div>
+                </div>
+                <div class="meter-container">
+                    <div class="meter-scale"><div class="meter-indicator" id="meterIndicator" style="left:50%"></div></div>
+                    <div class="meter-labels"><span>-3</span><span id="lowerLabel">-1.5</span><span>0</span><span id="upperLabel">+1.5</span><span>+3</span></div>
+                    <div class="z-value" id="zValue">0.00</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-title">🎯 SIGNAL + TELEGRAM ALERTS</div>
+                <div class="signal-box signal-neutral" id="signalBox">
+                    <div class="signal-text" id="signalText">WAITING</div>
+                    <div class="signal-subtext" id="signalSubtext">Analyzing...</div>
+                </div>
+                <div class="cooldown" id="cooldownDisplay"></div>
+                <div class="telegram-settings">
+                    <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+                        <label>🤖 Telegram Bot Token:</label>
+                        <input type="text" id="telegramToken" placeholder="Enter your Bot Token from @BotFather" style="flex:2;">
+                        <button onclick="saveTelegramSettings()" style="padding:5px 10px;">Save</button>
+                    </div>
+                    <div style="margin-top:8px;">
+                        <label>📱 Telegram Chat ID:</label>
+                        <input type="text" id="telegramChatId" placeholder="Enter your Chat ID from @userinfobot" style="width:100%;">
+                    </div>
+                    <div class="telegram-status" id="telegramStatus">⚠️ Not configured - Get token from @BotFather on Telegram</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid">
+        <div class="card">
+            <div class="card-title">📈 RSI + EMA ANALYSIS</div>
+            <div class="dashboard-row"><span class="dashboard-label">RSI (7):</span><span class="dashboard-value" id="rsiFast">--</span></div>
+            <div class="dashboard-row"><span class="dashboard-label">RSI (14):</span><span class="dashboard-value" id="rsiSlow">--</span></div>
+            <div class="dashboard-row"><span class="dashboard-label">EMA50:</span><span class="dashboard-value" id="emaDisplay">--</span></div>
+            <div class="dashboard-row"><span class="dashboard-label">Price vs EMA:</span><span class="dashboard-value" id="priceVsEma">--</span></div>
+            <div class="dashboard-row"><span class="dashboard-label">Market Phase:</span><span class="dashboard-value" id="phaseDisplay">--</span></div>
+        </div>
+        <div class="card">
+            <div class="card-title">✅ ENTRY CONDITIONS</div>
+            <div class="dashboard-row"><span class="dashboard-label">Z-Score Ready:</span><span class="dashboard-value" id="zReady">--</span></div>
+            <div class="dashboard-row"><span class="dashboard-label">RSI Ready:</span><span class="dashboard-value" id="rsiReady">--</span></div>
+            <div class="dashboard-row"><span class="dashboard-label">Trend Ready:</span><span class="dashboard-value" id="trendReady">--</span></div>
+            <div class="dashboard-row"><span class="dashboard-label">Signal Quality:</span><span class="dashboard-value" id="signalQuality">--</span></div>
+        </div>
+        <div class="card">
+            <div class="card-title">📋 STRATEGY RULES</div>
+            <ul style="font-size:0.75rem; list-style:none;">
+                <li>🟢 <strong>BUY</strong>: Z &lt; -1.5 + RSI 30-45 + Above EMA</li>
+                <li>🔴 <strong>SELL</strong>: Z &gt; +1.5 + RSI 55-70 + Below EMA</li>
+                <li>🟡 <strong>EXIT</strong>: Z returns to ~0</li>
+                <li>🤖 <strong>Alerts</strong>: Popup + Sound + Telegram</li>
+                <li>📊 <strong>Data Sources</strong>: Binance (Crypto) | Twelve Data (Forex/Gold)</li>
+            </ul>
+        </div>
+        <div class="card">
+            <div class="card-title">🕐 RECENT SIGNALS</div>
+            <div style="max-height: 180px; overflow-y: auto;">
+                <table style="width:100%; font-size:0.7rem;"><thead><tr><th>Time</th><th>Type</th><th>Price</th><th>Z</th></tr></thead>
+                <tbody id="signalsBody"><tr><td colspan="4">No signals yet</tr</tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="footer"><p>PRO Rotator | 13 Forex + 7 Crypto + XAUUSD (Gold) | Real Data from Binance (Crypto) & Twelve Data (Forex/Gold) | Alerts via Telegram</p></div>
+</div>
+</div>
+
+<script>
+    // ========== LICENSE SYSTEM ==========
+    const API_KEY = "47a0cf5e99174f358cc500b27b614ea6";
+    
+    let isLicensed = false;
+    let telegramBotToken = localStorage.getItem('telegram_bot_token') || '';
+    let telegramChatId = localStorage.getItem('telegram_chat_id') || '';
+    let refreshInterval = null;
+    let currentSymbol = "EUR/USD";
+    let currentTimeframe = "1h";
+    let zPeriod = 50;
+    let zEntry = 1.5;
+    let rsiPeriod = 14;
+    let emaPeriod = 50;
+    
+    // Scanner symbols
+    const scannerSymbols = [
+        "EUR/USD","GBP/USD","USD/JPY","USD/CHF","USD/CAD","AUD/USD","NZD/USD",
+        "EUR/GBP","EUR/JPY","GBP/JPY","AUD/JPY","CAD/JPY","CHF/JPY",
+        "BTC/USD","ETH/USD","BNB/USD","SOL/USD","XRP/USD","ADA/USD","ETH/BTC",
+        "XAU/USD"
+    ];
+    
+    // Load saved Telegram settings
+    document.getElementById('telegramToken').value = telegramBotToken;
+    document.getElementById('telegramChatId').value = telegramChatId;
+    updateTelegramStatus();
+    
+    function saveTelegramSettings() {
+        telegramBotToken = document.getElementById('telegramToken').value.trim();
+        telegramChatId = document.getElementById('telegramChatId').value.trim();
+        localStorage.setItem('telegram_bot_token', telegramBotToken);
+        localStorage.setItem('telegram_chat_id', telegramChatId);
+        updateTelegramStatus();
+        alert('Telegram settings saved! Click "Test Telegram Alert" to verify.');
+    }
+    
+    function updateTelegramStatus() {
+        const statusDiv = document.getElementById('telegramStatus');
+        if (telegramBotToken && telegramBotToken !== '' && telegramChatId && telegramChatId !== '') {
+            statusDiv.innerHTML = '✅ Telegram bot configured! Alerts will be sent to your Telegram.';
+            statusDiv.className = 'telegram-status configured';
+        } else {
+            statusDiv.innerHTML = '⚠️ Telegram not configured. Get Bot Token from @BotFather and Chat ID from @userinfobot on Telegram.';
+            statusDiv.className = 'telegram-status not-configured';
+        }
+    }
+    
+    // ========== TELEGRAM ALERT FUNCTION ==========
+    function sendTelegramAlert(message, type) {
+        if (!telegramBotToken || telegramBotToken === '' || !telegramChatId || telegramChatId === '') {
+            console.log("⚠️ Telegram not configured - alert not sent");
+            return;
+        }
+        
+        const url = `https://api.telegram.org/bot${telegramBotToken}/sendMessage`;
+        const text = `🔔 *PRO ROTATOR ALERT* 🔔\n\n*Type:* ${type}\n*Message:* ${message}\n*Time:* ${new Date().toLocaleString()}\n*Symbol:* ${currentSymbol}\n*Price:* ${currentPrice}\n*Z-Score:* ${currentZScore.toFixed(2)}`;
+        
+        fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                chat_id: telegramChatId,
+                text: text,
+                parse_mode: 'Markdown'
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.ok) {
+                console.log("✅ Telegram alert sent successfully");
+            } else {
+                console.log("❌ Telegram error:", data.description);
+            }
+        })
+        .catch(e => console.log("Telegram fetch error:", e));
+    }
+    
+    // ========== ALERT FUNCTION (Popup + Sound + Telegram) ==========
+    function sendAlert(message, type) {
+        // 1. Browser Popup
+        alert(message);
+        
+        // 2. Sound
+        try {
+            let audio = new Audio('data:audio/wav;base64,U3RlYWx0aCBzb3VuZA==');
+            audio.play().catch(e=>console.log('Sound not supported'));
+        } catch(e) {}
+        
+        // 3. Telegram Alert
+        sendTelegramAlert(message, type);
+        
+        // 4. Console log
+        console.log(`🔔 ALERT: ${message} at ${new Date().toLocaleString()}`);
+    }
+    
+    function testAlert() { 
+        sendAlert('🧪 TEST ALERT: Your Telegram bot is working correctly!', 'TEST');
+    }
+    
+    function refreshData() { fetchData(); }
+    
+    function loadLicenseStatus() {
+        let savedLicense = localStorage.getItem('pro_license_code');
+        let savedExpiry = localStorage.getItem('pro_license_expiry');
+        let savedTrial = localStorage.getItem('pro_trial_start');
+        
+        if(savedLicense && savedExpiry && new Date(savedExpiry) > new Date()) {
+            isLicensed = true;
+            document.getElementById('licenseStatusBadge').innerHTML = '✅ Licensed';
+            showDashboard();
+            return true;
+        }
+        if(savedTrial) {
+            let trialEnd = new Date(new Date(savedTrial).getTime() + 14 * 24 * 60 * 60 * 1000);
+            if(trialEnd > new Date()) {
+                isLicensed = true;
+                let daysLeft = Math.ceil((trialEnd - new Date())/(1000*60*60*24));
+                document.getElementById('licenseStatusBadge').innerHTML = `🎁 Trial: ${daysLeft}d left`;
+                showDashboard();
+                return true;
+            } else {
+                localStorage.removeItem('pro_trial_start');
+                showExpiredScreen();
+                return false;
+            }
+        }
+        showActivationScreen();
+        return false;
+    }
+    
+    function startTrial() { localStorage.setItem('pro_trial_start', new Date().toISOString()); location.reload(); }
+    function activateLicense() {
+        let code = document.getElementById('licenseInput').value.toUpperCase().trim();
+        if(code.length > 10) {
+            let expiry = new Date(); expiry.setDate(expiry.getDate() + 30);
+            localStorage.setItem('pro_license_code', code);
+            localStorage.setItem('pro_license_expiry', expiry.toISOString());
+            location.reload();
+        } else { alert('Invalid license code'); }
+    }
+    
+    function showDashboard() {
+        document.getElementById('licenseOverlay').classList.add('hidden');
+        document.getElementById('mainDashboard').classList.remove('hidden');
+        if(refreshInterval) clearInterval(refreshInterval);
+        refreshInterval = setInterval(() => { if(isLicensed) fetchData(); }, 60000);
+        fetchData();
+    }
+    function showActivationScreen() {
+        document.getElementById('trialPanel').classList.remove('hidden');
+        document.getElementById('licensePanel').classList.remove('hidden');
+        document.getElementById('expiredPanel').classList.add('hidden');
+    }
+    function showExpiredScreen() {
+        document.getElementById('trialPanel').classList.add('hidden');
+        document.getElementById('licensePanel').classList.add('hidden');
+        document.getElementById('expiredPanel').classList.remove('hidden');
+    }
+    function showActivation() {
+        document.getElementById('trialPanel').classList.remove('hidden');
+        document.getElementById('licensePanel').classList.remove('hidden');
+        document.getElementById('expiredPanel').classList.add('hidden');
+    }
+    
+    let historicalData = [], buySignals = [], sellSignals = [];
+    let buyCount = 0, sellCount = 0, currentRSI = 50, prevRSI = 50, currentRSI7 = 50;
+    let currentEMA = null, emaValues = [], lastSignalTime = 0, currentPrice = 0, currentZScore = 0;
+    
+    function calculateRSI(prices, p) {
+        if(prices.length < p+1) return 50;
+        let gains=0, losses=0;
+        for(let i=1;i<=p;i++){let d=prices[i]-prices[i-1]; if(d>=0) gains+=d; else losses+=Math.abs(d);}
+        let ag=gains/p, al=losses/p;
+        for(let i=p+1;i<prices.length;i++){let d=prices[i]-prices[i-1]; if(d>=0){ag=(ag*(p-1)+d)/p; al=(al*(p-1)+0)/p;}else{ag=(ag*(p-1)+0)/p; al=(al*(p-1)+Math.abs(d))/p;}}
+        if(al===0) return 100;
+        return 100 - (100 / (1 + (ag/al)));
+    }
+    
+    function calculateEMA(data, p) {
+        let ema=[], m=2/(p+1);
+        for(let i=0;i<data.length;i++) ema.push(i===0 ? data[i] : (data[i]-ema[i-1])*m+ema[i-1]);
+        return ema;
+    }
+    
+    function calculateZScore(data, currentPrice) {
+        if(data.length < zPeriod) return 0;
+        let recent = data.slice(-zPeriod);
+        let mean = recent.reduce((a,b)=>a+b,0)/recent.length;
+        let variance = recent.reduce((s,v)=>s+Math.pow(v-mean,2),0)/recent.length;
+        let stdDev = Math.sqrt(variance);
+        return stdDev === 0 ? 0 : (currentPrice - mean) / stdDev;
+    }
+    
+    async function fetchBinanceData(symbol, interval, limit=150) {
+        const map = {'15min':'15m','1h':'1h','4h':'4h','1day':'1d'};
+        let binanceSymbol = '';
+        
+        if(symbol === 'BTC/USD') binanceSymbol = 'BTCUSDT';
+        else if(symbol === 'ETH/USD') binanceSymbol = 'ETHUSDT';
+        else if(symbol === 'BNB/USD') binanceSymbol = 'BNBUSDT';
+        else if(symbol === 'SOL/USD') binanceSymbol = 'SOLUSDT';
+        else if(symbol === 'XRP/USD') binanceSymbol = 'XRPUSDT';
+        else if(symbol === 'ADA/USD') binanceSymbol = 'ADAUSDT';
+        else if(symbol === 'ETH/BTC') binanceSymbol = 'ETHBTC';
+        else return null;
+        
+        const url = `https://api.binance.com/api/v3/klines?symbol=${binanceSymbol}&interval=${map[interval]}&limit=${limit}`;
+        try {
+            const resp = await fetch(url);
+            const data = await resp.json();
+            if(data && data.length) {
+                return data.map(item=>({
+                    time:new Date(item[0]), 
+                    open:parseFloat(item[1]), 
+                    high:parseFloat(item[2]), 
+                    low:parseFloat(item[3]), 
+                    close:parseFloat(item[4])
+                }));
+            }
+            return null;
+        } catch(e){ 
+            console.error(`Binance error for ${symbol}:`, e);
+            return null;
+        }
+    }
+    
+    async function fetchTwelveData(symbol, interval, limit=150) {
+        const map = {'15min':'15min','1h':'1h','4h':'4h','1day':'1day'};
+        const url = `https://api.twelvedata.com/time_series?symbol=${symbol}&interval=${map[interval]}&outputsize=${limit}&apikey=${API_KEY}`;
+        try {
+            const resp = await fetch(url);
+            const data = await resp.json();
+            if(data.values && data.values.length > 0) {
+                return data.values.map(v=>({
+                    time:new Date(v.datetime), 
+                    open:parseFloat(v.open), 
+                    high:parseFloat(v.high), 
+                    low:parseFloat(v.low), 
+                    close:parseFloat(v.close)
+                })).reverse();
+            }
+            return null;
+        } catch(e){ 
+            console.error(`TwelveData error for ${symbol}:`, e);
+            return null;
+        }
+    }
+    
+    async function fetchDataForSymbol(symbol, interval) {
+        if(symbol === 'BTC/USD' || symbol === 'ETH/USD' || symbol === 'BNB/USD' || 
+           symbol === 'SOL/USD' || symbol === 'XRP/USD' || symbol === 'ADA/USD' || 
+           symbol === 'ETH/BTC') {
+            return await fetchBinanceData(symbol, interval);
+        }
+        else {
+            return await fetchTwelveData(symbol, interval);
+        }
+    }
+    
+    async function scanAllMarkets() {
+        const tbody = document.getElementById('scannerBody');
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">🔍 Scanning 21 instruments...<span class="live-badge" style="margin-left:10px;"></span></td</tr';
+        let results = [];
+        
+        for(let sym of scannerSymbols) {
+            let data = await fetchDataForSymbol(sym, currentTimeframe);
+            let dataSource = (sym === 'BTC/USD' || sym === 'ETH/USD' || sym === 'BNB/USD' || 
+                             sym === 'SOL/USD' || sym === 'XRP/USD' || sym === 'ADA/USD' || 
+                             sym === 'ETH/BTC') ? 'Binance' : 'Twelve';
+            
+            if(data && data.length > 50) {
+                let closes = data.map(d=>d.close);
+                let price = closes[closes.length-1];
+                let z = calculateZScore(closes, price);
+                let rsi = calculateRSI(closes, 14);
+                let ema = calculateEMA(closes, 50).pop();
+                let aboveEma = price > ema;
+                let buyReady = (z < -zEntry && rsi >= 30 && rsi <= 45 && aboveEma);
+                let sellReady = (z > zEntry && rsi >= 55 && rsi <= 70 && !aboveEma);
+                let approaching = (Math.abs(z) > zEntry * 0.7 && !buyReady && !sellReady);
+                let quality = buyReady ? 90 : (sellReady ? 90 : (approaching ? 60 : 30));
+                
+                results.push({
+                    sym: sym,
+                    price: price,
+                    z: z,
+                    rsi: rsi,
+                    aboveEma: aboveEma,
+                    quality: quality,
+                    buyReady: buyReady,
+                    sellReady: sellReady,
+                    approaching: approaching,
+                    dataSource: dataSource
+                });
+            } else {
+                results.push({
+                    sym: sym,
+                    price: 0,
+                    z: 0,
+                    rsi: 0,
+                    aboveEma: false,
+                    quality: 0,
+                    buyReady: false,
+                    sellReady: false,
+                    approaching: false,
+                    dataSource: dataSource,
+                    error: true
+                });
+            }
+            await new Promise(r => setTimeout(r, 300));
+        }
+        
+        results.sort((a,b) => Math.abs(b.z) - Math.abs(a.z));
+        
+        let html = '';
+        for(let r of results) {
+            if(r.error) {
+                html += `<tr class="scanner-row-neutral">
+                            <td><strong>${r.sym === 'XAU/USD' ? '🥇 XAU/USD' : (r.sym === 'ETH/BTC' ? '🔷 ETH/BTC' : r.sym)}</strong></td>
+                            <td colspan="7" style="color:#ff8800;">⚠️ Data unavailable - API limit reached</td>
+                          </tr>`;
+                continue;
+            }
+            
+            let rowClass = '';
+            let signalText = '';
+            let signalClass = '';
+            
+            if(r.buyReady) {
+                rowClass = 'scanner-row-buy';
+                signalText = 'BUY NOW';
+                signalClass = 'badge-buy';
+            } else if(r.sellReady) {
+                rowClass = 'scanner-row-sell';
+                signalText = 'SELL NOW';
+                signalClass = 'badge-sell';
+            } else if(r.approaching) {
+                rowClass = 'scanner-row-neutral';
+                signalText = 'Approaching';
+                signalClass = 'badge-approaching';
+            } else {
+                rowClass = 'scanner-row-neutral';
+                signalText = '--';
+                signalClass = 'badge-wait';
+            }
+            
+            let pricePrec = r.sym === 'XAU/USD' ? 2 : (r.sym.includes('JPY') ? 3 : (r.sym.includes('BTC')||r.sym.includes('ETH')? (r.sym === 'ETH/BTC' ? 8 : 2) : 5));
+            let zColor = r.z < -zEntry ? '#00ff88' : (r.z > zEntry ? '#ff4444' : '#FFD700');
+            let emaSymbol = r.aboveEma ? '▲' : '▼';
+            let emaColor = r.aboveEma ? '#00ff88' : '#ff4444';
+            let qualityColor = r.quality >= 80 ? '#00ff88' : (r.quality >= 50 ? '#ffaa00' : '#333');
+            
+            let displaySym = r.sym === 'XAU/USD' ? '🥇 XAU/USD' : (r.sym === 'ETH/BTC' ? '🔷 ETH/BTC' : r.sym);
+            let sourceBadge = r.dataSource === 'Binance' ? '🟣 BNC' : '🔵 12D';
+            
+            html += `<tr class="${rowClass}">
+                        <td><strong>${displaySym}</strong> <span class="data-source-badge">${sourceBadge}</span></td>
+                        <td style="font-family:monospace;">${r.price.toFixed(pricePrec)}</td>
+                        <td style="color:${zColor}; font-weight:bold;">${r.z.toFixed(2)}</td>
+                        <td><span class="badge-scanner ${signalClass}">${signalText}</span></td>
+                        <td>${r.rsi.toFixed(0)}</td>
+                        <td style="color:${emaColor}">${emaSymbol}</td>
+                        <td><div class="quality-bar"><div class="quality-fill" style="background:${qualityColor}; width:${r.quality}%;"></div></div> ${r.quality}%</td>
+                      </tr>`;
+        }
+        
+        tbody.innerHTML = html;
+        document.getElementById('scanStatus').innerHTML = `Last scan: ${new Date().toLocaleTimeString()} | ${results.filter(r=>!r.error).length} analyzed | Entry Z: ±${zEntry} | 🟣 Binance for Crypto | 🔵 Twelve Data for Forex/Gold`;
+    }
+    
+    async function fetchData() {
+        if(!isLicensed) return;
+        
+        currentSymbol = document.getElementById('symbolSelect').value;
+        currentTimeframe = document.getElementById('timeframeSelect').value;
+        zPeriod = parseInt(document.getElementById('zPeriodSelect').value);
+        zEntry = parseFloat(document.getElementById('zEntrySelect').value);
+        rsiPeriod = parseInt(document.getElementById('rsiPeriodSelect').value);
+        emaPeriod = parseInt(document.getElementById('emaPeriodSelect').value);
+        
+        document.getElementById('symbolDisplay').innerHTML = currentSymbol;
+        document.getElementById('timeframeDisplay').innerHTML = currentTimeframe;
+        document.getElementById('lowerLabel').innerHTML = `-${zEntry}`;
+        document.getElementById('upperLabel').innerHTML = `+${zEntry}`;
+        
+        let isCrypto = (currentSymbol === 'BTC/USD' || currentSymbol === 'ETH/USD' || currentSymbol === 'BNB/USD' || 
+                        currentSymbol === 'SOL/USD' || currentSymbol === 'XRP/USD' || currentSymbol === 'ADA/USD' || 
+                        currentSymbol === 'ETH/BTC');
+        document.getElementById('dataSourceDisplay').innerHTML = isCrypto ? 'Binance ✓' : 'Twelve Data ✓';
+        
+        historicalData = await fetchDataForSymbol(currentSymbol, currentTimeframe);
+        if(!historicalData || historicalData.length === 0) {
+            document.getElementById('priceValue').innerHTML = 'No Data';
+            return;
+        }
+        
+        let closes = historicalData.map(d=>d.close);
+        currentPrice = closes[closes.length-1];
+        currentRSI = calculateRSI(closes, rsiPeriod);
+        prevRSI = calculateRSI(closes.slice(0,-1), rsiPeriod);
+        currentRSI7 = calculateRSI(closes, 7);
+        emaValues = calculateEMA(closes, emaPeriod);
+        currentEMA = emaValues[emaValues.length-1];
+        currentZScore = calculateZScore(closes, currentPrice);
+        
+        let rsiBuy = (prevRSI <= 45 && currentRSI >= 50);
+        let rsiSell = (prevRSI >= 55 && currentRSI <= 50);
+        let priceAboveEMA = currentPrice > currentEMA;
+        let newBuy = (currentZScore < -zEntry && rsiBuy && priceAboveEMA);
+        let newSell = (currentZScore > zEntry && rsiSell && !priceAboveEMA);
+        
+        let now = Date.now();
+        if(now - lastSignalTime > 300000) {
+            if(newBuy) {
+                buySignals.unshift({time:new Date(), price:currentPrice, zScore:currentZScore});
+                buyCount++;
+                lastSignalTime=now;
+                sendAlert(`🟢 BUY SIGNAL for ${currentSymbol} | Price: ${currentPrice.toFixed(currentSymbol === 'ETH/BTC' ? 8 : (currentSymbol === 'XAU/USD' ? 2 : 5))} | Z: ${currentZScore.toFixed(2)}`, 'BUY');
+            }
+            if(newSell) {
+                sellSignals.unshift({time:new Date(), price:currentPrice, zScore:currentZScore});
+                sellCount++;
+                lastSignalTime=now;
+                sendAlert(`🔴 SELL SIGNAL for ${currentSymbol} | Price: ${currentPrice.toFixed(currentSymbol === 'ETH/BTC' ? 8 : (currentSymbol === 'XAU/USD' ? 2 : 5))} | Z: ${currentZScore.toFixed(2)}`, 'SELL');
+            }
+        }
+        
+        let p = currentSymbol === 'XAU/USD' ? 2 : (currentSymbol.includes('JPY') ? 3 : (currentSymbol.includes('BTC')||currentSymbol.includes('ETH')? (currentSymbol === 'ETH/BTC' ? 8 : 2) : 5));
+        document.getElementById('priceValue').innerHTML = currentPrice.toFixed(p);
+        document.getElementById('priceChange').innerHTML = `EMA50: ${currentEMA.toFixed(p)}`;
+        document.getElementById('zValue').innerHTML = currentZScore.toFixed(2);
+        let pos = ((currentZScore+3)/6)*100;
+        document.getElementById('meterIndicator').style.left = `${Math.min(100,Math.max(0,pos))}%`;
+        
+        document.getElementById('rsiFast').innerHTML = currentRSI7.toFixed(1);
+        document.getElementById('rsiSlow').innerHTML = currentRSI.toFixed(1);
+        document.getElementById('emaDisplay').innerHTML = currentEMA.toFixed(p);
+        document.getElementById('priceVsEma').innerHTML = priceAboveEMA ? '▲ Above (Bullish)' : '▼ Below (Bearish)';
+        document.getElementById('priceVsEma').style.color = priceAboveEMA ? '#00ff88' : '#ff4444';
+        
+        let phase = Math.abs(currentZScore) > zEntry ? (currentZScore<0 ? '⏳ PRE-EARLY' : '⚠️ LATE') : (Math.abs(currentZScore)<0.5 ? '🛑 EXHAUSTED' : '⚡ MID');
+        document.getElementById('phaseDisplay').innerHTML = phase;
+        
+        document.getElementById('zReady').innerHTML = Math.abs(currentZScore) > zEntry ? '✅ Ready' : `Need ±${zEntry}`;
+        document.getElementById('rsiReady').innerHTML = (rsiBuy || rsiSell) ? '✅ Ready' : 'Need 45→50 or 55→50';
+        document.getElementById('trendReady').innerHTML = ((currentZScore<-zEntry && priceAboveEMA) || (currentZScore>zEntry && !priceAboveEMA)) ? '✅ Ready' : 'Not aligned';
+        
+        let quality = (Math.abs(currentZScore)>zEntry?35:0) + ((rsiBuy||rsiSell)?35:0) + (((currentZScore<-zEntry&&priceAboveEMA)||(currentZScore>zEntry&&!priceAboveEMA))?30:0);
+        document.getElementById('signalQuality').innerHTML = `${quality}% ${quality>=70?'🔥 STRONG':(quality>=50?'⚠️ MEDIUM':'❌ WEAK')}`;
+        
+        let signalObj = {action:'⚪ NO ACTION', color:'signal-neutral', detail:'No clear signal'};
+        if(Math.abs(currentZScore)<0.5) signalObj = {action:'📤 TAKE PROFITS', color:'signal-exit', detail:'Z returned to neutral'};
+        else if(newBuy) signalObj = {action:'🟢 BUY', color:'signal-buy', detail:'Z extreme + RSI ready + Uptrend'};
+        else if(newSell) signalObj = {action:'🔴 SELL', color:'signal-sell', detail:'Z extreme + RSI ready + Downtrend'};
+        
+        document.getElementById('signalBox').className = `signal-box ${signalObj.color}`;
+        document.getElementById('signalText').innerHTML = signalObj.action;
+        document.getElementById('signalSubtext').innerHTML = signalObj.detail;
+        
+        let cd = Math.max(0, 300 - Math.floor((Date.now()-lastSignalTime)/1000));
+        document.getElementById('cooldownDisplay').innerHTML = cd>0 ? `⏱️ Cooldown: ${cd}s` : '✅ Ready';
+        
+        let allSig = [...buySignals.slice(0,10).map(s=>({...s,type:'BUY'})), ...sellSignals.slice(0,10).map(s=>({...s,type:'SELL'}))].sort((a,b)=>new Date(b.time)-new Date(a.time));
+        let sigHtml = allSig.map(s=>`<tr><td>${s.time.toLocaleTimeString()}</td><td><span class="badge ${s.type==='BUY'?'badge-buy':'badge-sell'}">${s.type}</span></td><td>${s.price.toFixed(p)}</td><td>${s.zScore.toFixed(2)}</td></tr>`).join('');
+        document.getElementById('signalsBody').innerHTML = sigHtml || '<tr><td colspan="4">No signals yet</tr>';
+        
+        let badge = document.getElementById('liveBadge');
+        badge.style.animation = 'none';
+        setTimeout(()=>badge.style.animation='pulse 1.5s infinite',100);
+    }
+    
+    loadLicenseStatus();
+</script>
+</body>
+</html>
