@@ -1,11 +1,9 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PRO Rotator Strategy | ETH/BTC Rotation Engine | No Popups</title>
+    <title>FX/CRYPTO Rotator | Paper Trading + Live Signals</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -19,13 +17,13 @@
         
         .header { text-align: center; margin-bottom: 30px; }
         .header h1 {
-            font-size: 2.5rem;
+            font-size: 1.8rem;
             background: linear-gradient(90deg, #FFD700, #FF6B6B, #4ECDC4, #FFAA00);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
         }
-        .header p { color: #888; font-size: 0.9rem; }
+        .header p { color: #888; font-size: 0.75rem; }
         
         .status-bar {
             background: rgba(0,0,0,0.5);
@@ -333,6 +331,99 @@
         .active-session { color: #00ff88; font-weight: bold; }
         .next-session { color: #FFD700; }
         
+        /* Paper Trading Styles */
+        .paper-trading-panel {
+            background: rgba(0,0,0,0.4);
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 15px;
+            border: 1px solid rgba(255,215,0,0.3);
+        }
+        .balance-display {
+            background: linear-gradient(135deg, #1a1a2e, #0a0a0a);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            margin-bottom: 15px;
+            border: 1px solid #FFD700;
+        }
+        .balance-amount {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #00ff88;
+            font-family: monospace;
+        }
+        .balance-label {
+            font-size: 0.7rem;
+            color: #888;
+            margin-bottom: 5px;
+        }
+        .trade-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        .trade-input-group {
+            flex: 1;
+            min-width: 120px;
+        }
+        .trade-input-group label {
+            font-size: 0.65rem;
+            color: #888;
+            display: block;
+            margin-bottom: 3px;
+        }
+        .trade-input-group input, .trade-input-group select {
+            width: 100%;
+            padding: 6px;
+            background: #2a2a3e;
+            border: 1px solid #444;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 0.75rem;
+        }
+        .btn-buy { background: #00aa44; color: white; }
+        .btn-sell { background: #ff4444; color: white; }
+        .positions-table {
+            width: 100%;
+            font-size: 0.7rem;
+            border-collapse: collapse;
+        }
+        .positions-table th, .positions-table td {
+            padding: 8px 4px;
+            text-align: left;
+            border-bottom: 1px solid #333;
+        }
+        .positions-table th { color: #FFD700; }
+        .profit-positive { color: #00ff88; }
+        .profit-negative { color: #ff4444; }
+        .close-btn {
+            background: #ff4444;
+            color: white;
+            border: none;
+            padding: 2px 8px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 0.6rem;
+        }
+        .funds-control {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            align-items: center;
+            justify-content: center;
+        }
+        .funds-control input {
+            width: 120px;
+            padding: 6px;
+            background: #2a2a3e;
+            border: 1px solid #444;
+            border-radius: 6px;
+            color: #fff;
+            text-align: center;
+        }
+        
         @media (max-width: 1000px) { .two-columns { grid-template-columns: 1fr; } }
         
         .no-popup-alert {
@@ -358,7 +449,7 @@
 <!-- LICENSE OVERLAY -->
 <div id="licenseOverlay" class="license-overlay">
     <div class="license-card">
-        <h1 style="color:#FFD700;">🔐 PRO Rotator Strategy</h1>
+        <h1 style="color:#FFD700;">🔐 FX/CRYPTO Rotator</h1>
         <p>Professional Trading Dashboard</p>
         <div id="trialPanel">
             <p style="margin:15px 0;">🎁 <strong>14 Days Free Trial</strong></p>
@@ -386,9 +477,9 @@
 <div id="mainDashboard" class="hidden">
 <div class="container">
     <div class="header">
-    <h1 style="font-size: 1.8rem;">🔥 FX/CRYPTO Rotator Engine 🔥</h1>
-    <p>13 Forex + 7 Crypto + Gold | Smart Rotation | Telegram Alerts</p>
-</div>
+        <h1>🔥 FX/CRYPTO <span style="color:#FFD700;">ROTATOR</span> 🔥</h1>
+        <p>13 Forex · 7 Crypto · Gold | Paper Trading + Live Signals | Telegram Alerts</p>
+    </div>
 
     <div class="status-bar">
         <div class="status-item"><span class="status-label">Symbol:</span><span class="status-value" id="symbolDisplay">EUR/USD</span></div>
@@ -470,31 +561,29 @@
     <div class="two-columns">
         <div class="card">
             <div class="card-title">🔍 MARKET SCANNER (21 Instruments)</div>
-            <div style="max-height: 450px; overflow-y: auto;">
+            <div style="max-height: 400px; overflow-y: auto;">
                 <table class="scanner-table" id="scannerTable">
                     <thead><tr><th>Pair</th><th>Price</th><th>Z-Score</th><th>Signal</th><th>RSI</th><th>vs EMA</th><th>Quality</th><th>Source</th></tr></thead>
-                    <tbody id="scannerBody"><tr><td colspan="8" style="text-align:center;">Click "Scan All Markets"</td</tr</tbody>
+                    <tbody id="scannerBody"><tr><td colspan="8">Click "Scan All Markets"</td</tr</tbody>
                 </table>
             </div>
             <div class="scan-status" id="scanStatus"></div>
             <div class="auto-scan-panel">
-                🤖 <strong>AUTO-SCAN ACTIVE</strong> | Every <span id="intervalDisplay">5</span> minutes<br>
-                📱 <strong>Telegram alerts only (NO POPUPS!)</strong>
+                🤖 <strong>AUTO-SCAN</strong> | Every <span id="intervalDisplay">5</span> min | 📱 Telegram ONLY (No popups!)
             </div>
             
-            <!-- ETH/BTC Rotation Panel -->
             <div class="rotation-panel" id="rotationPanel">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span>🔄 <strong>ETH/BTC ROTATION ENGINE</strong></span>
+                    <span>🔄 <strong>ETH/BTC ROTATION</strong></span>
                     <span id="rotationStatus" style="font-size:0.7rem;">Loading...</span>
                 </div>
                 <div id="rotationDetails" style="font-size:0.65rem; margin-top: 6px; color: #ccc;"></div>
             </div>
             
-            <!-- Session Chart -->
+            <!-- FIXED SESSION CHART -->
             <div class="session-chart">
                 <div class="session-chart-title">
-                    <span>🌍 MARKET SESSIONS</span>
+                    <span>🌍 MARKET SESSIONS (UTC)</span>
                     <span class="current-time" id="liveClock">--:--:-- UTC</span>
                 </div>
                 <div class="timeline-container">
@@ -502,9 +591,9 @@
                     <div class="current-marker" id="currentMarker" style="left: 0%;"></div>
                 </div>
                 <div class="session-legend">
-                    <div class="legend-item"><div class="legend-color asian"></div><span>🇯🇵 Asian (00-09 GMT)</span></div>
-                    <div class="legend-item"><div class="legend-color london"></div><span>🇬🇧 London (08-17 GMT)</span></div>
-                    <div class="legend-item"><div class="legend-color ny"></div><span>🇺🇸 New York (13-22 GMT)</span></div>
+                    <div class="legend-item"><div class="legend-color asian"></div><span>🇯🇵 Asian (00-09 UTC)</span></div>
+                    <div class="legend-item"><div class="legend-color london"></div><span>🇬🇧 London (08-17 UTC)</span></div>
+                    <div class="legend-item"><div class="legend-color ny"></div><span>🇺🇸 New York (13-22 UTC)</span></div>
                 </div>
                 <div class="session-info" id="sessionInfo">Loading...</div>
             </div>
@@ -523,8 +612,71 @@
                     <div class="z-value" id="zValue">0.00</div>
                 </div>
             </div>
+            
+            <!-- PAPER TRADING SECTION -->
+            <div class="paper-trading-panel">
+                <div class="card-title">💰 PAPER TRADING - Virtual Portfolio</div>
+                
+                <div class="balance-display">
+                    <div class="balance-label">💰 CASH BALANCE</div>
+                    <div class="balance-amount" id="cashBalance">$10,000.00</div>
+                    <div class="balance-label" style="margin-top: 8px;">📊 TOTAL PORTFOLIO VALUE</div>
+                    <div class="balance-amount" id="totalValue" style="font-size: 1.5rem; color: #FFD700;">$10,000.00</div>
+                </div>
+                
+                <div class="funds-control">
+                    <input type="number" id="fundAmount" placeholder="Amount" value="10000" min="1000" max="200000" step="1000">
+                    <button onclick="setFunds()" style="background:#4ECDC4;">💵 Set Balance</button>
+                    <button onclick="resetFunds()" style="background:#ff8800;">🔄 Reset to $10,000</button>
+                </div>
+                <div style="font-size:0.6rem; color:#888; text-align:center; margin-top:5px;">
+                    Min: $1,000 | Max: $200,000
+                </div>
+                
+                <div class="trade-controls" style="margin-top: 15px;">
+                    <div class="trade-input-group">
+                        <label>📊 Pair</label>
+                        <select id="tradeSymbol">
+                            <option value="EUR/USD">EUR/USD</option>
+                            <option value="GBP/USD">GBP/USD</option>
+                            <option value="USD/JPY">USD/JPY</option>
+                            <option value="BTC/USD">BTC/USD</option>
+                            <option value="ETH/USD">ETH/USD</option>
+                            <option value="ETH/BTC">ETH/BTC</option>
+                            <option value="XAU/USD">XAU/USD (Gold)</option>
+                        </select>
+                    </div>
+                    <div class="trade-input-group">
+                        <label>📈 Direction</label>
+                        <select id="tradeDirection">
+                            <option value="BUY">🟢 BUY (Long)</option>
+                            <option value="SELL">🔴 SELL (Short)</option>
+                        </select>
+                    </div>
+                    <div class="trade-input-group">
+                        <label>💰 Amount ($)</label>
+                        <input type="number" id="tradeAmount" placeholder="Amount" value="1000" min="100" step="100">
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn-buy" style="flex:1;" onclick="executeTrade('BUY')">🟢 EXECUTE BUY</button>
+                    <button class="btn-sell" style="flex:1;" onclick="executeTrade('SELL')">🔴 EXECUTE SELL</button>
+                </div>
+                
+                <div style="margin-top: 15px;">
+                    <div class="card-title" style="font-size: 0.9rem;">📋 OPEN POSITIONS</div>
+                    <div style="max-height: 250px; overflow-y: auto;">
+                        <table class="positions-table">
+                            <thead><tr><th>Pair</th><th>Type</th><th>Entry Price</th><th>Amount</th><th>Current Price</th><th>P&L</th><th>Action</th></tr></thead>
+                            <tbody id="positionsBody"><tr><td colspan="7">No open positions</td</tr</tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
             <div class="card">
-                <div class="card-title">🎯 SIGNAL + TELEGRAM ALERTS</div>
+                <div class="card-title">🎯 SIGNAL + TELEGRAM</div>
                 <div class="signal-box signal-neutral" id="signalBox">
                     <div class="signal-text" id="signalText">WAITING</div>
                     <div class="signal-subtext" id="signalSubtext">Analyzing...</div>
@@ -566,29 +718,30 @@
         <div class="card">
             <div class="card-title">📋 STRATEGY RULES</div>
             <ul style="font-size:0.75rem; list-style:none;">
-                <li>🟢 <strong>BUY</strong>: Z &lt; -1.5 + RSI 30-45 + (EMA optional in Aggressive mode)</li>
-                <li>🔴 <strong>SELL</strong>: Z &gt; +1.5 + RSI 55-70 + (EMA optional in Aggressive mode)</li>
+                <li>🟢 <strong>BUY</strong>: Z &lt; -1.5 + RSI 30-45 + (EMA optional)</li>
+                <li>🔴 <strong>SELL</strong>: Z &gt; +1.5 + RSI 55-70 + (EMA optional)</li>
                 <li>🟡 <strong>EXIT</strong>: Z returns to ~0</li>
                 <li>🔄 <strong>ROTATION</strong>: ETH/BTC Z > +1.5 = Risk OFF (favor BTC)</li>
                 <li>🔄 <strong>ROTATION</strong>: ETH/BTC Z < -1.5 = Risk ON (favor ETH)</li>
                 <li>🤖 <strong>Alerts</strong>: Telegram ONLY (NO POPUPS!)</li>
+                <li>💰 <strong>Paper Trading</strong>: Practice with virtual money</li>
             </ul>
         </div>
         <div class="card">
             <div class="card-title">🕐 RECENT SIGNALS</div>
             <div style="max-height: 180px; overflow-y: auto;">
                 <table style="width:100%; font-size:0.7rem;"><thead><tr><th>Time</th><th>Pair</th><th>Type</th><th>Price</th><th>Z</th></tr></thead>
-                <tbody id="signalsBody"><tr><td colspan="5">No signals yet</td</tr</tbody>
+                <tbody id="signalsBody"></tr><td colspan="5">No signals yet</td</tr</tbody>
                 </table>
             </div>
         </div>
     </div>
-    <div class="footer"><p>PRO Rotator | ETH/BTC Rotation Engine | Silent Telegram Alerts (No Popups!)</p></div>
+    <div class="footer"><p>FX/CRYPTO Rotator | 13 Forex · 7 Crypto · Gold | Paper Trading | ETH/BTC Rotation | Telegram Alerts</p></div>
 </div>
 </div>
 
 <script>
-    // ========== LICENSE SYSTEM ==========
+    // ========== GLOBAL VARIABLES ==========
     const API_KEY = "47a0cf5e99174f358cc500b27b614ea6";
     
     let isLicensed = false;
@@ -605,7 +758,11 @@
     let emaPeriod = 50;
     let tradingMode = "conservative";
     let lastAlertSent = {};
-    let ethBtcRotation = { z: 0, rsi: 50, status: "neutral", recommendation: "" };
+    let ethBtcRotation = { z: 0, rsi: 50 };
+    
+    // Paper Trading Variables
+    let cashBalance = 10000;
+    let positions = [];
     
     const scannerSymbols = [
         "EUR/USD","GBP/USD","USD/JPY","USD/CHF","USD/CAD","AUD/USD","NZD/USD",
@@ -618,7 +775,7 @@
     let historicalData = [], currentRSI = 50, prevRSI = 50, currentRSI7 = 50;
     let currentEMA = null, emaValues = [], lastSignalTime = 0, currentPrice = 0, currentZScore = 0;
     
-    // ========== SILENT ALERT (NO POPUP!) ==========
+    // ========== HELPER FUNCTIONS ==========
     function showToast(message) {
         const toast = document.createElement('div');
         toast.className = 'no-popup-alert';
@@ -627,270 +784,162 @@
         setTimeout(() => toast.remove(), 3000);
     }
     
-    // ========== REAL QUALITY CALCULATION ==========
-    function calculateRealQuality(z, rsi, aboveEma, isBuySignal, isSellSignal) {
-        let quality = 0;
-        const absZ = Math.abs(z);
-        if (absZ > 2.0) quality += 40;
-        else if (absZ > 1.8) quality += 35;
-        else if (absZ > 1.5) quality += 30;
-        else if (absZ > 1.2) quality += 20;
-        else if (absZ > 0.8) quality += 10;
-        else quality += 5;
+    // ========== PAPER TRADING FUNCTIONS ==========
+    function loadPaperTradingData() {
+        const savedBalance = localStorage.getItem('paper_cash_balance');
+        const savedPositions = localStorage.getItem('paper_positions');
         
-        if (isBuySignal && rsi >= 30 && rsi <= 45) quality += 30;
-        else if (isSellSignal && rsi >= 55 && rsi <= 70) quality += 30;
-        else if ((isBuySignal && rsi > 45 && rsi < 55) || (isSellSignal && rsi > 45 && rsi < 55)) quality += 15;
-        else quality += 5;
+        if (savedBalance) cashBalance = parseFloat(savedBalance);
+        if (savedPositions) positions = JSON.parse(savedPositions);
         
-        if (isBuySignal && aboveEma) quality += 30;
-        else if (isSellSignal && !aboveEma) quality += 30;
-        else if (isBuySignal && !aboveEma) quality += 10;
-        else if (isSellSignal && aboveEma) quality += 10;
-        else quality += 15;
-        
-        return Math.min(100, quality);
+        updatePaperTradingUI();
     }
     
-    // ========== ETH/BTC ROTATION ENGINE ==========
-    async function updateRotationStatus() {
-        try {
-            const data = await fetchDataForSymbol("ETH/BTC", currentTimeframe);
-            if (data && data.length > 50) {
-                const closes = data.map(d => d.close);
-                const price = closes[closes.length-1];
-                const z = calculateZScore(closes, price);
-                const rsi = calculateRSI(closes, 14);
-                
-                ethBtcRotation = { z: z, rsi: rsi, price: price };
-                
-                let status = "", recommendation = "", rotationClass = "";
-                if (z < -1.5) {
-                    status = "🔥 RISK ON MODE";
-                    recommendation = "ETH is cheap → Favor BUY signals on ETH, ETH pairs, Altcoins";
-                    rotationClass = "rotation-risk-on";
-                } else if (z > 1.5) {
-                    status = "⚠️ RISK OFF MODE";
-                    recommendation = "ETH is expensive → Favor BUY signals on BTC, USD pairs, Gold";
-                    rotationClass = "rotation-risk-off";
-                } else {
-                    status = "⚖️ NEUTRAL MODE";
-                    recommendation = "No rotation edge → Trade both directions with caution";
-                    rotationClass = "";
-                }
-                
-                const badge = document.getElementById('rotationBadge');
-                badge.innerHTML = `🔄 ${status}`;
-                badge.className = `rotation-badge ${rotationClass}`;
-                
-                document.getElementById('rotationDetails').innerHTML = `
-                    ETH/BTC Z: <strong style="color:${z < -1.5 ? '#00ff88' : (z > 1.5 ? '#ff4444' : '#FFD700')}">${z.toFixed(2)}</strong> | RSI: ${rsi.toFixed(0)}<br>
-                    📌 ${recommendation}
-                `;
-                
-                const filterSpan = document.getElementById('rotationFilter');
-                if (filterSpan) {
-                    if (z < -1.5) filterSpan.innerHTML = '🔥 RISK ON (Favor ETH/ALTS)';
-                    else if (z > 1.5) filterSpan.innerHTML = '⚠️ RISK OFF (Favor BTC/USD/GOLD)';
-                    else filterSpan.innerHTML = '⚖️ NEUTRAL';
-                }
+    function savePaperTradingData() {
+        localStorage.setItem('paper_cash_balance', cashBalance);
+        localStorage.setItem('paper_positions', JSON.stringify(positions));
+    }
+    
+    function setFunds() {
+        let amount = parseFloat(document.getElementById('fundAmount').value);
+        if (isNaN(amount)) amount = 10000;
+        if (amount < 1000) amount = 1000;
+        if (amount > 200000) amount = 200000;
+        
+        cashBalance = amount;
+        savePaperTradingData();
+        updatePaperTradingUI();
+        showToast(`💰 Balance set to $${cashBalance.toFixed(2)}`);
+    }
+    
+    function resetFunds() {
+        cashBalance = 10000;
+        positions = [];
+        savePaperTradingData();
+        updatePaperTradingUI();
+        showToast(`🔄 Balance reset to $10,000, all positions closed`);
+    }
+    
+    async function executeTrade(direction) {
+        const symbol = document.getElementById('tradeSymbol').value;
+        const amount = parseFloat(document.getElementById('tradeAmount').value);
+        
+        if (isNaN(amount) || amount <= 0) {
+            showToast('❌ Please enter a valid amount');
+            return;
+        }
+        
+        if (amount > cashBalance) {
+            showToast(`❌ Insufficient funds! Available: $${cashBalance.toFixed(2)}`);
+            return;
+        }
+        
+        const data = await fetchDataForSymbol(symbol, currentTimeframe);
+        if (!data || data.length === 0) {
+            showToast('❌ Cannot get current price for this pair');
+            return;
+        }
+        
+        const currentPrice = data[data.length-1].close;
+        let pricePrec = symbol === 'XAU/USD' ? 2 : (symbol.includes('JPY') ? 3 : (symbol.includes('BTC')||symbol.includes('ETH')? (symbol === 'ETH/BTC' ? 8 : 2) : 5));
+        
+        cashBalance -= amount;
+        
+        positions.push({
+            id: Date.now(),
+            symbol: symbol,
+            type: direction,
+            entryPrice: currentPrice,
+            amount: amount,
+            entryValue: amount,
+            timestamp: new Date().toISOString()
+        });
+        
+        savePaperTradingData();
+        updatePaperTradingUI();
+        showToast(`${direction === 'BUY' ? '✅ BOUGHT' : '🔴 SOLD SHORT'} ${amount} worth of ${symbol} at ${currentPrice.toFixed(pricePrec)}`);
+    }
+    
+    async function closePosition(positionId) {
+        const position = positions.find(p => p.id === positionId);
+        if (!position) return;
+        
+        const data = await fetchDataForSymbol(position.symbol, currentTimeframe);
+        if (!data || data.length === 0) {
+            showToast('❌ Cannot get current price to close position');
+            return;
+        }
+        
+        const currentPrice = data[data.length-1].close;
+        let pnl = 0;
+        
+        if (position.type === 'BUY') {
+            pnl = ((currentPrice - position.entryPrice) / position.entryPrice) * position.amount;
+        } else {
+            pnl = ((position.entryPrice - currentPrice) / position.entryPrice) * position.amount;
+        }
+        
+        cashBalance += position.amount + pnl;
+        positions = positions.filter(p => p.id !== positionId);
+        
+        savePaperTradingData();
+        updatePaperTradingUI();
+        
+        const pnlSymbol = pnl >= 0 ? '🟢' : '🔴';
+        showToast(`${pnlSymbol} Closed ${position.symbol} ${position.type} | P&L: $${pnl.toFixed(2)}`);
+    }
+    
+    async function updatePaperTradingUI() {
+        const cashSpan = document.getElementById('cashBalance');
+        const totalSpan = document.getElementById('totalValue');
+        const positionsBody = document.getElementById('positionsBody');
+        
+        if (cashSpan) cashSpan.innerHTML = `$${cashBalance.toFixed(2)}`;
+        
+        let totalValue = cashBalance;
+        let html = '';
+        
+        for (let position of positions) {
+            const data = await fetchDataForSymbol(position.symbol, currentTimeframe);
+            let currentPrice = position.entryPrice;
+            if (data && data.length > 0) {
+                currentPrice = data[data.length-1].close;
             }
-        } catch(e) {
-            console.log("Rotation update failed:", e);
-        }
-    }
-    
-    // ========== SESSION CHART WITH DETAILS ==========
-    function updateSessionChart() {
-        const now = new Date();
-        const currentHour = now.getUTCHours();
-        const currentMinute = now.getUTCMinutes();
-        const currentTimeDecimal = currentHour + currentMinute / 60;
-        
-        const markerPercent = (currentTimeDecimal / 24) * 100;
-        const marker = document.getElementById('currentMarker');
-        if (marker) marker.style.left = `${Math.min(100, Math.max(0, markerPercent))}%`;
-        
-        const track = document.getElementById('timelineTrack');
-        if (!track) return;
-        track.innerHTML = '';
-        
-        // Asian Session (0-9)
-        const asianDiv = document.createElement('div');
-        asianDiv.className = 'session-segment asian-session';
-        asianDiv.style.width = `${(9-0)/24*100}%`;
-        asianDiv.style.left = `0%`;
-        asianDiv.innerHTML = '<span>🇯🇵 ASIAN</span>';
-        track.appendChild(asianDiv);
-        
-        const asianLabel = document.createElement('div');
-        asianLabel.className = 'session-label';
-        asianLabel.style.left = `${(9-0)/24*100/2}%`;
-        asianLabel.innerHTML = '00:00 — 09:00 GMT';
-        track.appendChild(asianLabel);
-        
-        // London Session (8-17)
-        const londonStart = 8/24*100;
-        const londonDiv = document.createElement('div');
-        londonDiv.className = 'session-segment london-session';
-        londonDiv.style.width = `${(17-8)/24*100}%`;
-        londonDiv.style.left = `${londonStart}%`;
-        londonDiv.innerHTML = '<span>🇬🇧 LONDON</span>';
-        track.appendChild(londonDiv);
-        
-        const londonLabel = document.createElement('div');
-        londonLabel.className = 'session-label';
-        londonLabel.style.left = `${londonStart + (17-8)/24*100/2}%`;
-        londonLabel.innerHTML = '08:00 — 17:00 GMT';
-        track.appendChild(londonLabel);
-        
-        // New York Session (13-22)
-        const nyStart = 13/24*100;
-        const nyDiv = document.createElement('div');
-        nyDiv.className = 'session-segment ny-session';
-        nyDiv.style.width = `${(22-13)/24*100}%`;
-        nyDiv.style.left = `${nyStart}%`;
-        nyDiv.innerHTML = '<span>🇺🇸 NEW YORK</span>';
-        track.appendChild(nyDiv);
-        
-        const nyLabel = document.createElement('div');
-        nyLabel.className = 'session-label';
-        nyLabel.style.left = `${nyStart + (22-13)/24*100/2}%`;
-        nyLabel.innerHTML = '13:00 — 22:00 GMT';
-        track.appendChild(nyLabel);
-        
-        // Hour markers
-        for (let i = 0; i <= 24; i += 4) {
-            const markerDiv = document.createElement('div');
-            markerDiv.style.position = 'absolute';
-            markerDiv.style.left = `${i/24*100}%`;
-            markerDiv.style.bottom = '-22px';
-            markerDiv.style.fontSize = '0.5rem';
-            markerDiv.style.color = '#666';
-            markerDiv.style.transform = 'translateX(-50%)';
-            markerDiv.innerHTML = `${i}:00`;
-            track.appendChild(markerDiv);
+            
+            let currentValue = 0;
+            let pnl = 0;
+            
+            if (position.type === 'BUY') {
+                currentValue = (currentPrice / position.entryPrice) * position.amount;
+                pnl = currentValue - position.amount;
+            } else {
+                currentValue = ((2 * position.entryPrice - currentPrice) / position.entryPrice) * position.amount;
+                pnl = currentValue - position.amount;
+            }
+            
+            totalValue += currentValue;
+            
+            let pricePrec = position.symbol === 'XAU/USD' ? 2 : (position.symbol.includes('JPY') ? 3 : (position.symbol.includes('BTC')||position.symbol.includes('ETH')? (position.symbol === 'ETH/BTC' ? 8 : 2) : 5));
+            const entryPriceFormatted = position.entryPrice.toFixed(pricePrec);
+            const currentPriceFormatted = currentPrice.toFixed(pricePrec);
+            const pnlFormatted = Math.abs(pnl).toFixed(2);
+            const pnlClass = pnl >= 0 ? 'profit-positive' : 'profit-negative';
+            const pnlSymbol = pnl >= 0 ? '▲' : '▼';
+            
+            html += `<tr>
+                        <td><strong>${position.symbol}</strong></td>
+                        <td><span style="color:${position.type === 'BUY' ? '#00ff88' : '#ff4444'}">${position.type}</span></td>
+                        <td>${entryPriceFormatted}</td>
+                        <td>$${position.amount.toFixed(2)}</td>
+                        <td>${currentPriceFormatted}</td>
+                        <td class="${pnlClass}">${pnlSymbol} $${pnlFormatted}</td>
+                        <td><button class="close-btn" onclick="closePosition(${position.id})">✖ Close</button></td>
+                     </tr>`;
         }
         
-        // DETAILED SESSION INFO
-        const infoDiv = document.getElementById('sessionInfo');
-        const timeStr = now.toUTCString();
-        
-        let activeSession = "";
-        let sessionEnd = null;
-        let bestPairs = "";
-        let nextSession = "";
-        let nextSessionTime = "";
-        
-        if (currentTimeDecimal >= 0 && currentTimeDecimal < 9) {
-            activeSession = "Asian";
-            sessionEnd = new Date(now);
-            sessionEnd.setUTCHours(9, 0, 0, 0);
-            bestPairs = "JPY, AUD, NZD";
-            nextSession = "London";
-            nextSessionTime = "08:00 GMT";
-        } else if (currentTimeDecimal >= 8 && currentTimeDecimal < 17) {
-            activeSession = "London";
-            sessionEnd = new Date(now);
-            sessionEnd.setUTCHours(17, 0, 0, 0);
-            bestPairs = "EUR, GBP, CHF";
-            nextSession = "New York";
-            nextSessionTime = "13:00 GMT";
-        } else if (currentTimeDecimal >= 13 && currentTimeDecimal < 22) {
-            activeSession = "New York";
-            sessionEnd = new Date(now);
-            sessionEnd.setUTCHours(22, 0, 0, 0);
-            bestPairs = "USD, Gold, Oil";
-            nextSession = "Asian";
-            nextSessionTime = "00:00 GMT";
-        } else {
-            activeSession = "";
-            nextSession = "Asian";
-            nextSessionTime = "00:00 GMT";
-        }
-        
-        if (activeSession && sessionEnd) {
-            const minutesLeft = Math.ceil((sessionEnd - now) / 1000 / 60);
-            infoDiv.innerHTML = `
-                📅 ${timeStr}<br>
-                🔴 <span class="active-session">${activeSession} Session ACTIVE</span> | Ends in ${minutesLeft} minutes<br>
-                📊 Best pairs: <strong>${bestPairs}</strong><br>
-                ⏰ Next: <span class="next-session">${nextSession} session</span> starts at ${nextSessionTime}
-            `;
-        } else {
-            infoDiv.innerHTML = `
-                📅 ${timeStr}<br>
-                ⚪ Between sessions | Low liquidity expected<br>
-                ⏰ Next: <span class="next-session">${nextSession} session</span> starts at ${nextSessionTime}
-            `;
-        }
+        if (totalSpan) totalSpan.innerHTML = `$${totalValue.toFixed(2)}`;
+        if (positionsBody) positionsBody.innerHTML = html || '<tr><td colspan="7">No open positions</td</tr';
     }
-    
-    function startLiveClock() {
-        if (clockInterval) clearInterval(clockInterval);
-        clockInterval = setInterval(() => {
-            const now = new Date();
-            const timeStr = now.toUTCString().split(' ')[4];
-            const clockSpan = document.getElementById('liveClock');
-            if (clockSpan) clockSpan.innerHTML = `${timeStr} UTC`;
-            updateSessionChart();
-        }, 1000);
-    }
-    
-    // ========== TELEGRAM FUNCTIONS (NO POPUP!) ==========
-    document.getElementById('telegramToken').value = telegramBotToken;
-    document.getElementById('telegramChatId').value = telegramChatId;
-    updateTelegramStatus();
-    
-    function saveTelegramSettings() {
-        telegramBotToken = document.getElementById('telegramToken').value.trim();
-        telegramChatId = document.getElementById('telegramChatId').value.trim();
-        localStorage.setItem('telegram_bot_token', telegramBotToken);
-        localStorage.setItem('telegram_chat_id', telegramChatId);
-        updateTelegramStatus();
-        showToast('✅ Telegram settings saved!');
-    }
-    
-    function updateTelegramStatus() {
-        const statusDiv = document.getElementById('telegramStatus');
-        if (telegramBotToken && telegramBotToken !== '' && telegramChatId && telegramChatId !== '') {
-            statusDiv.innerHTML = '✅ Telegram configured! Alerts will be sent silently.';
-            statusDiv.className = 'telegram-status configured';
-        } else {
-            statusDiv.innerHTML = '⚠️ Not configured. Get token from @BotFather, ID from @userinfobot';
-            statusDiv.className = 'telegram-status not-configured';
-        }
-    }
-    
-    function sendTelegramAlert(message, type, symbol, price, zScore) {
-        if (!telegramBotToken || !telegramChatId) return;
-        const url = `https://api.telegram.org/bot${telegramBotToken}/sendMessage`;
-        const text = `🔔 *PRO ROTATOR* 🔔\n\n*${type}* on ${symbol}\n${message}\nZ: ${zScore}\n${new Date().toLocaleString()}`;
-        fetch(url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ chat_id: telegramChatId, text: text, parse_mode: 'Markdown' })
-        }).catch(e => console.log("Telegram error:", e));
-    }
-    
-    // ========== SILENT ALERT (NO POPUP BLOCKING!) ==========
-    function sendAlert(message, type, symbol, price, zScore) {
-        // NO POPUP ALERT! Only Telegram and sound
-        try {
-            let audio = new Audio('data:audio/wav;base64,U3RlYWx0aCBzb3VuZA==');
-            audio.play().catch(e=>console.log('Sound blocked'));
-        } catch(e) {}
-        sendTelegramAlert(message, type, symbol, price, zScore);
-        showToast(`📱 ${type} on ${symbol} - Check Telegram!`);
-        console.log(`🔔 ${type} on ${symbol}`);
-    }
-    
-    function testAlert() { 
-        sendAlert('🧪 TEST: Your bot is working! (No popup, only Telegram)', 'TEST', currentSymbol, currentPrice || 'N/A', currentZScore || 'N/A');
-        showToast('📱 Test alert sent to Telegram!');
-    }
-    
-    function refreshData() { fetchData(); }
     
     // ========== TECHNICAL INDICATORS ==========
     function calculateRSI(prices, p) {
@@ -916,6 +965,30 @@
         let variance = recent.reduce((s,v)=>s+Math.pow(v-mean,2),0)/recent.length;
         let stdDev = Math.sqrt(variance);
         return stdDev === 0 ? 0 : (currentPrice - mean) / stdDev;
+    }
+    
+    function calculateRealQuality(z, rsi, aboveEma, isBuySignal, isSellSignal) {
+        let quality = 0;
+        const absZ = Math.abs(z);
+        if (absZ > 2.0) quality += 40;
+        else if (absZ > 1.8) quality += 35;
+        else if (absZ > 1.5) quality += 30;
+        else if (absZ > 1.2) quality += 20;
+        else if (absZ > 0.8) quality += 10;
+        else quality += 5;
+        
+        if (isBuySignal && rsi >= 30 && rsi <= 45) quality += 30;
+        else if (isSellSignal && rsi >= 55 && rsi <= 70) quality += 30;
+        else if ((isBuySignal && rsi > 45 && rsi < 55) || (isSellSignal && rsi > 45 && rsi < 55)) quality += 15;
+        else quality += 5;
+        
+        if (isBuySignal && aboveEma) quality += 30;
+        else if (isSellSignal && !aboveEma) quality += 30;
+        else if (isBuySignal && !aboveEma) quality += 10;
+        else if (isSellSignal && aboveEma) quality += 10;
+        else quality += 15;
+        
+        return Math.min(100, quality);
     }
     
     // ========== DATA FETCHING ==========
@@ -948,7 +1021,14 @@
             const resp = await fetch(url);
             const data = await resp.json();
             if(data.values && data.values.length > 0) {
-                return data.values.map(v=>({time:new Date(v.datetime), open:parseFloat(v.open), high:parseFloat(v.high), low:parseFloat(v.low), close:parseFloat(v.close)})).reverse();
+                const mapped = data.values.map(v=>({
+                    time: new Date(v.datetime),
+                    open: parseFloat(v.open),
+                    high: parseFloat(v.high),
+                    low: parseFloat(v.low),
+                    close: parseFloat(v.close)
+                }));
+                return mapped.reverse();
             }
             return null;
         } catch(e){ console.error(`TwelveData error:`, e); return null; }
@@ -962,11 +1042,224 @@
         }
     }
     
+    // ========== TELEGRAM FUNCTIONS ==========
+    function saveTelegramSettings() {
+        telegramBotToken = document.getElementById('telegramToken').value.trim();
+        telegramChatId = document.getElementById('telegramChatId').value.trim();
+        localStorage.setItem('telegram_bot_token', telegramBotToken);
+        localStorage.setItem('telegram_chat_id', telegramChatId);
+        updateTelegramStatus();
+        showToast('✅ Telegram settings saved!');
+    }
+    
+    function updateTelegramStatus() {
+        const statusDiv = document.getElementById('telegramStatus');
+        if (telegramBotToken && telegramBotToken !== '' && telegramChatId && telegramChatId !== '') {
+            statusDiv.innerHTML = '✅ Telegram configured! Alerts will be sent silently.';
+            statusDiv.className = 'telegram-status configured';
+        } else {
+            statusDiv.innerHTML = '⚠️ Not configured. Get token from @BotFather, ID from @userinfobot';
+            statusDiv.className = 'telegram-status not-configured';
+        }
+    }
+    
+    function sendTelegramAlert(message, type, symbol, price, zScore) {
+        if (!telegramBotToken || !telegramChatId) return;
+        const url = `https://api.telegram.org/bot${telegramBotToken}/sendMessage`;
+        const text = `🔔 *FX/CRYPTO ROTATOR* 🔔\n\n*${type}* on ${symbol}\n${message}\nZ: ${zScore}\n${new Date().toLocaleString()}`;
+        fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ chat_id: telegramChatId, text: text, parse_mode: 'Markdown' })
+        }).catch(e => console.log("Telegram error:", e));
+    }
+    
+    function sendAlert(message, type, symbol, price, zScore) {
+        try {
+            let audio = new Audio('data:audio/wav;base64,U3RlYWx0aCBzb3VuZA==');
+            audio.play().catch(e=>console.log('Sound blocked'));
+        } catch(e) {}
+        sendTelegramAlert(message, type, symbol, price, zScore);
+        showToast(`📱 ${type} on ${symbol} - Check Telegram!`);
+        console.log(`🔔 ${type} on ${symbol}`);
+    }
+    
+    function testAlert() { 
+        sendAlert('🧪 TEST: Your bot is working!', 'TEST', currentSymbol, currentPrice || 'N/A', currentZScore || 'N/A');
+        showToast('📱 Test alert sent to Telegram!');
+    }
+    
+    function refreshData() { fetchData(); }
+    
+    // ========== FIXED SESSION CHART ==========
+    function updateSessionChart() {
+        const now = new Date();
+        
+        // Get UK time for display
+        const ukTimeStr = new Date().toLocaleString('en-GB', { timeZone: 'Europe/London', timeStyle: 'medium' });
+        
+        const currentHourUTC = now.getUTCHours();
+        const currentMinuteUTC = now.getUTCMinutes();
+        const currentTimeDecimalUTC = currentHourUTC + currentMinuteUTC / 60;
+        
+        const markerPercent = (currentTimeDecimalUTC / 24) * 100;
+        const marker = document.getElementById('currentMarker');
+        if (marker) marker.style.left = `${Math.min(100, Math.max(0, markerPercent))}%`;
+        
+        const track = document.getElementById('timelineTrack');
+        if (!track) return;
+        track.innerHTML = '';
+        
+        // Session times in UTC
+        const sessions = [
+            { name: 'Asian', start: 0, end: 9, color: 'asian', label: '🇯🇵 ASIAN', best: 'JPY, AUD, NZD' },
+            { name: 'London', start: 8, end: 17, color: 'london', label: '🇬🇧 LONDON', best: 'EUR, GBP, CHF' },
+            { name: 'New York', start: 13, end: 22, color: 'ny', label: '🇺🇸 NEW YORK', best: 'USD, Gold, Oil' }
+        ];
+        
+        // Draw session segments
+        sessions.forEach(session => {
+            const startPercent = (session.start / 24) * 100;
+            const widthPercent = ((session.end - session.start) / 24) * 100;
+            
+            const segment = document.createElement('div');
+            segment.className = `session-segment ${session.color}-session`;
+            segment.style.width = `${widthPercent}%`;
+            segment.style.left = `${startPercent}%`;
+            segment.innerHTML = `<span>${session.label}</span>`;
+            track.appendChild(segment);
+            
+            const label = document.createElement('div');
+            label.className = 'session-label';
+            label.style.left = `${startPercent + widthPercent / 2}%`;
+            label.innerHTML = `${session.start.toString().padStart(2,'0')}:00 — ${session.end.toString().padStart(2,'0')}:00 UTC`;
+            track.appendChild(label);
+        });
+        
+        // Hour markers
+        for (let i = 0; i <= 24; i += 4) {
+            const markerDiv = document.createElement('div');
+            markerDiv.style.position = 'absolute';
+            markerDiv.style.left = `${i/24*100}%`;
+            markerDiv.style.bottom = '-22px';
+            markerDiv.style.fontSize = '0.5rem';
+            markerDiv.style.color = '#666';
+            markerDiv.style.transform = 'translateX(-50%)';
+            markerDiv.innerHTML = `${i}:00`;
+            track.appendChild(markerDiv);
+        }
+        
+        // Find active session (UTC)
+        let activeSession = null;
+        let nextSession = null;
+        
+        for (let s of sessions) {
+            if (currentTimeDecimalUTC >= s.start && currentTimeDecimalUTC < s.end) {
+                activeSession = s;
+            }
+        }
+        
+        for (let s of sessions) {
+            if (s.start > currentTimeDecimalUTC) {
+                nextSession = s;
+                break;
+            }
+        }
+        if (!nextSession && activeSession) {
+            nextSession = sessions[0];
+        }
+        if (!nextSession && !activeSession) {
+            nextSession = sessions[0];
+        }
+        
+        // Calculate time remaining in active session
+        let timeLeftMsg = '';
+        if (activeSession) {
+            const sessionEnd = new Date(now);
+            sessionEnd.setUTCHours(activeSession.end, 0, 0, 0);
+            const minutesLeft = Math.ceil((sessionEnd - now) / 1000 / 60);
+            timeLeftMsg = ` | Ends in ${minutesLeft} minutes`;
+        }
+        
+        const infoDiv = document.getElementById('sessionInfo');
+        const utcTimeStr = now.toUTCString();
+        const sessionStatus = activeSession ? 
+            `🔴 <span class="active-session">${activeSession.name} Session ACTIVE</span>${timeLeftMsg}<br>📊 Best pairs: <strong>${activeSession.best}</strong><br>⏰ Next: <span class="next-session">${nextSession.name} session</span> starts at ${nextSession.start.toString().padStart(2,'0')}:00 UTC` :
+            `⚪ Between sessions | Low liquidity expected<br>⏰ Next: <span class="next-session">${nextSession.name} session</span> starts at ${nextSession.start.toString().padStart(2,'0')}:00 UTC`;
+        
+        infoDiv.innerHTML = `
+            📅 ${utcTimeStr}<br>
+            🇬🇧 UK Time: ${ukTimeStr}<br>
+            ${sessionStatus}
+        `;
+    }
+    
+    function startLiveClock() {
+        if (clockInterval) clearInterval(clockInterval);
+        clockInterval = setInterval(() => {
+            const now = new Date();
+            const timeStr = now.toUTCString().split(' ')[4];
+            const clockSpan = document.getElementById('liveClock');
+            if (clockSpan) clockSpan.innerHTML = `${timeStr} UTC`;
+            updateSessionChart();
+        }, 1000);
+    }
+    
+    // ========== ROTATION STATUS ==========
+    async function updateRotationStatus() {
+        try {
+            const data = await fetchDataForSymbol("ETH/BTC", currentTimeframe);
+            if (data && data.length > 50) {
+                const closes = data.map(d => d.close);
+                const price = closes[closes.length-1];
+                const z = calculateZScore(closes, price);
+                const rsi = calculateRSI(closes, 14);
+                ethBtcRotation = { z: z, rsi: rsi, price: price };
+                
+                let status = "", recommendation = "", rotationClass = "";
+                if (z < -1.5) {
+                    status = "🔥 RISK ON MODE";
+                    recommendation = "ETH is cheap → Favor BUY on ETH, ETH pairs, Altcoins";
+                    rotationClass = "rotation-risk-on";
+                } else if (z > 1.5) {
+                    status = "⚠️ RISK OFF MODE";
+                    recommendation = "ETH is expensive → Favor BUY on BTC, USD pairs, Gold";
+                    rotationClass = "rotation-risk-off";
+                } else {
+                    status = "⚖️ NEUTRAL MODE";
+                    recommendation = "No rotation edge → Trade both directions with caution";
+                    rotationClass = "";
+                }
+                
+                const badge = document.getElementById('rotationBadge');
+                if (badge) {
+                    badge.innerHTML = `🔄 ${status}`;
+                    badge.className = `rotation-badge ${rotationClass}`;
+                }
+                
+                const detailsDiv = document.getElementById('rotationDetails');
+                if (detailsDiv) {
+                    detailsDiv.innerHTML = `
+                        ETH/BTC Z: <strong style="color:${z < -1.5 ? '#00ff88' : (z > 1.5 ? '#ff4444' : '#FFD700')}">${z.toFixed(2)}</strong> | RSI: ${rsi.toFixed(0)}<br>
+                        📌 ${recommendation}
+                    `;
+                }
+                
+                const filterSpan = document.getElementById('rotationFilter');
+                if (filterSpan) {
+                    if (z < -1.5) filterSpan.innerHTML = '🔥 RISK ON (Favor ETH/ALTS)';
+                    else if (z > 1.5) filterSpan.innerHTML = '⚠️ RISK OFF (Favor BTC/USD/GOLD)';
+                    else filterSpan.innerHTML = '⚖️ NEUTRAL';
+                }
+            }
+        } catch(e) { console.log("Rotation update failed:", e); }
+    }
+    
     // ========== SCANNER ==========
     async function scanAllMarketsAndAlert() {
         console.log("🔄 Scanning all 21 markets...");
         const tbody = document.getElementById('scannerBody');
-        tbody.innerHTML = '<tr><td colspan="8">🔄 Scanning 21 instruments...</td</tr';
+        if (tbody) tbody.innerHTML = '<tr><td colspan="8">🔄 Scanning 21 instruments...</td</tr';
         
         let buySignalsFound = [], sellSignalsFound = [], results = [];
         
@@ -982,7 +1275,6 @@
                 let ema = calculateEMA(closes, 50).pop();
                 let aboveEma = price > ema;
                 
-                // Trading mode logic
                 let buyReady, sellReady;
                 if (tradingMode === "aggressive") {
                     buyReady = (z < -zEntry && rsi >= 30 && rsi <= 45);
@@ -992,7 +1284,6 @@
                     sellReady = (z > zEntry && rsi >= 55 && rsi <= 70 && !aboveEma);
                 }
                 
-                // Rotation filter
                 const rotationBoost = (ethBtcRotation.z < -1.5 && (sym === 'ETH/USD' || sym === 'ETH/BTC')) ? 15 :
                                      (ethBtcRotation.z > 1.5 && (sym === 'BTC/USD' || sym === 'XAU/USD')) ? 15 : 0;
                 
@@ -1027,26 +1318,21 @@
             await new Promise(r => setTimeout(r, 300));
         }
         
-        updateSignalsDisplay();
+        const sigBody = document.getElementById('signalsBody');
+        if (sigBody) {
+            let sigHtml = allSignals.slice(0,20).map(s => {
+                let pricePrec = s.symbol === 'XAU/USD' ? 2 : (s.symbol.includes('JPY') ? 3 : (s.symbol.includes('BTC')||s.symbol.includes('ETH')? (s.symbol === 'ETH/BTC' ? 8 : 2) : 5));
+                return `<tr><td>${s.time.toLocaleTimeString()}</td><td><strong>${s.symbol}</strong></td><td><span class="badge ${s.type==='BUY'?'badge-buy':'badge-sell'}">${s.type}</span></td><td>${s.price.toFixed(pricePrec)}</td><td>${s.zScore.toFixed(2)}</td></tr>`;
+            }).join('');
+            sigBody.innerHTML = sigHtml || '<tr><td colspan="5">No signals yet</td></tr';
+        }
+        
         results.sort((a,b) => Math.abs(b.z) - Math.abs(a.z));
-        updateScannerTable(results);
-        document.getElementById('scanStatus').innerHTML = `Last scan: ${new Date().toLocaleTimeString()} | ${results.filter(r=>!r.error).length} analyzed | ${buySignalsFound.length} BUY, ${sellSignalsFound.length} SELL`;
-    }
-    
-    function updateSignalsDisplay() {
-        const tbody = document.getElementById('signalsBody');
-        let sigHtml = allSignals.slice(0,20).map(s => {
-            let pricePrec = s.symbol === 'XAU/USD' ? 2 : (s.symbol.includes('JPY') ? 3 : (s.symbol.includes('BTC')||s.symbol.includes('ETH')? (s.symbol === 'ETH/BTC' ? 8 : 2) : 5));
-            return `<tr><td>${s.time.toLocaleTimeString()}</td><td><strong>${s.symbol}</strong></td><td><span class="badge ${s.type==='BUY'?'badge-buy':'badge-sell'}">${s.type}</span></td><td>${s.price.toFixed(pricePrec)}</td><td>${s.zScore.toFixed(2)}</td></tr>`;
-        }).join('');
-        tbody.innerHTML = sigHtml || '<tr><td colspan="5">No signals yet</tr';
-    }
-    
-    function updateScannerTable(results) {
+        
         let html = '';
         for(let r of results) {
             if(r.error) {
-                html += `<tr class="scanner-row-neutral"><td><strong>${r.sym}</strong></td><td colspan="7" style="color:#ff8800;">⚠️ Data unavailable</tr>`;
+                html += `<tr class="scanner-row-neutral"><td><strong>${r.sym}</strong></td><td colspan="7" style="color:#ff8800;">⚠️ Data unavailable</td></tr>`;
                 continue;
             }
             let rowClass = '', signalText = '', signalClass = '';
@@ -1070,9 +1356,13 @@
                     <td>${r.rsi.toFixed(0)}</td>
                     <td style="color:${emaColor}">${emaSymbol}</td>
                     <td><div style="background:#333; border-radius:10px; height:4px;"><div style="background:${qualityColor}; width:${r.quality}%; height:4px; border-radius:10px;"></div></div> ${r.quality}%</td>
-                    <td>${sourceBadge}</td></tr>`;
+                    <td>${sourceBadge}</td>
+                   </tr>`;
         }
-        document.getElementById('scannerBody').innerHTML = html;
+        const scannerBody = document.getElementById('scannerBody');
+        if (scannerBody) scannerBody.innerHTML = html;
+        const scanStatus = document.getElementById('scanStatus');
+        if (scanStatus) scanStatus.innerHTML = `Last scan: ${new Date().toLocaleTimeString()} | ${results.filter(r=>!r.error).length} analyzed | ${buySignalsFound.length} BUY, ${sellSignalsFound.length} SELL`;
     }
     
     async function scanAllMarkets() { await scanAllMarketsAndAlert(); }
@@ -1081,101 +1371,104 @@
     async function fetchData() {
         if(!isLicensed) return;
         
-        currentSymbol = document.getElementById('symbolSelect').value;
-        currentTimeframe = document.getElementById('timeframeSelect').value;
-        zPeriod = parseInt(document.getElementById('zPeriodSelect').value);
-        zEntry = parseFloat(document.getElementById('zEntrySelect').value);
-        rsiPeriod = parseInt(document.getElementById('rsiPeriodSelect').value);
-        emaPeriod = parseInt(document.getElementById('emaPeriodSelect').value);
-        tradingMode = document.getElementById('tradingModeSelect').value;
-        
-        document.getElementById('symbolDisplay').innerHTML = currentSymbol;
-        document.getElementById('timeframeDisplay').innerHTML = currentTimeframe;
-        document.getElementById('lowerLabel').innerHTML = `-${zEntry}`;
-        document.getElementById('upperLabel').innerHTML = `+${zEntry}`;
-        
-        let isCrypto = (currentSymbol === 'BTC/USD' || currentSymbol === 'ETH/USD' || currentSymbol === 'BNB/USD' || currentSymbol === 'SOL/USD' || currentSymbol === 'XRP/USD' || currentSymbol === 'ADA/USD' || currentSymbol === 'ETH/BTC');
-        document.getElementById('dataSourceDisplay').innerHTML = isCrypto ? 'Binance ✓' : 'Twelve Data ✓';
-        
-        historicalData = await fetchDataForSymbol(currentSymbol, currentTimeframe);
-        if(!historicalData || historicalData.length === 0) {
-            document.getElementById('priceValue').innerHTML = 'No Data';
-            return;
+        try {
+            currentSymbol = document.getElementById('symbolSelect').value;
+            currentTimeframe = document.getElementById('timeframeSelect').value;
+            zPeriod = parseInt(document.getElementById('zPeriodSelect').value);
+            zEntry = parseFloat(document.getElementById('zEntrySelect').value);
+            rsiPeriod = parseInt(document.getElementById('rsiPeriodSelect').value);
+            emaPeriod = parseInt(document.getElementById('emaPeriodSelect').value);
+            tradingMode = document.getElementById('tradingModeSelect').value;
+            
+            document.getElementById('symbolDisplay').innerHTML = currentSymbol;
+            document.getElementById('timeframeDisplay').innerHTML = currentTimeframe;
+            document.getElementById('lowerLabel').innerHTML = `-${zEntry}`;
+            document.getElementById('upperLabel').innerHTML = `+${zEntry}`;
+            
+            let isCrypto = (currentSymbol === 'BTC/USD' || currentSymbol === 'ETH/USD' || currentSymbol === 'BNB/USD' || currentSymbol === 'SOL/USD' || currentSymbol === 'XRP/USD' || currentSymbol === 'ADA/USD' || currentSymbol === 'ETH/BTC');
+            document.getElementById('dataSourceDisplay').innerHTML = isCrypto ? 'Binance ✓' : 'Twelve Data ✓';
+            
+            historicalData = await fetchDataForSymbol(currentSymbol, currentTimeframe);
+            if(!historicalData || historicalData.length === 0) {
+                document.getElementById('priceValue').innerHTML = 'No Data';
+                return;
+            }
+            
+            let closes = historicalData.map(d=>d.close);
+            currentPrice = closes[closes.length-1];
+            currentRSI = calculateRSI(closes, rsiPeriod);
+            prevRSI = calculateRSI(closes.slice(0,-1), rsiPeriod);
+            currentRSI7 = calculateRSI(closes, 7);
+            emaValues = calculateEMA(closes, emaPeriod);
+            currentEMA = emaValues[emaValues.length-1];
+            currentZScore = calculateZScore(closes, currentPrice);
+            
+            let rsiBuy = (prevRSI <= 45 && currentRSI >= 50);
+            let rsiSell = (prevRSI >= 55 && currentRSI <= 50);
+            let priceAboveEMA = currentPrice > currentEMA;
+            
+            let p = currentSymbol === 'XAU/USD' ? 2 : (currentSymbol.includes('JPY') ? 3 : (currentSymbol.includes('BTC')||currentSymbol.includes('ETH')? (currentSymbol === 'ETH/BTC' ? 8 : 2) : 5));
+            document.getElementById('priceValue').innerHTML = currentPrice.toFixed(p);
+            document.getElementById('priceChange').innerHTML = `EMA50: ${currentEMA.toFixed(p)}`;
+            document.getElementById('zValue').innerHTML = currentZScore.toFixed(2);
+            let pos = ((currentZScore+3)/6)*100;
+            document.getElementById('meterIndicator').style.left = `${Math.min(100,Math.max(0,pos))}%`;
+            
+            document.getElementById('rsiFast').innerHTML = currentRSI7.toFixed(1);
+            document.getElementById('rsiSlow').innerHTML = currentRSI.toFixed(1);
+            document.getElementById('emaDisplay').innerHTML = currentEMA.toFixed(p);
+            document.getElementById('priceVsEma').innerHTML = priceAboveEMA ? '▲ Above (Bullish)' : '▼ Below (Bearish)';
+            document.getElementById('priceVsEma').style.color = priceAboveEMA ? '#00ff88' : '#ff4444';
+            
+            let phase = Math.abs(currentZScore) > zEntry ? (currentZScore<0 ? '⏳ OVERSOLD' : '⚠️ OVERBOUGHT') : (Math.abs(currentZScore)<0.5 ? '🛑 EXHAUSTED' : '⚡ MID');
+            document.getElementById('phaseDisplay').innerHTML = phase;
+            
+            document.getElementById('zReady').innerHTML = Math.abs(currentZScore) > zEntry ? '✅ Ready' : `Need ±${zEntry}`;
+            document.getElementById('rsiReady').innerHTML = (rsiBuy || rsiSell) ? '✅ Ready' : 'Need 45→50 or 55→50';
+            
+            let trendReady = false;
+            if (tradingMode === "aggressive") {
+                trendReady = true;
+                document.getElementById('trendReady').innerHTML = '✅ Mode: Aggressive (No EMA filter)';
+            } else {
+                trendReady = ((currentZScore<-zEntry && priceAboveEMA) || (currentZScore>zEntry && !priceAboveEMA));
+                document.getElementById('trendReady').innerHTML = trendReady ? '✅ Ready' : 'Need EMA alignment';
+            }
+            
+            let buySignal = false, sellSignal = false;
+            if (tradingMode === "aggressive") {
+                buySignal = (currentZScore < -zEntry && currentRSI >= 30 && currentRSI <= 45);
+                sellSignal = (currentZScore > zEntry && currentRSI >= 55 && currentRSI <= 70);
+            } else {
+                buySignal = (currentZScore < -zEntry && currentRSI >= 30 && currentRSI <= 45 && priceAboveEMA);
+                sellSignal = (currentZScore > zEntry && currentRSI >= 55 && currentRSI <= 70 && !priceAboveEMA);
+            }
+            
+            let quality = calculateRealQuality(currentZScore, currentRSI, priceAboveEMA, buySignal, sellSignal);
+            document.getElementById('signalQuality').innerHTML = `${quality}% ${quality>=70?'🔥 STRONG':(quality>=50?'⚠️ MEDIUM':'❌ WEAK')}`;
+            
+            let signalObj = {action:'⚪ NO ACTION', color:'signal-neutral', detail:'No clear signal'};
+            if (buySignal) {
+                signalObj = {action:'🟢 BUY', color:'signal-buy', detail:'Z extreme + RSI ready'};
+            } else if (sellSignal) {
+                signalObj = {action:'🔴 SELL', color:'signal-sell', detail:'Z extreme + RSI ready'};
+            } else if (Math.abs(currentZScore) < 0.5) {
+                signalObj = {action:'📤 TAKE PROFITS', color:'signal-exit', detail:'Z returned to neutral'};
+            }
+            
+            document.getElementById('signalBox').className = `signal-box ${signalObj.color}`;
+            document.getElementById('signalText').innerHTML = signalObj.action;
+            document.getElementById('signalSubtext').innerHTML = signalObj.detail;
+            
+            let cd = Math.max(0, 300 - Math.floor((Date.now()-lastSignalTime)/1000));
+            document.getElementById('cooldownDisplay').innerHTML = cd>0 ? `⏱️ Cooldown: ${cd}s` : '✅ Ready';
+            
+            updateRotationStatus();
+            updatePaperTradingUI();
+        } catch(e) {
+            console.log("Fetch data error:", e);
+            document.getElementById('priceValue').innerHTML = 'Loading...';
         }
-        
-        let closes = historicalData.map(d=>d.close);
-        currentPrice = closes[closes.length-1];
-        currentRSI = calculateRSI(closes, rsiPeriod);
-        prevRSI = calculateRSI(closes.slice(0,-1), rsiPeriod);
-        currentRSI7 = calculateRSI(closes, 7);
-        emaValues = calculateEMA(closes, emaPeriod);
-        currentEMA = emaValues[emaValues.length-1];
-        currentZScore = calculateZScore(closes, currentPrice);
-        
-        let rsiBuy = (prevRSI <= 45 && currentRSI >= 50);
-        let rsiSell = (prevRSI >= 55 && currentRSI <= 50);
-        let priceAboveEMA = currentPrice > currentEMA;
-        
-        let p = currentSymbol === 'XAU/USD' ? 2 : (currentSymbol.includes('JPY') ? 3 : (currentSymbol.includes('BTC')||currentSymbol.includes('ETH')? (currentSymbol === 'ETH/BTC' ? 8 : 2) : 5));
-        document.getElementById('priceValue').innerHTML = currentPrice.toFixed(p);
-        document.getElementById('priceChange').innerHTML = `EMA50: ${currentEMA.toFixed(p)}`;
-        document.getElementById('zValue').innerHTML = currentZScore.toFixed(2);
-        let pos = ((currentZScore+3)/6)*100;
-        document.getElementById('meterIndicator').style.left = `${Math.min(100,Math.max(0,pos))}%`;
-        
-        document.getElementById('rsiFast').innerHTML = currentRSI7.toFixed(1);
-        document.getElementById('rsiSlow').innerHTML = currentRSI.toFixed(1);
-        document.getElementById('emaDisplay').innerHTML = currentEMA.toFixed(p);
-        document.getElementById('priceVsEma').innerHTML = priceAboveEMA ? '▲ Above (Bullish)' : '▼ Below (Bearish)';
-        document.getElementById('priceVsEma').style.color = priceAboveEMA ? '#00ff88' : '#ff4444';
-        
-        let phase = Math.abs(currentZScore) > zEntry ? (currentZScore<0 ? '⏳ OVERSOLD' : '⚠️ OVERBOUGHT') : (Math.abs(currentZScore)<0.5 ? '🛑 EXHAUSTED' : '⚡ MID');
-        document.getElementById('phaseDisplay').innerHTML = phase;
-        
-        document.getElementById('zReady').innerHTML = Math.abs(currentZScore) > zEntry ? '✅ Ready' : `Need ±${zEntry}`;
-        document.getElementById('rsiReady').innerHTML = (rsiBuy || rsiSell) ? '✅ Ready' : 'Need 45→50 or 55→50';
-        
-        let trendReady = false;
-        if (tradingMode === "aggressive") {
-            trendReady = true;
-            document.getElementById('trendReady').innerHTML = '✅ Mode: Aggressive (No EMA filter)';
-        } else {
-            trendReady = ((currentZScore<-zEntry && priceAboveEMA) || (currentZScore>zEntry && !priceAboveEMA));
-            document.getElementById('trendReady').innerHTML = trendReady ? '✅ Ready' : 'Need EMA alignment';
-        }
-        
-        // FIXED: Signal box now correctly shows BUY/SELL for selected symbol
-        let buySignal = false;
-        let sellSignal = false;
-        
-        if (tradingMode === "aggressive") {
-            buySignal = (currentZScore < -zEntry && currentRSI >= 30 && currentRSI <= 45);
-            sellSignal = (currentZScore > zEntry && currentRSI >= 55 && currentRSI <= 70);
-        } else {
-            buySignal = (currentZScore < -zEntry && currentRSI >= 30 && currentRSI <= 45 && priceAboveEMA);
-            sellSignal = (currentZScore > zEntry && currentRSI >= 55 && currentRSI <= 70 && !priceAboveEMA);
-        }
-        
-        let quality = calculateRealQuality(currentZScore, currentRSI, priceAboveEMA, buySignal, sellSignal);
-        document.getElementById('signalQuality').innerHTML = `${quality}% ${quality>=70?'🔥 STRONG':(quality>=50?'⚠️ MEDIUM':'❌ WEAK')}`;
-        
-        let signalObj = {action:'⚪ NO ACTION', color:'signal-neutral', detail:'No clear signal'};
-        if (buySignal) {
-            signalObj = {action:'🟢 BUY', color:'signal-buy', detail:'Z extreme + RSI ready'};
-        } else if (sellSignal) {
-            signalObj = {action:'🔴 SELL', color:'signal-sell', detail:'Z extreme + RSI ready'};
-        } else if (Math.abs(currentZScore) < 0.5) {
-            signalObj = {action:'📤 TAKE PROFITS', color:'signal-exit', detail:'Z returned to neutral'};
-        }
-        
-        document.getElementById('signalBox').className = `signal-box ${signalObj.color}`;
-        document.getElementById('signalText').innerHTML = signalObj.action;
-        document.getElementById('signalSubtext').innerHTML = signalObj.detail;
-        
-        let cd = Math.max(0, 300 - Math.floor((Date.now()-lastSignalTime)/1000));
-        document.getElementById('cooldownDisplay').innerHTML = cd>0 ? `⏱️ Cooldown: ${cd}s` : '✅ Ready';
-        
-        updateRotationStatus();
     }
     
     function startAutoScan() {
@@ -1184,9 +1477,6 @@
         document.getElementById('intervalDisplay').innerHTML = intervalMinutes;
         autoScanInterval = setInterval(() => { if(isLicensed) scanAllMarketsAndAlert(); }, intervalMinutes * 60 * 1000);
     }
-    
-    document.getElementById('autoScanInterval').addEventListener('change', function() { if(autoScanInterval) startAutoScan(); });
-    document.getElementById('tradingModeSelect').addEventListener('change', function() { refreshData(); });
     
     // ========== LICENSE SYSTEM ==========
     function loadLicenseStatus() {
@@ -1232,12 +1522,24 @@
     function showDashboard() {
         document.getElementById('licenseOverlay').classList.add('hidden');
         document.getElementById('mainDashboard').classList.remove('hidden');
+        
+        // Initialize paper trading FIRST
+        loadPaperTradingData();
+        
+        document.getElementById('telegramToken').value = telegramBotToken;
+        document.getElementById('telegramChatId').value = telegramChatId;
+        updateTelegramStatus();
+        
         if(refreshInterval) clearInterval(refreshInterval);
         refreshInterval = setInterval(() => { if(isLicensed) fetchData(); }, 60000);
         startAutoScan();
         startLiveClock();
+        
         fetchData();
-        setTimeout(() => { scanAllMarketsAndAlert(); updateRotationStatus(); }, 2000);
+        setTimeout(() => { 
+            scanAllMarketsAndAlert(); 
+            updateRotationStatus(); 
+        }, 2000);
     }
     
     function showActivationScreen() {
@@ -1255,6 +1557,19 @@
         document.getElementById('licensePanel').classList.remove('hidden');
         document.getElementById('expiredPanel').classList.add('hidden');
     }
+    
+    // Make functions global for onclick
+    window.setFunds = setFunds;
+    window.resetFunds = resetFunds;
+    window.executeTrade = executeTrade;
+    window.closePosition = closePosition;
+    window.saveTelegramSettings = saveTelegramSettings;
+    window.testAlert = testAlert;
+    window.refreshData = refreshData;
+    window.scanAllMarkets = scanAllMarkets;
+    window.startTrial = startTrial;
+    window.activateLicense = activateLicense;
+    window.showActivation = showActivation;
     
     loadLicenseStatus();
 </script>
