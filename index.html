@@ -164,6 +164,67 @@
         .telegram-status.configured { color: #00ff88; }
         .telegram-status.not-configured { color: #ff8800; }
         
+        /* REFERRAL SECTION - BITGET */
+        .referral-section {
+            background: linear-gradient(135deg, #1a1a2e, #0a0a0a);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 15px;
+            border: 2px solid #FFD700;
+            position: relative;
+            overflow: hidden;
+        }
+        .referral-section::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,215,0,0.1), transparent);
+            animation: shine 3s infinite;
+        }
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%); }
+            100% { transform: translateX(100%) translateY(100%); }
+        }
+        .referral-title {
+            font-size: 1.2rem;
+            color: #FFD700;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .referral-benefits {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin: 15px 0;
+        }
+        .benefit-item {
+            background: rgba(255,215,0,0.1);
+            padding: 8px 12px;
+            border-radius: 10px;
+            font-size: 0.75rem;
+        }
+        .referral-btn {
+            background: linear-gradient(90deg, #FFD700, #FF8C00);
+            color: #000;
+            padding: 12px 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 40px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
+        .referral-btn:hover {
+            transform: scale(1.02);
+            background: linear-gradient(90deg, #FFE44D, #FFA500);
+        }
+        
         .license-overlay {
             position: fixed;
             top: 0;
@@ -454,7 +515,7 @@
                 </div>
                 <div style="display:flex; gap:10px;"><button class="btn-buy" style="flex:1;" onclick="executeTrade('BUY')">🟢 EXECUTE BUY</button><button class="btn-sell" style="flex:1;" onclick="executeTrade('SELL')">🔴 EXECUTE SELL</button></div>
                 <div style="margin-top:15px;"><div class="card-title" style="font-size:0.9rem;">📋 OPEN POSITIONS</div>
-                <div style="max-height:180px; overflow-y:auto;"><table class="positions-table"><thead><tr><th>Coin</th><th>Type</th><th>Entry</th><th>Amount</th><th>Current</th><th>P&L</th><th></th></tr></thead>
+                <div style="max-height:180px; overflow-y:auto;"><table class="positions-table"><thead></table><th>Coin</th><th>Type</th><th>Entry</th><th>Amount</th><th>Current</th><th>P&L</th><th></th></tr></thead>
                 <tbody id="positionsBody"><tr><td colspan="7">No positions</td</tr</tbody></table></div></div>
             </div>
             
@@ -467,6 +528,31 @@
                     <div style="margin-top:8px;"><label>📱 Chat ID:</label><input type="text" id="telegramChatId" style="width:100%;"></div>
                     <div class="telegram-status" id="telegramStatus">⚠️ Not configured</div>
                 </div>
+            </div>
+            
+            <!-- BITGET REFERRAL SECTION - INTEGRATED CODE AUTO-APPLIES -->
+            <div class="referral-section">
+                <div class="referral-title">
+                    <span>🚀</span>
+                    <span>READY TO TRADE WITH REAL MONEY?</span>
+                    <span>🚀</span>
+                </div>
+                <p style="font-size:0.85rem; margin-bottom:10px;">Get started on <strong style="color:#FFD700;">Bitget</strong> - One of the world's leading crypto exchanges!</p>
+                
+                <div class="referral-benefits">
+                    <div class="benefit-item">💰 <strong>Up to $5,000</strong> Bonus</div>
+                    <div class="benefit-item">📉 <strong>20% Fee Discount</strong></div>
+                    <div class="benefit-item">🔒 <strong>Secure & Trusted</strong></div>
+                    <div class="benefit-item">🚀 <strong>Spot + Futures + Copy Trading</strong></div>
+                </div>
+                
+                <!-- DIRECT REFERRAL LINK - CODE AUTO-APPLIED, NO MANUAL ENTRY NEEDED -->
+                <button class="referral-btn" onclick="window.open('https://www.bitget.com/referral/register?clacCode=31734NNX', '_blank')">
+                    🔥 CLAIM YOUR BONUS & START TRADING 🔥
+                </button>
+                <p style="font-size:0.65rem; color:#888; margin-top:10px; text-align:center;">
+                    ✅ Your referral code <strong style="color:#FFD700;">31734NNX</strong> will be applied automatically!
+                </p>
             </div>
         </div>
     </div>
@@ -587,13 +673,18 @@
             let pnl = val - pos.amount;
             total += val;
             let prec = pos.symbol.includes('BTC')||pos.symbol.includes('ETH')? (pos.symbol==='ETH/BTC'?8:2) : 4;
-            html += `<tr><td><strong>${pos.symbol}</strong></td><td style="color:${pos.type==='BUY'?'#00ff88':'#ff4444'}">${pos.type}</td>
-                    <td>${pos.entryPrice.toFixed(prec)}</td><td>$${pos.amount.toFixed(2)}</td>
-                    <td>${curr.toFixed(prec)}</td><td class="${pnl>=0?'profit-positive':'profit-negative'}">${pnl>=0?'▲':'▼'} $${Math.abs(pnl).toFixed(2)}</td>
-                    <td><button class="close-btn" onclick="closePosition(${pos.id})">✖</button></td></tr>`;
+            html += `<tr>
+                <td><strong>${pos.symbol}</strong></td>
+                <td><td style="color:${pos.type==='BUY'?'#00ff88':'#ff4444'}">${pos.type}</td>
+                <td>${pos.entryPrice.toFixed(prec)}</td>
+                <td>$${pos.amount.toFixed(2)}</td>
+                <td>${curr.toFixed(prec)}</td>
+                <td class="${pnl>=0?'profit-positive':'profit-negative'}">${pnl>=0?'▲':'▼'} $${Math.abs(pnl).toFixed(2)}</td>
+                <td><button class="close-btn" onclick="closePosition(${pos.id})">✖</button></td>
+              </tr>`;
         }
         document.getElementById('totalValue').innerHTML = `$${total.toFixed(2)}`;
-        document.getElementById('positionsBody').innerHTML = html || '<td><td colspan="7">No positions</td</tr';
+        document.getElementById('positionsBody').innerHTML = html || '<tr><td colspan="7">No positions</td</tr';
     }
     
     // ========== TECHNICAL INDICATORS ==========
@@ -635,7 +726,6 @@
     async function fetchBinanceData(symbol, interval, limit=150) {
         const map = {'15m':'15m','1h':'1h','4h':'4h','1d':'1d'};
         let bs = symbol.replace('/','');
-        if(bs === 'BTCUSDT') bs='BTCUSDT';
         const url = `https://api.binance.com/api/v3/klines?symbol=${bs}&interval=${map[interval]}&limit=${limit}`;
         try {
             const resp = await fetch(url);
@@ -702,7 +792,6 @@
                 const rsi = calculateRSI(closes, 14);
                 const ema = calculateEMA(closes, 50).pop();
                 const aboveEma = price > ema;
-                const prevPrice = closes[closes.length-2];
                 const change24h = ((price - data[0].close) / data[0].close * 100).toFixed(2);
                 let buyReady = false, sellReady = false;
                 if(tradingMode === "aggressive") {
@@ -745,7 +834,7 @@
         results.sort((a,b)=>Math.abs(b.z)-Math.abs(a.z));
         let html='';
         for(let r of results) {
-            if(r.error) { html += `<tr><td><strong>${r.name}</strong></td><td colspan="7">⚠️ No data</td></tr>`; continue; }
+            if(r.error) { html += `<tr><td colspan="8">⚠️ ${r.name} No data</td</tr`; continue; }
             html += `<tr class="${r.rowCls}">
                         <td><strong>${r.name}</strong><br><span style="font-size:0.6rem;">${r.pair}</span></td>
                         <td style="font-family:monospace;">$${r.price.toFixed(r.pair==='ETH/BTC'?6:4)}</td>
@@ -759,7 +848,6 @@
         }
         document.getElementById('scannerBody').innerHTML = html;
         document.getElementById('scanStatus').innerHTML = `Last scan: ${new Date().toLocaleTimeString()} | ${results.length} analyzed`;
-        // Update signals display
         const sigBody = document.getElementById('signalsBody');
         let sigHtml = allSignals.slice(0,15).map(s=>`<tr><td>${s.time.toLocaleTimeString()}</td><td><strong>${s.symbol}</strong></td><td><span class="badge ${s.type==='BUY'?'badge-buy':'badge-sell'}">${s.type}</span></td><td>$${s.price.toFixed(2)}</td><td>${s.zScore.toFixed(2)}</td></tr>`).join('');
         sigBody.innerHTML = sigHtml || '<tr><td colspan="5">No signals</td</tr';
@@ -820,7 +908,6 @@
         document.getElementById('signalSubtext').innerHTML = signalObj.detail;
         let cd = Math.max(0, 300 - Math.floor((Date.now()-lastSignalTime)/1000));
         document.getElementById('cooldownDisplay').innerHTML = cd>0 ? `⏱️ Cooldown: ${cd}s` : '✅ Ready';
-        // Trend info for current coin
         if(historicalData.length > 1) {
             const prevPrice = historicalData[historicalData.length-2].close;
             const change = ((currentPrice - prevPrice) / prevPrice * 100).toFixed(2);
@@ -838,7 +925,6 @@
     document.getElementById('autoScanInterval').addEventListener('change', startAutoScan);
     document.getElementById('tradingModeSelect').addEventListener('change', refreshData);
     
-    // Build trade symbol dropdown
     function buildTradeSymbols() { const sel = document.getElementById('tradeSymbol'); sel.innerHTML = cryptoPairs.filter(p => p.symbol !== 'ETH/BTC').map(p => `<option value="${p.symbol}">${p.name} (${p.symbol})</option>`).join(''); }
     
     // ========== LICENSE ==========
