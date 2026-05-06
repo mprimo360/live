@@ -454,7 +454,7 @@
             <div class="card-title">🔍 MARKET SCANNER (20+ Coins)</div>
             <div style="max-height: 500px; overflow-y: auto;">
                 <table class="scanner-table" id="scannerTable">
-                    <thead><tr><th>Coin</th><th>Price</th><th>24h%</th><th>Z-Score</th><th>Signal</th><th>RSI</th><th>vs EMA</th><th>Quality</th></td></thead>
+                    <thead><tr><th>Coin</th><th>Price</th><th>24h%</th><th>Z-Score</th><th>Signal</th><th>RSI</th><th>vs EMA</th><th>Quality</th></tr></thead>
                     <tbody id="scannerBody"><tr><td colspan="8">Click "Scan All"</td</tr</tbody>
                 </table>
             </div>
@@ -495,7 +495,7 @@
                 </div>
             </div>
             
-            <!-- FIXED PAPER TRADING SECTION -->
+            <!-- PAPER TRADING SECTION -->
             <div class="paper-trading-panel">
                 <div class="card-title">💰 PAPER TRADING</div>
                 <div class="balance-display">
@@ -623,7 +623,7 @@
     let allSignals = [], historicalData = [], currentRSI = 50, prevRSI = 50, currentRSI7 = 50;
     let currentEMA = null, emaValues = [], lastSignalTime = 0, currentPrice = 0, currentZScore = 0;
     
-    // ========== PAPER TRADING (FIXED) ==========
+    // ========== PAPER TRADING ==========
     let cashBalance = 10000;
     let positions = [];
     
@@ -842,38 +842,62 @@
     function updateSession() {
         const now = new Date();
         const h = now.getUTCHours();
-        let active = "", best = "";
-        if(h>=0 && h<9) { active="Asian"; best="JPY pairs (Forex not in crypto)"; }
-        else if(h>=8 && h<17) { active="London"; best="EUR/GBP (Forex not in crypto)"; }
-        else if(h>=13 && h<22) { active="New York"; best="USD pairs (Forex not in crypto)"; }
-        else { active="Between Sessions"; best="Reduced liquidity"; }
-        document.getElementById('sessionInfo').innerHTML = `📅 ${now.toUTCString()}<br>🔴 ${active}<br>📊 Crypto 24/7, peaks during ${active}`;
+        let active = "";
+        if(h>=0 && h<9) active="Asian Session";
+        else if(h>=8 && h<17) active="London Session";
+        else if(h>=13 && h<22) active="New York Session";
+        else active="Between Sessions";
+        document.getElementById('sessionInfo').innerHTML = `📅 ${now.toUTCString()}<br>🔴 ${active}<br>📊 Crypto 24/7`;
         document.getElementById('liveClock').innerHTML = now.toUTCString().split(' ')[4];
     }
+    
     function startClock() { if(clockInterval) clearInterval(clockInterval); clockInterval = setInterval(()=>{ updateSession(); }, 1000); }
     
     // ========== TELEGRAM ==========
-    function saveTelegramSettings() { telegramBotToken = document.getElementById('telegramToken').value.trim(); telegramChatId = document.getElementById('telegramChatId').value.trim(); localStorage.setItem('telegram_bot_token', telegramBotToken); localStorage.setItem('telegram_chat_id', telegramChatId); document.getElementById('telegramStatus').innerHTML = telegramBotToken ? '✅ Configured' : '⚠️ Not configured'; showToast('✅ Saved'); }
+    function saveTelegramSettings() { telegramBotToken = document.getElementById('telegramToken').value.trim(); telegramChatId = document.getElementById('telegramChatId').value.trim(); localStorage.setItem('telegram_bot_token', telegramBotToken); localStorage.setItem('telegram_chat_id', telegramChatId); updateTelegramStatus(); showToast('✅ Saved'); }
     function updateTelegramStatus() { const s = document.getElementById('telegramStatus'); if(telegramBotToken && telegramChatId) { s.innerHTML='✅ Configured'; s.className='telegram-status configured'; } else { s.innerHTML='⚠️ Not configured'; s.className='telegram-status not-configured'; } }
     function sendTelegramAlert(msg, type, sym, price, z) { if(!telegramBotToken || !telegramChatId) return; fetch(`https://api.telegram.org/bot${telegramBotToken}/sendMessage`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ chat_id:telegramChatId, text:`🔔 *CRYPTO ROTATOR* 🔔\n\n*${type}* on ${sym}\n${msg}\nZ: ${z}\n${new Date().toLocaleString()}`, parse_mode:'Markdown' }) }).catch(e=>console.log(e)); }
     function sendAlert(msg, type, sym, price, z) { try { new Audio('data:audio/wav;base64,U3RlYWx0aCBzb3VuZA==').play().catch(e=>{}); } catch(e){} sendTelegramAlert(msg,type,sym,price,z); showToast(`📱 ${type} on ${sym}`); console.log(`${type} on ${sym}`); }
     function testAlert() { sendAlert('✅ TEST: Bot working!', 'TEST', currentSymbol, currentPrice, currentZScore); }
     
-    // ========== SCANNER ==========
+    // ========== SCANNER (FIXED 24h CHANGE USING BINANCE TICKER API) ==========
     async function scanAllMarkets() {
         console.log("🔄 Scanning all crypto...");
         document.getElementById('scannerBody').innerHTML = '<tr><td colspan="8">🔄 Scanning...</td</tr';
         let results = [];
+        
         for(let pair of scannerSymbols) {
             const data = await fetchBinanceData(pair, currentTimeframe);
-            if(data && data.length>50) {
+            if(data && data.length > 50) {
                 const closes = data.map(d=>d.close);
                 const price = closes[closes.length-1];
                 const z = calculateZScore(closes, price);
                 const rsi = calculateRSI(closes, 14);
                 const ema = calculateEMA(closes, 50).pop();
                 const aboveEma = price > ema;
-                const change24h = ((price - data[0].close) / data[0].close * 100).toFixed(2);
+                
+                // FIXED: Get accurate 24h change from Binance 24hr ticker API
+                let change24h = 0;
+                try {
+                    const symbolForTicker = pair.replace('/', '');
+                    const tickerUrl = `https://api.binance.com/api/v3/ticker/24hr?symbol=${symbolForTicker}`;
+                    const tickerRes = await fetch(tickerUrl);
+                    const tickerData = await tickerRes.json();
+                    if(tickerData && tickerData.priceChangePercent) {
+                        change24h = parseFloat(tickerData.priceChangePercent);
+                    }
+                } catch(e) {
+                    console.warn(`Ticker error for ${pair}, using fallback`);
+                    // Fallback: compare with candle 24 intervals ago
+                    const intervalMinutes = { '15m': 15, '1h': 60, '4h': 240, '1d': 1440 };
+                    const minutesPerCandle = intervalMinutes[currentTimeframe] || 60;
+                    const candlesPerDay = Math.floor(1440 / minutesPerCandle);
+                    const dayAgoIndex = Math.min(closes.length - 1, candlesPerDay);
+                    if(dayAgoIndex > 0 && dayAgoIndex < closes.length) {
+                        change24h = ((price - closes[closes.length - 1 - dayAgoIndex]) / closes[closes.length - 1 - dayAgoIndex]) * 100;
+                    }
+                }
+                
                 let buyReady = false, sellReady = false;
                 if(tradingMode === "aggressive") {
                     buyReady = (z < -zEntry && rsi >= 30 && rsi <= 45);
@@ -882,40 +906,54 @@
                     buyReady = (z < -zEntry && rsi >= 30 && rsi <= 45 && aboveEma);
                     sellReady = (z > zEntry && rsi >= 55 && rsi <= 70 && !aboveEma);
                 }
+                
                 const rotationBoost = (ethBtcRotation.z < -1.5 && (pair === 'ETH/USDT' || pair === 'ETH/BTC')) ? 15 : (ethBtcRotation.z > 1.5 && pair === 'BTC/USDT') ? 15 : 0;
                 const quality = Math.min(100, calcQuality(z, rsi, aboveEma, buyReady, sellReady) + rotationBoost);
                 const now = Date.now();
+                
                 if(buyReady && now - (lastAlertSent[pair]||0) > 300000) {
                     lastAlertSent[pair] = now;
-                    const msg = `🟢 BUY on ${pair} | Price: ${price.toFixed(pair==='ETH/BTC'?8:2)} | Z: ${z.toFixed(2)} | RSI: ${rsi.toFixed(0)} | Quality: ${quality}%`;
+                    const msg = `🟢 BUY on ${pair} | Price: $${price.toFixed(pair==='ETH/BTC'?6:2)} | Z: ${z.toFixed(2)} | RSI: ${rsi.toFixed(0)} | Quality: ${quality}%`;
                     sendAlert(msg, 'BUY', pair, price, z);
                     allSignals.unshift({time:new Date(), symbol: pair, type:'BUY', price, zScore:z});
                 }
                 if(sellReady && now - (lastAlertSent[pair]||0) > 300000) {
                     lastAlertSent[pair] = now;
-                    const msg = `🔴 SELL on ${pair} | Price: ${price.toFixed(pair==='ETH/BTC'?8:2)} | Z: ${z.toFixed(2)} | RSI: ${rsi.toFixed(0)} | Quality: ${quality}%`;
+                    const msg = `🔴 SELL on ${pair} | Price: $${price.toFixed(pair==='ETH/BTC'?6:2)} | Z: ${z.toFixed(2)} | RSI: ${rsi.toFixed(0)} | Quality: ${quality}%`;
                     sendAlert(msg, 'SELL', pair, price, z);
                     allSignals.unshift({time:new Date(), symbol: pair, type:'SELL', price, zScore:z});
                 }
+                
                 let signal = '--', cls = 'badge-wait', rowCls = '';
                 if(buyReady) { signal='BUY NOW'; cls='badge-buy'; rowCls='scanner-row-buy'; }
                 else if(sellReady) { signal='SELL NOW'; cls='badge-sell'; rowCls='scanner-row-sell'; }
                 else if(Math.abs(z) > zEntry*0.7) { signal='Approaching'; cls='badge-approaching'; rowCls='scanner-row-neutral'; }
                 else { rowCls='scanner-row-neutral'; }
+                
                 const zColor = z < -zEntry ? '#00ff88' : (z > zEntry ? '#ff4444' : '#FFD700');
-                const changeColor = parseFloat(change24h) >= 0 ? '#00ff88' : '#ff4444';
-                const changeSymbol = parseFloat(change24h) >= 0 ? '▲' : '▼';
+                const changeColor = change24h >= 0 ? '#00ff88' : '#ff4444';
+                const changeSymbol = change24h >= 0 ? '▲' : '▼';
                 const coinInfo = cryptoPairs.find(p=>p.symbol===pair);
-                results.push({pair, name: coinInfo?.name || pair, price, change24h, z, signal, cls, rowCls, rsi, aboveEma, quality, zColor, changeColor, changeSymbol});
+                const displayName = coinInfo ? coinInfo.name : pair.split('/')[0];
+                
+                results.push({
+                    pair, name: displayName, price, change24h: Math.abs(change24h).toFixed(2),
+                    z, signal, cls, rowCls, rsi, aboveEma, quality, zColor, changeColor, changeSymbol
+                });
             } else {
                 results.push({pair, name: pair.split('/')[0], price:0, change24h:0, z:0, error:true});
             }
-            await new Promise(r=>setTimeout(r,200));
+            await new Promise(r=>setTimeout(r, 200));
         }
+        
         results.sort((a,b)=>Math.abs(b.z)-Math.abs(a.z));
-        let html='';
+        
+        let html = '';
         for(let r of results) {
-            if(r.error) { html += `<tr><td colspan="8">⚠️ ${r.name} No data</td</tr`; continue; }
+            if(r.error) { 
+                html += `<tr class="scanner-row-neutral"><td><strong>${r.name}</strong></td><td colspan="7" style="color:#ff8800;">⚠️ Data unavailable</td</tr`; 
+                continue; 
+            }
             html += `<tr class="${r.rowCls}">
                         <td><strong>${r.name}</strong><br><span style="font-size:0.6rem;">${r.pair}</span></td>
                         <td style="font-family:monospace;">$${r.price.toFixed(r.pair==='ETH/BTC'?6:4)}</td>
@@ -928,9 +966,16 @@
                       </tr>`;
         }
         document.getElementById('scannerBody').innerHTML = html;
-        document.getElementById('scanStatus').innerHTML = `Last scan: ${new Date().toLocaleTimeString()} | ${results.length} analyzed`;
+        document.getElementById('scanStatus').innerHTML = `Last scan: ${new Date().toLocaleTimeString()} | ${results.length} analyzed | 24h% from Binance ticker API`;
+        
         const sigBody = document.getElementById('signalsBody');
-        let sigHtml = allSignals.slice(0,15).map(s=>`<tr><td>${s.time.toLocaleTimeString()}</td><td><strong>${s.symbol}</strong></td><td><span class="badge ${s.type==='BUY'?'badge-buy':'badge-sell'}">${s.type}</span></td><td>$${s.price.toFixed(2)}</td><td>${s.zScore.toFixed(2)}</td></tr>`).join('');
+        let sigHtml = allSignals.slice(0,15).map(s=>`<tr>
+            <td>${s.time.toLocaleTimeString()}</td>
+            <td><strong>${s.symbol}</strong></td>
+            <td><span class="badge ${s.type==='BUY'?'badge-buy':'badge-sell'}">${s.type}</span></td>
+            <td>$${s.price.toFixed(2)}</td>
+            <td>${s.zScore.toFixed(2)}</td>
+          </tr>`).join('');
         sigBody.innerHTML = sigHtml || '<tr><td colspan="5">No signals</td</tr';
     }
     
