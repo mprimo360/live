@@ -164,7 +164,7 @@
         .telegram-status.configured { color: #00ff88; }
         .telegram-status.not-configured { color: #ff8800; }
         
-        /* REFERRAL SECTION */
+        /* REFERRAL SECTION - BITGET */
         .referral-section {
             background: linear-gradient(135deg, #1a1a2e, #0a0a0a);
             border-radius: 15px;
@@ -311,11 +311,11 @@
         .btn-buy { background: #00aa44; color: white; }
         .btn-sell { background: #ff4444; color: white; }
         .positions-table { width: 100%; font-size: 0.7rem; border-collapse: collapse; }
-        .positions-table th, .positions-table td { padding: 8px 4px; text-align: left; border-bottom: 1px solid #333; }
+        .positions-table th, .positions-table td { padding: 6px 4px; text-align: left; border-bottom: 1px solid #333; }
         .positions-table th { color: #FFD700; }
         .profit-positive { color: #00ff88; }
         .profit-negative { color: #ff4444; }
-        .close-btn { background: #ff4444; color: white; border: none; padding: 2px 10px; border-radius: 12px; cursor: pointer; font-size: 0.65rem; }
+        .close-btn { background: #ff4444; color: white; border: none; padding: 2px 8px; border-radius: 12px; cursor: pointer; font-size: 0.6rem; }
         .funds-control { display: flex; gap: 10px; margin-top: 10px; align-items: center; justify-content: center; }
         .funds-control input { width: 120px; padding: 6px; background: #2a2a3e; border: 1px solid #444; border-radius: 6px; color: #fff; text-align: center; }
         
@@ -454,7 +454,7 @@
             <div class="card-title">🔍 MARKET SCANNER (20+ Coins)</div>
             <div style="max-height: 500px; overflow-y: auto;">
                 <table class="scanner-table" id="scannerTable">
-                    <thead><tr><th>Coin</th><th>Price</th><th>24h%</th><th>Z-Score</th><th>Signal</th><th>RSI</th><th>vs EMA</th><th>Quality</th></table></thead>
+                    <thead><tr><th>Coin</th><th>Price</th><th>24h%</th><th>Z-Score</th><th>Signal</th><th>RSI</th><th>vs EMA</th><th>Quality</th></td></thead>
                     <tbody id="scannerBody"><tr><td colspan="8">Click "Scan All"</td</tr</tbody>
                 </table>
             </div>
@@ -495,95 +495,38 @@
                 </div>
             </div>
             
-            <!-- PAPER TRADING SECTION - FIXED -->
+            <!-- FIXED PAPER TRADING SECTION -->
             <div class="paper-trading-panel">
-                <div class="card-title">💰 PAPER TRADING - Virtual Portfolio</div>
+                <div class="card-title">💰 PAPER TRADING</div>
                 <div class="balance-display">
                     <div class="balance-label">💰 CASH BALANCE</div>
                     <div class="balance-amount" id="cashBalance">$10,000.00</div>
-                    <div class="balance-label" style="margin-top: 8px;">📊 TOTAL PORTFOLIO VALUE</div>
+                    <div class="balance-label" style="margin-top: 8px;">📊 TOTAL VALUE</div>
                     <div class="balance-amount" id="totalValue" style="font-size:1.5rem;">$10,000.00</div>
                 </div>
                 <div class="funds-control">
                     <input type="number" id="fundAmount" value="10000" min="1000" max="200000" step="1000">
-                    <button onclick="setFunds()" style="background:#4ECDC4;">💵 Set Balance</button>
-                    <button onclick="resetFunds()" style="background:#ff8800;">🔄 Reset to $10,000</button>
+                    <button onclick="setFunds()" style="background:#4ECDC4;">Set Balance</button>
+                    <button onclick="resetFunds()" style="background:#ff8800;">Reset</button>
                 </div>
-                <div style="font-size:0.6rem; color:#888; text-align:center; margin-top:5px;">
-                    Min: $1,000 | Max: $200,000
+                <div class="trade-controls">
+                    <div class="trade-input-group"><label>Coin</label><select id="tradeSymbol"></select></div>
+                    <div class="trade-input-group"><label>Direction</label><select id="tradeDirection"><option value="BUY">🟢 BUY</option><option value="SELL">🔴 SELL</option></select></div>
+                    <div class="trade-input-group"><label>Amount ($)</label><input type="number" id="tradeAmount" value="1000" min="100" step="100"></div>
                 </div>
-                
-                <div class="trade-controls" style="margin-top: 15px;">
-                    <div class="trade-input-group">
-                        <label>📊 Coin</label>
-                        <select id="tradeSymbol">
-                            <option value="BTC/USDT">BTC/USDT (Bitcoin)</option>
-                            <option value="ETH/USDT">ETH/USDT (Ethereum)</option>
-                            <option value="BNB/USDT">BNB/USDT (Binance Coin)</option>
-                            <option value="SOL/USDT">SOL/USDT (Solana)</option>
-                            <option value="XRP/USDT">XRP/USDT (Ripple)</option>
-                            <option value="ADA/USDT">ADA/USDT (Cardano)</option>
-                            <option value="DOGE/USDT">DOGE/USDT (Dogecoin)</option>
-                        </select>
-                    </div>
-                    <div class="trade-input-group">
-                        <label>📈 Direction</label>
-                        <select id="tradeDirection">
-                            <option value="BUY">🟢 BUY (Long)</option>
-                            <option value="SELL">🔴 SELL (Short)</option>
-                        </select>
-                    </div>
-                    <div class="trade-input-group">
-                        <label>💰 Amount ($)</label>
-                        <input type="number" id="tradeAmount" value="1000" min="100" step="100">
-                    </div>
-                </div>
-                
-                <div style="display: flex; gap: 10px;">
-                    <button class="btn-buy" style="flex:1;" onclick="executeTrade('BUY')">🟢 EXECUTE BUY</button>
-                    <button class="btn-sell" style="flex:1;" onclick="executeTrade('SELL')">🔴 EXECUTE SELL</button>
-                </div>
-                
-                <div style="margin-top: 15px;">
-                    <div class="card-title" style="font-size: 0.9rem;">📋 OPEN POSITIONS</div>
-                    <div style="max-height: 250px; overflow-y: auto;">
-                        <table class="positions-table">
-                            <thead>
-                                <tr>
-                                    <th>Coin</th>
-                                    <th>Type</th>
-                                    <th>Entry Price</th>
-                                    <th>Amount</th>
-                                    <th>Current Price</th>
-                                    <th>P&amp;L</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="positionsBody">
-                                <tr><td colspan="7">No open positions</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                <div style="display:flex; gap:10px;"><button class="btn-buy" style="flex:1;" onclick="executeTrade('BUY')">🟢 EXECUTE BUY</button><button class="btn-sell" style="flex:1;" onclick="executeTrade('SELL')">🔴 EXECUTE SELL</button></div>
+                <div style="margin-top:15px;"><div class="card-title" style="font-size:0.9rem;">📋 OPEN POSITIONS</div>
+                <div style="max-height:180px; overflow-y:auto;"><table class="positions-table"><thead><tr><th>Coin</th><th>Type</th><th>Entry</th><th>Amount</th><th>Current</th><th>P&L</th><th></th></tr></thead>
+                <tbody id="positionsBody"><tr><td colspan="7">No positions</td</tr</tbody></table></div></div>
             </div>
             
             <div class="card">
                 <div class="card-title">🎯 SIGNAL + TELEGRAM</div>
-                <div class="signal-box signal-neutral" id="signalBox">
-                    <div class="signal-text" id="signalText">WAITING</div>
-                    <div class="signal-subtext" id="signalSubtext">Analyzing...</div>
-                </div>
+                <div class="signal-box signal-neutral" id="signalBox"><div class="signal-text" id="signalText">WAITING</div><div class="signal-subtext" id="signalSubtext">Analyzing...</div></div>
                 <div class="cooldown" id="cooldownDisplay"></div>
                 <div class="telegram-settings">
-                    <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
-                        <label>🤖 Bot Token:</label>
-                        <input type="text" id="telegramToken" placeholder="@BotFather token" style="flex:2;">
-                        <button onclick="saveTelegramSettings()">Save</button>
-                    </div>
-                    <div style="margin-top:8px;">
-                        <label>📱 Chat ID:</label>
-                        <input type="text" id="telegramChatId" placeholder="@userinfobot ID" style="width:100%;">
-                    </div>
+                    <div style="display:flex; gap:10px;"><label>🤖 Bot Token:</label><input type="text" id="telegramToken" style="flex:2;"><button onclick="saveTelegramSettings()">Save</button></div>
+                    <div style="margin-top:8px;"><label>📱 Chat ID:</label><input type="text" id="telegramChatId" style="width:100%;"></div>
                     <div class="telegram-status" id="telegramStatus">⚠️ Not configured</div>
                 </div>
             </div>
@@ -615,7 +558,7 @@
     </div>
 
     <div class="grid">
-        <div class="card"><div class="card-title">📈 RSI + EMA ANALYSIS</div>
+        <div class="card"><div class="card-title">📈 RSI + EMA</div>
             <div class="dashboard-row"><span class="dashboard-label">RSI (7):</span><span class="dashboard-value" id="rsiFast">--</span></div>
             <div class="dashboard-row"><span class="dashboard-label">RSI (14):</span><span class="dashboard-value" id="rsiSlow">--</span></div>
             <div class="dashboard-row"><span class="dashboard-label">EMA50:</span><span class="dashboard-value" id="emaDisplay">--</span></div>
@@ -625,26 +568,18 @@
             <div class="dashboard-row"><span class="dashboard-label">Z-Score Ready:</span><span class="dashboard-value" id="zReady">--</span></div>
             <div class="dashboard-row"><span class="dashboard-label">RSI Ready:</span><span class="dashboard-value" id="rsiReady">--</span></div>
             <div class="dashboard-row"><span class="dashboard-label">Trend Ready:</span><span class="dashboard-value" id="trendReady">--</span></div>
-            <div class="dashboard-row"><span class="dashboard-label">Rotation Filter:</span><span class="dashboard-value" id="rotationFilter">--</span></div>
-            <div class="dashboard-row"><span class="dashboard-label">Signal Quality:</span><span class="dashboard-value" id="signalQuality">--</span></div>
+            <div class="dashboard-row"><span class="dashboard-label">Rotation:</span><span class="dashboard-value" id="rotationFilter">--</span></div>
+            <div class="dashboard-row"><span class="dashboard-label">Quality:</span><span class="dashboard-value" id="signalQuality">--</span></div>
         </div>
         <div class="card"><div class="card-title">📋 STRATEGY RULES</div>
-            <ul style="font-size:0.75rem; list-style:none;">
-                <li>🟢 <strong>BUY</strong>: Z &lt; -1.5 + RSI 30-45 + (EMA optional in Aggressive mode)</li>
-                <li>🔴 <strong>SELL</strong>: Z &gt; +1.5 + RSI 55-70 + (EMA optional in Aggressive mode)</li>
-                <li>🟡 <strong>EXIT</strong>: Z returns to ~0</li>
-                <li>🔄 <strong>ROTATION</strong>: ETH/BTC Z > +1.5 = Risk OFF (favor BTC)</li>
-                <li>🔄 <strong>ROTATION</strong>: ETH/BTC Z < -1.5 = Risk ON (favor ETH)</li>
-                <li>🤖 <strong>Alerts</strong>: Telegram ONLY (NO POPUPS!)</li>
-                <li>💰 <strong>Paper Trading</strong>: Practice with virtual money</li>
-            </ul>
+            <ul style="font-size:0.7rem;"><li>🟢 <strong>BUY</strong>: Z &lt; -1.5 + RSI 30-45</li>
+            <li>🔴 <strong>SELL</strong>: Z &gt; +1.5 + RSI 55-70</li>
+            <li>🔄 <strong>ETH/BTC</strong>: Z &lt; -1.5 = RISK ON (Favor ETH/Alts)</li>
+            <li>🤖 <strong>Alerts</strong>: Telegram only</li></ul>
         </div>
         <div class="card"><div class="card-title">🕐 RECENT SIGNALS</div>
-            <div style="max-height: 180px; overflow-y: auto;">
-                <table style="width:100%; font-size:0.7rem;"><thead><tr><th>Time</th><th>Pair</th><th>Type</th><th>Price</th><th>Z</th></tr></thead>
-                <tbody id="signalsBody"><tr><td colspan="5">No signals yet</td</tr</tbody>
-                </table>
-            </div>
+            <div style="max-height:160px; overflow-y:auto;"><table style="width:100%; font-size:0.7rem;"><thead><tr><th>Time</th><th>Coin</th><th>Type</th><th>Price</th><th>Z</th></tr></thead>
+            <tbody id="signalsBody"><tr><td colspan="5">No signals</td</tr</tbody></table></div>
         </div>
     </div>
     <div class="footer"><p>🚀 CRYPTO ROTATOR ENGINE | 20+ Coins | Binance Live Data | Z-Score + RSI + EMA | ETH/BTC Rotation | Telegram Alerts</p></div>
@@ -688,10 +623,10 @@
     let allSignals = [], historicalData = [], currentRSI = 50, prevRSI = 50, currentRSI7 = 50;
     let currentEMA = null, emaValues = [], lastSignalTime = 0, currentPrice = 0, currentZScore = 0;
     
-    // Paper Trading
-    let cashBalance = 10000, positions = [];
+    // ========== PAPER TRADING (FIXED) ==========
+    let cashBalance = 10000;
+    let positions = [];
     
-    // ========== PAPER TRADING FUNCTIONS ==========
     function loadPaperData() { 
         const b = localStorage.getItem('paper_cash'); 
         const p = localStorage.getItem('paper_positions'); 
@@ -727,12 +662,11 @@
     async function executeTrade(direction) {
         const symbol = document.getElementById('tradeSymbol').value;
         const amount = parseFloat(document.getElementById('tradeAmount').value);
-        
-        if(isNaN(amount) || amount <= 0) { showToast('❌ Please enter a valid amount'); return; }
-        if(amount < 100) { showToast('❌ Minimum trade amount is $100'); return; }
+        if(isNaN(amount) || amount <= 0) { showToast('❌ Enter amount'); return; }
+        if(amount < 100) { showToast('❌ Min trade $100'); return; }
         
         const data = await fetchBinanceData(symbol, currentTimeframe);
-        if(!data || data.length === 0) { showToast('❌ Cannot get current price for this pair'); return; }
+        if(!data || data.length === 0) { showToast('❌ No price data'); return; }
         
         const currentPrice = data[data.length-1].close;
         let pricePrec = symbol.includes('BTC') || symbol.includes('ETH') ? (symbol === 'ETH/BTC' ? 8 : 2) : 4;
@@ -760,7 +694,7 @@
         if(!position) return;
         
         const data = await fetchBinanceData(position.symbol, currentTimeframe);
-        if(!data || data.length === 0) { showToast('❌ Cannot get current price to close position'); return; }
+        if(!data || data.length === 0) { showToast('❌ Cannot get price'); return; }
         
         const currentPrice = data[data.length-1].close;
         let pnl = 0;
@@ -832,13 +766,7 @@
     }
     
     // ========== HELPER FUNCTIONS ==========
-    function showToast(msg) { 
-        const t = document.createElement('div'); 
-        t.className = 'no-popup-alert'; 
-        t.innerHTML = msg; 
-        document.body.appendChild(t); 
-        setTimeout(() => t.remove(), 3000); 
-    }
+    function showToast(msg) { const t = document.createElement('div'); t.className = 'no-popup-alert'; t.innerHTML = msg; document.body.appendChild(t); setTimeout(() => t.remove(), 3000); }
     
     // ========== TECHNICAL INDICATORS ==========
     function calculateRSI(prices, p) {
@@ -914,73 +842,28 @@
     function updateSession() {
         const now = new Date();
         const h = now.getUTCHours();
-        let active = "";
-        if(h>=0 && h<9) active="Asian Session";
-        else if(h>=8 && h<17) active="London Session";
-        else if(h>=13 && h<22) active="New York Session";
-        else active="Between Sessions";
-        document.getElementById('sessionInfo').innerHTML = `📅 ${now.toUTCString()}<br>🔴 ${active}<br>📊 Crypto 24/7, peaks during major sessions`;
+        let active = "", best = "";
+        if(h>=0 && h<9) { active="Asian"; best="JPY pairs (Forex not in crypto)"; }
+        else if(h>=8 && h<17) { active="London"; best="EUR/GBP (Forex not in crypto)"; }
+        else if(h>=13 && h<22) { active="New York"; best="USD pairs (Forex not in crypto)"; }
+        else { active="Between Sessions"; best="Reduced liquidity"; }
+        document.getElementById('sessionInfo').innerHTML = `📅 ${now.toUTCString()}<br>🔴 ${active}<br>📊 Crypto 24/7, peaks during ${active}`;
         document.getElementById('liveClock').innerHTML = now.toUTCString().split(' ')[4];
     }
-    
     function startClock() { if(clockInterval) clearInterval(clockInterval); clockInterval = setInterval(()=>{ updateSession(); }, 1000); }
     
     // ========== TELEGRAM ==========
-    function saveTelegramSettings() { 
-        telegramBotToken = document.getElementById('telegramToken').value.trim(); 
-        telegramChatId = document.getElementById('telegramChatId').value.trim(); 
-        localStorage.setItem('telegram_bot_token', telegramBotToken); 
-        localStorage.setItem('telegram_chat_id', telegramChatId); 
-        updateTelegramStatus(); 
-        showToast('✅ Telegram settings saved!'); 
-    }
-    
-    function updateTelegramStatus() { 
-        const s = document.getElementById('telegramStatus'); 
-        if(telegramBotToken && telegramChatId) { 
-            s.innerHTML='✅ Configured'; 
-            s.className='telegram-status configured'; 
-        } else { 
-            s.innerHTML='⚠️ Not configured'; 
-            s.className='telegram-status not-configured'; 
-        } 
-    }
-    
-    function sendTelegramAlert(msg, type, sym, price, z) { 
-        if(!telegramBotToken || !telegramChatId) return; 
-        fetch(`https://api.telegram.org/bot${telegramBotToken}/sendMessage`, { 
-            method:'POST', 
-            headers:{'Content-Type':'application/json'}, 
-            body:JSON.stringify({ 
-                chat_id:telegramChatId, 
-                text:`🔔 *CRYPTO ROTATOR* 🔔\n\n*${type}* on ${sym}\n${msg}\nZ: ${z}\n${new Date().toLocaleString()}`, 
-                parse_mode:'Markdown' 
-            }) 
-        }).catch(e=>console.log(e)); 
-    }
-    
-    function sendAlert(msg, type, sym, price, z) { 
-        try { 
-            new Audio('data:audio/wav;base64,U3RlYWx0aCBzb3VuZA==').play().catch(e=>{}); 
-        } catch(e){} 
-        sendTelegramAlert(msg,type,sym,price,z); 
-        showToast(`📱 ${type} on ${sym}`); 
-        console.log(`${type} on ${sym}`); 
-    }
-    
-    function testAlert() { 
-        sendAlert('✅ TEST: Your bot is working!', 'TEST', currentSymbol, currentPrice, currentZScore); 
-        showToast('📱 Test alert sent to Telegram!'); 
-    }
-    
-    function refreshData() { fetchData(); }
+    function saveTelegramSettings() { telegramBotToken = document.getElementById('telegramToken').value.trim(); telegramChatId = document.getElementById('telegramChatId').value.trim(); localStorage.setItem('telegram_bot_token', telegramBotToken); localStorage.setItem('telegram_chat_id', telegramChatId); document.getElementById('telegramStatus').innerHTML = telegramBotToken ? '✅ Configured' : '⚠️ Not configured'; showToast('✅ Saved'); }
+    function updateTelegramStatus() { const s = document.getElementById('telegramStatus'); if(telegramBotToken && telegramChatId) { s.innerHTML='✅ Configured'; s.className='telegram-status configured'; } else { s.innerHTML='⚠️ Not configured'; s.className='telegram-status not-configured'; } }
+    function sendTelegramAlert(msg, type, sym, price, z) { if(!telegramBotToken || !telegramChatId) return; fetch(`https://api.telegram.org/bot${telegramBotToken}/sendMessage`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ chat_id:telegramChatId, text:`🔔 *CRYPTO ROTATOR* 🔔\n\n*${type}* on ${sym}\n${msg}\nZ: ${z}\n${new Date().toLocaleString()}`, parse_mode:'Markdown' }) }).catch(e=>console.log(e)); }
+    function sendAlert(msg, type, sym, price, z) { try { new Audio('data:audio/wav;base64,U3RlYWx0aCBzb3VuZA==').play().catch(e=>{}); } catch(e){} sendTelegramAlert(msg,type,sym,price,z); showToast(`📱 ${type} on ${sym}`); console.log(`${type} on ${sym}`); }
+    function testAlert() { sendAlert('✅ TEST: Bot working!', 'TEST', currentSymbol, currentPrice, currentZScore); }
     
     // ========== SCANNER ==========
     async function scanAllMarkets() {
         console.log("🔄 Scanning all crypto...");
-        document.getElementById('scannerBody').innerHTML = '<tr><td colspan="8">🔄 Scanning 20+ coins...</td</tr';
+        document.getElementById('scannerBody').innerHTML = '<tr><td colspan="8">🔄 Scanning...</td</tr';
         let results = [];
-        
         for(let pair of scannerSymbols) {
             const data = await fetchBinanceData(pair, currentTimeframe);
             if(data && data.length>50) {
@@ -991,7 +874,6 @@
                 const ema = calculateEMA(closes, 50).pop();
                 const aboveEma = price > ema;
                 const change24h = ((price - data[0].close) / data[0].close * 100).toFixed(2);
-                
                 let buyReady = false, sellReady = false;
                 if(tradingMode === "aggressive") {
                     buyReady = (z < -zEntry && rsi >= 30 && rsi <= 45);
@@ -1000,50 +882,40 @@
                     buyReady = (z < -zEntry && rsi >= 30 && rsi <= 45 && aboveEma);
                     sellReady = (z > zEntry && rsi >= 55 && rsi <= 70 && !aboveEma);
                 }
-                
                 const rotationBoost = (ethBtcRotation.z < -1.5 && (pair === 'ETH/USDT' || pair === 'ETH/BTC')) ? 15 : (ethBtcRotation.z > 1.5 && pair === 'BTC/USDT') ? 15 : 0;
                 const quality = Math.min(100, calcQuality(z, rsi, aboveEma, buyReady, sellReady) + rotationBoost);
-                
                 const now = Date.now();
                 if(buyReady && now - (lastAlertSent[pair]||0) > 300000) {
                     lastAlertSent[pair] = now;
-                    const msg = `🟢 BUY on ${pair} | Price: $${price.toFixed(pair==='ETH/BTC'?6:2)} | Z: ${z.toFixed(2)} | RSI: ${rsi.toFixed(0)} | Quality: ${quality}%`;
+                    const msg = `🟢 BUY on ${pair} | Price: ${price.toFixed(pair==='ETH/BTC'?8:2)} | Z: ${z.toFixed(2)} | RSI: ${rsi.toFixed(0)} | Quality: ${quality}%`;
                     sendAlert(msg, 'BUY', pair, price, z);
                     allSignals.unshift({time:new Date(), symbol: pair, type:'BUY', price, zScore:z});
                 }
                 if(sellReady && now - (lastAlertSent[pair]||0) > 300000) {
                     lastAlertSent[pair] = now;
-                    const msg = `🔴 SELL on ${pair} | Price: $${price.toFixed(pair==='ETH/BTC'?6:2)} | Z: ${z.toFixed(2)} | RSI: ${rsi.toFixed(0)} | Quality: ${quality}%`;
+                    const msg = `🔴 SELL on ${pair} | Price: ${price.toFixed(pair==='ETH/BTC'?8:2)} | Z: ${z.toFixed(2)} | RSI: ${rsi.toFixed(0)} | Quality: ${quality}%`;
                     sendAlert(msg, 'SELL', pair, price, z);
                     allSignals.unshift({time:new Date(), symbol: pair, type:'SELL', price, zScore:z});
                 }
-                
                 let signal = '--', cls = 'badge-wait', rowCls = '';
                 if(buyReady) { signal='BUY NOW'; cls='badge-buy'; rowCls='scanner-row-buy'; }
                 else if(sellReady) { signal='SELL NOW'; cls='badge-sell'; rowCls='scanner-row-sell'; }
                 else if(Math.abs(z) > zEntry*0.7) { signal='Approaching'; cls='badge-approaching'; rowCls='scanner-row-neutral'; }
                 else { rowCls='scanner-row-neutral'; }
-                
                 const zColor = z < -zEntry ? '#00ff88' : (z > zEntry ? '#ff4444' : '#FFD700');
                 const changeColor = parseFloat(change24h) >= 0 ? '#00ff88' : '#ff4444';
                 const changeSymbol = parseFloat(change24h) >= 0 ? '▲' : '▼';
                 const coinInfo = cryptoPairs.find(p=>p.symbol===pair);
-                const displayName = coinInfo ? coinInfo.name : pair.split('/')[0];
-                
-                results.push({pair, name: displayName, price, change24h, z, signal, cls, rowCls, rsi, aboveEma, quality, zColor, changeColor, changeSymbol});
+                results.push({pair, name: coinInfo?.name || pair, price, change24h, z, signal, cls, rowCls, rsi, aboveEma, quality, zColor, changeColor, changeSymbol});
             } else {
                 results.push({pair, name: pair.split('/')[0], price:0, change24h:0, z:0, error:true});
             }
             await new Promise(r=>setTimeout(r,200));
         }
-        
         results.sort((a,b)=>Math.abs(b.z)-Math.abs(a.z));
         let html='';
         for(let r of results) {
-            if(r.error) { 
-                html += `<tr class="scanner-row-neutral"><td><strong>${r.name}</strong></td><td colspan="7" style="color:#ff8800;">⚠️ Data unavailable</td></tr>`; 
-                continue; 
-            }
+            if(r.error) { html += `<tr><td colspan="8">⚠️ ${r.name} No data</td</tr`; continue; }
             html += `<tr class="${r.rowCls}">
                         <td><strong>${r.name}</strong><br><span style="font-size:0.6rem;">${r.pair}</span></td>
                         <td style="font-family:monospace;">$${r.price.toFixed(r.pair==='ETH/BTC'?6:4)}</td>
@@ -1056,17 +928,15 @@
                       </tr>`;
         }
         document.getElementById('scannerBody').innerHTML = html;
-        document.getElementById('scanStatus').innerHTML = `Last scan: ${new Date().toLocaleTimeString()} | ${results.filter(r=>!r.error).length} analyzed`;
-        
+        document.getElementById('scanStatus').innerHTML = `Last scan: ${new Date().toLocaleTimeString()} | ${results.length} analyzed`;
         const sigBody = document.getElementById('signalsBody');
         let sigHtml = allSignals.slice(0,15).map(s=>`<tr><td>${s.time.toLocaleTimeString()}</td><td><strong>${s.symbol}</strong></td><td><span class="badge ${s.type==='BUY'?'badge-buy':'badge-sell'}">${s.type}</span></td><td>$${s.price.toFixed(2)}</td><td>${s.zScore.toFixed(2)}</td></tr>`).join('');
-        sigBody.innerHTML = sigHtml || '<tr><td colspan="5">No signals yet</td></tr';
+        sigBody.innerHTML = sigHtml || '<tr><td colspan="5">No signals</td</tr';
     }
     
     // ========== MAIN FETCH ==========
     async function fetchData() {
         if(!isLicensed) return;
-        
         currentSymbol = document.getElementById('symbolSelect').value;
         currentTimeframe = document.getElementById('timeframeSelect').value;
         zPeriod = parseInt(document.getElementById('zPeriodSelect').value);
@@ -1074,21 +944,12 @@
         rsiPeriod = parseInt(document.getElementById('rsiPeriodSelect').value);
         emaPeriod = parseInt(document.getElementById('emaPeriodSelect').value);
         tradingMode = document.getElementById('tradingModeSelect').value;
-        
         document.getElementById('symbolDisplay').innerHTML = currentSymbol;
         document.getElementById('timeframeDisplay').innerHTML = currentTimeframe;
         document.getElementById('lowerLabel').innerHTML = `-${zEntry}`;
         document.getElementById('upperLabel').innerHTML = `+${zEntry}`;
-        
-        let isCrypto = true;
-        document.getElementById('dataSourceDisplay').innerHTML = 'Binance ✓';
-        
         historicalData = await fetchBinanceData(currentSymbol, currentTimeframe);
-        if(!historicalData || historicalData.length === 0) {
-            document.getElementById('priceValue').innerHTML = 'No Data';
-            return;
-        }
-        
+        if(!historicalData || historicalData.length===0) { document.getElementById('priceValue').innerHTML = 'No Data'; return; }
         let closes = historicalData.map(d=>d.close);
         currentPrice = closes[closes.length-1];
         currentRSI = calculateRSI(closes, rsiPeriod);
@@ -1097,64 +958,37 @@
         emaValues = calculateEMA(closes, emaPeriod);
         currentEMA = emaValues[emaValues.length-1];
         currentZScore = calculateZScore(closes, currentPrice);
-        
         let rsiBuy = (prevRSI <= 45 && currentRSI >= 50);
         let rsiSell = (prevRSI >= 55 && currentRSI <= 50);
         let priceAboveEMA = currentPrice > currentEMA;
-        
         let p = currentSymbol === 'ETH/BTC' ? 8 : (currentSymbol.includes('BTC')||currentSymbol.includes('ETH')?2:4);
         document.getElementById('priceValue').innerHTML = `$${currentPrice.toFixed(p)}`;
         document.getElementById('priceChange').innerHTML = `EMA50: $${currentEMA.toFixed(p)}`;
         document.getElementById('zValue').innerHTML = currentZScore.toFixed(2);
         let pos = ((currentZScore+3)/6)*100;
         document.getElementById('meterIndicator').style.left = `${Math.min(100,Math.max(0,pos))}%`;
-        
         document.getElementById('rsiFast').innerHTML = currentRSI7.toFixed(1);
         document.getElementById('rsiSlow').innerHTML = currentRSI.toFixed(1);
         document.getElementById('emaDisplay').innerHTML = `$${currentEMA.toFixed(p)}`;
         document.getElementById('priceVsEma').innerHTML = priceAboveEMA ? '▲ Above (Bullish)' : '▼ Below (Bearish)';
         document.getElementById('priceVsEma').style.color = priceAboveEMA ? '#00ff88' : '#ff4444';
-        
         document.getElementById('zReady').innerHTML = Math.abs(currentZScore) > zEntry ? '✅ Ready' : `Need ±${zEntry}`;
         document.getElementById('rsiReady').innerHTML = (rsiBuy || rsiSell) ? '✅ Ready' : 'Need 45→50 or 55→50';
-        
-        let trendReady = false;
-        if (tradingMode === "aggressive") {
-            trendReady = true;
-            document.getElementById('trendReady').innerHTML = '✅ Mode: Aggressive (No EMA filter)';
-        } else {
-            trendReady = ((currentZScore<-zEntry && priceAboveEMA) || (currentZScore>zEntry && !priceAboveEMA));
-            document.getElementById('trendReady').innerHTML = trendReady ? '✅ Ready' : 'Need EMA alignment';
-        }
-        
+        let trendReady = tradingMode === "aggressive" ? true : ((currentZScore<-zEntry && priceAboveEMA) || (currentZScore>zEntry && !priceAboveEMA));
+        document.getElementById('trendReady').innerHTML = trendReady ? '✅ Ready' : (tradingMode==='aggressive'?'✅ Aggressive Mode':'Need EMA');
         let buySignal = false, sellSignal = false;
-        if (tradingMode === "aggressive") {
-            buySignal = (currentZScore < -zEntry && currentRSI >= 30 && currentRSI <= 45);
-            sellSignal = (currentZScore > zEntry && currentRSI >= 55 && currentRSI <= 70);
-        } else {
-            buySignal = (currentZScore < -zEntry && currentRSI >= 30 && currentRSI <= 45 && priceAboveEMA);
-            sellSignal = (currentZScore > zEntry && currentRSI >= 55 && currentRSI <= 70 && !priceAboveEMA);
-        }
-        
+        if(tradingMode === "aggressive") { buySignal = (currentZScore < -zEntry && currentRSI >= 30 && currentRSI <= 45); sellSignal = (currentZScore > zEntry && currentRSI >= 55 && currentRSI <= 70); }
+        else { buySignal = (currentZScore < -zEntry && currentRSI >= 30 && currentRSI <= 45 && priceAboveEMA); sellSignal = (currentZScore > zEntry && currentRSI >= 55 && currentRSI <= 70 && !priceAboveEMA); }
         let quality = calcQuality(currentZScore, currentRSI, priceAboveEMA, buySignal, sellSignal);
         document.getElementById('signalQuality').innerHTML = `${quality}% ${quality>=70?'🔥 STRONG':(quality>=50?'⚠️ MEDIUM':'❌ WEAK')}`;
-        
         let signalObj = {action:'⚪ NO ACTION', color:'signal-neutral', detail:'No clear signal'};
-        if (buySignal) {
-            signalObj = {action:'🟢 BUY', color:'signal-buy', detail:'Z extreme + RSI ready'};
-        } else if (sellSignal) {
-            signalObj = {action:'🔴 SELL', color:'signal-sell', detail:'Z extreme + RSI ready'};
-        } else if (Math.abs(currentZScore) < 0.5) {
-            signalObj = {action:'📤 TAKE PROFITS', color:'signal-exit', detail:'Z returned to neutral'};
-        }
-        
+        if(buySignal) signalObj = {action:'🟢 BUY', color:'signal-buy', detail:'Z extreme + RSI ready'};
+        else if(sellSignal) signalObj = {action:'🔴 SELL', color:'signal-sell', detail:'Z extreme + RSI ready'};
         document.getElementById('signalBox').className = `signal-box ${signalObj.color}`;
         document.getElementById('signalText').innerHTML = signalObj.action;
         document.getElementById('signalSubtext').innerHTML = signalObj.detail;
-        
         let cd = Math.max(0, 300 - Math.floor((Date.now()-lastSignalTime)/1000));
         document.getElementById('cooldownDisplay').innerHTML = cd>0 ? `⏱️ Cooldown: ${cd}s` : '✅ Ready';
-        
         if(historicalData.length > 1) {
             const prevPrice = historicalData[historicalData.length-2].close;
             const change = ((currentPrice - prevPrice) / prevPrice * 100).toFixed(2);
@@ -1162,87 +996,28 @@
             const trendSymbol = parseFloat(change) >= 0 ? '▲' : '▼';
             document.getElementById('coinTrend').innerHTML = `<span style="color:${trendColor}">${trendSymbol} ${Math.abs(change)}% in last hour</span>`;
         }
-        
         updateRotation();
         updatePaperUI();
     }
     
-    function startAutoScan() { 
-        if(autoScanInterval) clearInterval(autoScanInterval); 
-        const min = parseInt(document.getElementById('autoScanInterval').value) || 10; 
-        document.getElementById('intervalDisplay').innerHTML = min; 
-        autoScanInterval = setInterval(() => { if(isLicensed) scanAllMarkets(); }, min * 60 * 1000); 
-    }
+    function startAutoScan() { if(autoScanInterval) clearInterval(autoScanInterval); const min = parseInt(document.getElementById('autoScanInterval').value) || 10; document.getElementById('intervalDisplay').innerHTML = min; autoScanInterval = setInterval(() => { if(isLicensed) scanAllMarkets(); }, min * 60 * 1000); }
+    function refreshData() { fetchData(); }
     
     document.getElementById('autoScanInterval').addEventListener('change', startAutoScan);
     document.getElementById('tradingModeSelect').addEventListener('change', refreshData);
     
-    // ========== LICENSE SYSTEM ==========
-    function loadLicense() { 
-        let lic = localStorage.getItem('pro_license_code'); 
-        let exp = localStorage.getItem('pro_license_expiry'); 
-        let trial = localStorage.getItem('pro_trial_start'); 
-        if(lic && exp && new Date(exp) > new Date()) { 
-            isLicensed=true; 
-            showDashboard(); 
-            return true; 
-        } 
-        if(trial && new Date(new Date(trial).getTime()+14*24*60*60*1000) > new Date()) { 
-            isLicensed=true; 
-            let d=Math.ceil((new Date(new Date(trial).getTime()+14*24*60*60*1000)-new Date())/(1000*60*60*24)); 
-            document.getElementById('licenseStatusBadge').innerHTML = `🎁 Trial: ${d}d left`; 
-            showDashboard(); 
-            return true; 
-        } 
-        showActivation(); 
-        return false; 
-    }
+    function buildTradeSymbols() { const sel = document.getElementById('tradeSymbol'); sel.innerHTML = cryptoPairs.filter(p => p.symbol !== 'ETH/BTC').map(p => `<option value="${p.symbol}">${p.name} (${p.symbol})</option>`).join(''); }
     
+    // ========== LICENSE ==========
+    function loadLicense() { let lic = localStorage.getItem('pro_license_code'); let exp = localStorage.getItem('pro_license_expiry'); let trial = localStorage.getItem('pro_trial_start'); if(lic && exp && new Date(exp) > new Date()) { isLicensed=true; showDashboard(); return true; } if(trial && new Date(new Date(trial).getTime()+14*24*60*60*1000) > new Date()) { isLicensed=true; let d=Math.ceil((new Date(new Date(trial).getTime()+14*24*60*60*1000)-new Date())/(1000*60*60*24)); document.getElementById('licenseStatusBadge').innerHTML = `🎁 Trial: ${d}d`; showDashboard(); return true; } showActivation(); return false; }
     function startTrial() { localStorage.setItem('pro_trial_start', new Date().toISOString()); location.reload(); }
-    function activateLicense() { 
-        let code = document.getElementById('licenseInput').value.trim(); 
-        if(code.length>10) { 
-            let expiry=new Date(); 
-            expiry.setDate(expiry.getDate()+30); 
-            localStorage.setItem('pro_license_code',code); 
-            localStorage.setItem('pro_license_expiry',expiry.toISOString()); 
-            location.reload(); 
-        } else alert('Invalid license code'); 
-    }
+    function activateLicense() { let code = document.getElementById('licenseInput').value.trim(); if(code.length>10) { let expiry=new Date(); expiry.setDate(expiry.getDate()+30); localStorage.setItem('pro_license_code',code); localStorage.setItem('pro_license_expiry',expiry.toISOString()); location.reload(); } else alert('Invalid'); }
+    function showDashboard() { document.getElementById('licenseOverlay').classList.add('hidden'); document.getElementById('mainDashboard').classList.remove('hidden'); loadPaperData(); buildTradeSymbols(); if(refreshInterval) clearInterval(refreshInterval); refreshInterval = setInterval(()=>{if(isLicensed)fetchData();},60000); startAutoScan(); startClock(); fetchData(); setTimeout(()=>{scanAllMarkets(); updateRotation();},2000); document.getElementById('telegramToken').value = telegramBotToken; document.getElementById('telegramChatId').value = telegramChatId; updateTelegramStatus(); }
+    function showActivation() { document.getElementById('trialPanel').classList.remove('hidden'); document.getElementById('licensePanel').classList.remove('hidden'); document.getElementById('expiredPanel').classList.add('hidden'); }
     
-    function showDashboard() { 
-        document.getElementById('licenseOverlay').classList.add('hidden'); 
-        document.getElementById('mainDashboard').classList.remove('hidden'); 
-        loadPaperData(); 
-        if(refreshInterval) clearInterval(refreshInterval); 
-        refreshInterval = setInterval(()=>{if(isLicensed)fetchData();},60000); 
-        startAutoScan(); 
-        startClock(); 
-        fetchData(); 
-        setTimeout(()=>{scanAllMarkets(); updateRotation();},2000); 
-        document.getElementById('telegramToken').value = telegramBotToken; 
-        document.getElementById('telegramChatId').value = telegramChatId; 
-        updateTelegramStatus(); 
-    }
-    
-    function showActivation() { 
-        document.getElementById('trialPanel').classList.remove('hidden'); 
-        document.getElementById('licensePanel').classList.remove('hidden'); 
-        document.getElementById('expiredPanel').classList.add('hidden'); 
-    }
-    
-    // Make functions global for onclick
-    window.setFunds = setFunds;
-    window.resetFunds = resetFunds;
-    window.executeTrade = executeTrade;
-    window.closePosition = closePosition;
-    window.saveTelegramSettings = saveTelegramSettings;
-    window.testAlert = testAlert;
-    window.refreshData = refreshData;
-    window.scanAllMarkets = scanAllMarkets;
-    window.startTrial = startTrial;
-    window.activateLicense = activateLicense;
-    window.showActivation = showActivation;
+    window.setFunds=setFunds; window.resetFunds=resetFunds; window.executeTrade=executeTrade; window.closePosition=closePosition;
+    window.saveTelegramSettings=saveTelegramSettings; window.testAlert=testAlert; window.refreshData=refreshData; window.scanAllMarkets=scanAllMarkets;
+    window.startTrial=startTrial; window.activateLicense=activateLicense; window.showActivation=showActivation;
     
     loadLicense();
 </script>
