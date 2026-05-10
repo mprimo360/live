@@ -40,7 +40,7 @@
             background: rgba(0,0,0,0.3);
             font-size: 0.85rem;
         }
-        .nav-links a:hover, .nav-links a.active {
+        .nav-links a:hover {
             background: #FFD700;
             color: #000;
         }
@@ -272,7 +272,7 @@
             cursor: pointer;
             font-weight: bold;
         }
-        .unlock-section {
+        .trial-section {
             background: linear-gradient(135deg, #1a1a2e, #0a0a0a);
             border-radius: 20px;
             padding: 30px;
@@ -280,7 +280,7 @@
             border: 1px solid #FFD700;
             margin-top: 30px;
         }
-        .unlock-btn {
+        .trial-btn {
             background: linear-gradient(90deg, #FFD700, #FF6B6B);
             color: #000;
             border: none;
@@ -290,10 +290,6 @@
             font-weight: bold;
             cursor: pointer;
             margin-top: 20px;
-        }
-        .unlock-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
         }
         .quick-ref {
             background: rgba(0,0,0,0.3);
@@ -352,8 +348,8 @@
     <h1>📚 PRO ROTATOR TRADING ACADEMY</h1>
     <p>Learn how to read and act on our BUY / SELL signals – no complex formulas, just practical steps.</p>
     <div class="nav-links">
-        <a href="https://mprimo360.github.io/live">📊 Live Dashboard</a>
-        <a href="https://mprimo360.github.io/academy.html" class="active">📚 Academy</a>
+        <!-- Removed Live Dashboard and Academy self link -->
+        <a href="#" style="cursor:default; background:rgba(255,215,0,0.2);">📚 Academy</a>
     </div>
 </div>
 <div class="contact-bar">
@@ -371,7 +367,7 @@
             <div class="progress-fill" id="progressFill"></div>
         </div>
         <div style="margin-top: 8px; font-size: 0.7rem; color: #888;">
-            ✅ Complete all lessons to unlock Dashboard | 🏆 Get Certificate upon completion
+            ✅ Complete all lessons to receive your certificate.
         </div>
     </div>
 </div>
@@ -393,11 +389,11 @@
         <button class="download-certificate" onclick="downloadCertificate()">📥 Download Certificate (PNG)</button>
     </div>
 
-    <div class="unlock-section">
+    <div class="trial-section">
         <h2>🚀 Ready to Trade?</h2>
-        <p>Complete all 6 lessons to unlock the professional trading dashboard</p>
-        <button class="unlock-btn" id="unlockBtn" disabled>🔒 Complete All Lessons First</button>
-        <div id="unlockMessage" style="margin-top: 15px;"></div>
+        <p>When you finish the course and feel confident, you can request a <strong>7‑day free trial</strong>.</p>
+        <button class="trial-btn" id="trialBtn">📞 Contact Admin for 7‑Day Trial</button>
+        <div id="trialMessage" style="margin-top: 15px;"></div>
     </div>
 
     <div class="quick-ref">
@@ -413,9 +409,9 @@
     </div>
 </div>
 <footer>
-    <p>© 2026 PRO Rotator Strategy | Professional Trading Dashboard</p>
+    <p>© 2026 PRO Rotator Strategy | Professional Trading Signals</p>
     <p>Contact: ukdesigner62@gmail.com | WhatsApp: +447492166072</p>
-    <p>Complete all lessons → Unlock Dashboard + Certificate</p>
+    <p>Complete all lessons → Certificate of Completion</p>
 </footer>
 
 <div id="lessonModal" class="modal">
@@ -496,7 +492,7 @@
         }
     ];
 
-    // Lesson content (simple, practical)
+    // Lesson content (same as before – practical, no dashboard links)
     const lessonContent = {
         '1.1': {
             title: "BUY Signal Message",
@@ -703,7 +699,7 @@ Example: $200 risk / ($62500 - $61200) = $200 / 1300 ≈ 0.1538 BTC.
             title: "Test Your Knowledge",
             content: `
                 <h3>✅ Final Quiz</h3>
-                <p>Answer the questions below to confirm you understand how to use our signals. Upon passing, you can mark this lesson as complete and unlock the dashboard.</p>
+                <p>Answer the questions below to confirm you understand how to use our signals. Upon passing, you can mark this lesson as complete and receive your certificate.</p>
                 <div id="finalQuizContainer"></div>
                 <button class="quiz-submit" onclick="submitFinalQuiz()">Submit Quiz</button>
                 <div id="finalQuizResult"></div>
@@ -765,7 +761,6 @@ Example: $200 risk / ($62500 - $61200) = $200 / 1300 ≈ 0.1538 BTC.
         if (!lesson) return;
         document.getElementById('modalTitle').innerHTML = lesson.title;
         let contentHtml = lesson.content;
-        // For the final quiz lesson, inject the quiz container
         if (lessonId === '6.1') {
             contentHtml = lesson.content.replace('<div id="finalQuizContainer"></div>', generateFinalQuizHtml());
         }
@@ -782,7 +777,6 @@ Example: $200 risk / ($62500 - $61200) = $200 / 1300 ≈ 0.1538 BTC.
             btn.disabled = false;
         }
         document.getElementById('lessonModal').classList.add('active');
-        // Attach quiz option handlers if final quiz
         if (lessonId === '6.1') attachFinalQuizHandlers();
     }
 
@@ -830,7 +824,6 @@ Example: $200 risk / ($62500 - $61200) = $200 / 1300 ≈ 0.1538 BTC.
         if (!currentLessonId) return;
         if (completedLessons.includes(currentLessonId)) return;
         if (currentLessonId === '6.1') {
-            // Check final quiz passed
             let score = 0;
             finalQuiz.forEach((q, idx) => { if (finalQuizAnswers[idx] === q.correct) score++; });
             const passed = score >= Math.ceil(finalQuiz.length * 0.7);
@@ -841,7 +834,7 @@ Example: $200 risk / ($62500 - $61200) = $200 / 1300 ≈ 0.1538 BTC.
         updateAll();
         closeModal();
         showToast('✅ Lesson completed!');
-        if (completedLessons.length === 6) showToast('🎉 CONGRATULATIONS! You completed all lessons!');
+        if (completedLessons.length === modules.reduce((acc, m) => acc + m.lessons.length, 0)) showToast('🎉 CONGRATULATIONS! You completed all lessons!');
     }
 
     function updateAll() {
@@ -851,11 +844,7 @@ Example: $200 risk / ($62500 - $61200) = $200 / 1300 ≈ 0.1538 BTC.
         const percent = Math.round((completed/totalLessons)*100);
         document.getElementById('progressPercent').innerHTML = `${percent}%`;
         document.getElementById('progressFill').style.width = `${percent}%`;
-        const btn = document.getElementById('unlockBtn');
-        const msg = document.getElementById('unlockMessage');
         if (completed === totalLessons) {
-            btn.disabled = false;
-            btn.innerHTML = '🚀 UNLOCK TRADING DASHBOARD';
             document.getElementById('certificateSection').style.display = 'block';
             document.getElementById('completionDate').innerHTML = new Date().toLocaleDateString();
             if (!studentName) {
@@ -864,19 +853,15 @@ Example: $200 risk / ($62500 - $61200) = $200 / 1300 ≈ 0.1538 BTC.
                 else studentName = 'PRO Trader';
             }
             document.getElementById('studentName').innerHTML = studentName;
-            msg.innerHTML = '<span style="color:#00ff88;">✅ You completed all lessons! Click to access the dashboard.</span>';
         } else {
-            btn.disabled = true;
-            btn.innerHTML = `🔒 Complete ${totalLessons-completed} more lesson${totalLessons-completed !== 1 ? 's' : ''} to unlock`;
-            msg.innerHTML = `<span style="color:#ff8888;">⚠️ Complete all ${totalLessons} lessons first (${completed}/${totalLessons} completed)</span>`;
+            document.getElementById('certificateSection').style.display = 'none';
         }
     }
 
-    document.getElementById('unlockBtn').addEventListener('click', () => {
-        if (completedLessons.length === modules.reduce((acc, m) => acc + m.lessons.length, 0)) {
-            localStorage.setItem('pro_trial_start', new Date().toISOString());
-            window.location.href = 'https://mprimo360.github.io/live';
-        }
+    // Trial button – opens admin contact
+    document.getElementById('trialBtn').addEventListener('click', () => {
+        const msg = document.getElementById('trialMessage');
+        msg.innerHTML = '<span style="color:#FFD700;">📩 Please contact admin via email or WhatsApp to request your 7‑day trial link.</span>';
     });
 
     function downloadCertificate() {
