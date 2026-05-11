@@ -346,9 +346,8 @@
 <body>
 <div class="header">
     <h1>📚 PRO ROTATOR TRADING ACADEMY</h1>
-    <p>Learn how to read and act on our BUY / SELL signals – no complex formulas, just practical steps.</p>
+    <p>Learn how to read and act on our BUY signals and OVERBOUGHT alerts – no complex formulas, just practical steps.</p>
     <div class="nav-links">
-        <!-- Removed Live Dashboard and Academy self link -->
         <a href="#" style="cursor:default; background:rgba(255,215,0,0.2);">📚 Academy</a>
     </div>
 </div>
@@ -383,7 +382,7 @@
             <div class="student-name" id="studentName">[Your Name]</div>
             <p>for successfully completing the</p>
             <h3>PRO Rotator User Course</h3>
-            <p>Understanding BUY/SELL signals, risk management, and trade execution.<br>Auto-Scan & Telegram Alerts</p>
+            <p>Understanding BUY signals and OVERBOUGHT alerts, risk management, and trade execution.<br>Auto-Scan & Telegram Alerts</p>
             <p style="margin-top: 30px;">📅 <span id="completionDate"></span></p>
         </div>
         <button class="download-certificate" onclick="downloadCertificate()">📥 Download Certificate (PNG)</button>
@@ -399,11 +398,11 @@
     <div class="quick-ref">
         <h3>📖 Quick Reference – How to Use Our Signals</h3>
         <div class="ref-grid">
-            <div class="ref-card"><span class="buy">🟢 BUY SIGNAL</span><br>Enter LONG (buy) with suggested Entry, TP1, TP2, SL.</div>
-            <div class="ref-card"><span class="sell">🔴 SELL SIGNAL</span><br>Enter SHORT (sell) with suggested Entry, TP1, TP2, SL.</div>
-            <div class="ref-card">📤 TAKE PROFIT<br>Close at TP levels (partial or full).</div>
+            <div class="ref-card"><span class="buy">🟢 BUY SIGNAL</span><br>Enter LONG (buy) with suggested Entry Zone, TP1, TP2, SL.</div>
+            <div class="ref-card"><span class="sell">🔴 OVERBOUGHT ALERT</span><br>Take profit on existing longs, avoid new buys, wait for reversal.</div>
+            <div class="ref-card">📤 TAKE PROFIT<br>Close at suggested TP levels (partial or full).</div>
             <div class="ref-card">🛑 STOP LOSS<br>Always set – max loss per trade 1-2%.</div>
-            <div class="ref-card">⭐ CONFIDENCE<br>Higher % = stronger signal.</div>
+            <div class="ref-card">⭐ CONFIDENCE<br>Higher % = stronger signal (≥70% recommended).</div>
             <div class="ref-card">📈 TREND ARROW<br>📈 up / 📉 down / ➡️ flat (last 20 candles).</div>
         </div>
     </div>
@@ -429,7 +428,7 @@
 </div>
 
 <script>
-    // ========== SIMPLIFIED COURSE – FOCUS ON USING SIGNALS ==========
+    // ========== COURSE DATA – updated for OVERBOUGHT ALERT ==========
     const modules = [
         {
             id: 1,
@@ -438,7 +437,7 @@
             difficulty: "⭐ Beginner",
             lessons: [
                 { id: "1.1", title: "Understanding the BUY Signal Message" },
-                { id: "1.2", title: "Understanding the SELL Signal Message" }
+                { id: "1.2", title: "Understanding the OVERBOUGHT ALERT" }
             ]
         },
         {
@@ -454,7 +453,7 @@
         {
             id: 3,
             icon: "📊",
-            title: "Trade Plan (LONG & SHORT)",
+            title: "Trade Plan (LONG)",
             difficulty: "⭐ Beginner",
             lessons: [
                 { id: "3.1", title: "Entry Zone, Take Profit & Stop Loss" },
@@ -492,7 +491,7 @@
         }
     ];
 
-    // Lesson content (same as before – practical, no dashboard links)
+    // Lesson content – updated for OVERBOUGHT ALERT
     const lessonContent = {
         '1.1': {
             title: "BUY Signal Message",
@@ -537,19 +536,19 @@
             `
         },
         '1.2': {
-            title: "SELL Signal Message",
+            title: "OVERBOUGHT ALERT",
             content: `
-                <h3>🔴 What a SELL Signal Looks Like</h3>
-                <p>When the bot detects a SELL (short) opportunity, you will receive a message like this:</p>
+                <h3>⚠️ What an OVERBOUGHT ALERT Looks Like</h3>
+                <p>When the bot detects an overbought market (no new entry, only a warning), you will receive a message like this:</p>
                 <div class="example-box">
-🚀 *CRYPTO ROTATOR PRO* – 🔴 *SELL SIGNAL DETECTED*
+⚠️ *CRYPTO ROTATOR PRO* – 🔴 *OVERBOUGHT ALERT* (Take Profit / Avoid New Buys)
 
 ---
 📊 *MARKET EDGE*
 ---
 💎 *PAIR:* \`ETH/USDT\`
 💰 *PRICE:* \`$3120.00\`
-⚡ *Z-Score:* \`+1.78\` (Overbought)
+⚡ *Z-Score:* \`+1.78\` (Overbought – Reversal Likely)
 📈 *RSI(14):* \`62\`
 ⭐ *Confidence:* \`75%\` 🔥
 
@@ -557,24 +556,26 @@
 📉 *Trend (20 candles):* 📉 \`-1.5%\`
 
 ---
-📌 *TRADE PLAN (SHORT)*
+⚠️ *OVERBOUGHT WARNING*
 ---
-✅ *Entry Zone:* \`$3104 - $3136\`
-🎯 *Take Profit 1:* \`$3058\`
-🎯 *Take Profit 2:* \`$2995\`
-🛑 *Stop Loss:* \`$3182\`
+🔴 The market is **overbought** (Z > 1, RSI > 55).  
+💡 *What you can do:*  
+• Consider **closing existing long positions** (take profit).  
+• Avoid opening new long positions.  
+• Wait for Z‑score to return near zero before re‑entering.  
+• *If you short*, wait for confirmation – this is not an automatic entry signal.
 
-💡 *Tip:* Always use a stop loss on every trade.
+📖 *Remember:* This is a warning, not a short entry. Always use proper risk management.
                 </div>
-                <h3>📌 What to DO:</h3>
+                <h3>📌 What to DO when you see this alert:</h3>
                 <ul>
-                    <li><strong>ENTER</strong> a SHORT (sell) position when price is inside the <strong>Entry Zone</strong>.</li>
-                    <li><strong>TAKE PROFIT 1</strong> – close part of your position at the first target.</li>
-                    <li><strong>TAKE PROFIT 2</strong> – close remaining at the second target.</li>
-                    <li><strong>STOP LOSS</strong> – place it to limit losses if market moves against you.</li>
+                    <li><strong>Take profit</strong> on any long positions you currently hold.</li>
+                    <li><strong>Do not open new long positions</strong> until the market cools down.</li>
+                    <li>If you short, wait for additional confirmation – the alert alone is not a trading signal.</li>
+                    <li>Monitor the Z‑score – when it returns near zero, the warning ends.</li>
                 </ul>
                 <div style="background:#2a0a0a; padding:15px; border-radius:10px; margin-top:15px;">
-                    ⚠️ <strong>Important:</strong> SELL signals are for SHORT selling (profit when price goes down). If you cannot short, you can simply close any existing long positions.
+                    💡 <strong>Important:</strong> This alert appears when the market is extended. It prevents you from buying at the top and helps lock in profits.
                 </div>
             `
         },
@@ -606,7 +607,7 @@
                     <li><strong>➡️ flat arrow</strong> → Little change (sideways).</li>
                     <li>The number (+2.3%) shows the total percentage change over the last 20 candles.</li>
                 </ul>
-                <p>This helps you quickly see the recent momentum. For a BUY signal, a positive trend arrow is a good confirmation. For a SELL signal, a negative trend arrow is supportive.</p>
+                <p>This helps you quickly see the recent momentum. For a BUY signal, a positive trend arrow is a good confirmation. For an OVERBOUGHT alert, a strong uptrend supports the warning.</p>
             `
         },
         '3.1': {
@@ -614,7 +615,7 @@
             content: `
                 <h3>📌 Trade Plan Explained</h3>
                 <ul>
-                    <li><strong>Entry Zone</strong> – The price range where you should enter the trade (buy long or sell short). Try to enter within this zone for best risk/reward.</li>
+                    <li><strong>Entry Zone</strong> – The price range where you should enter the trade (buy long). Try to enter within this zone for best risk/reward.</li>
                     <li><strong>Take Profit 1 (TP1)</strong> – First target. Consider closing 50% of your position here and moving stop loss to breakeven.</li>
                     <li><strong>Take Profit 2 (TP2)</strong> – Second target. Close remaining position or let a small runner ride.</li>
                     <li><strong>Stop Loss (SL)</strong> – Maximum loss you accept. Never move it further away. Always set it as soon as you enter.</li>
@@ -650,9 +651,9 @@
             title: "Telegram Alerts & Cooldown",
             content: `
                 <h3>🤖 How Signals Reach You</h3>
-                <p>Once you have joined the bot via an invite link, you will receive <strong>instant Telegram messages</strong> whenever a BUY or SELL signal is generated for any tracked pair.</p>
+                <p>Once you have joined the bot via an invite link, you will receive <strong>instant Telegram messages</strong> whenever a BUY signal or OVERBOUGHT alert is generated for any tracked pair.</p>
                 <h3>⏱️ Cooldown Period</h3>
-                <p>To avoid signal spam, the same coin+type (e.g., BTC BUY) will not be sent again for <strong>5 minutes</strong> (configurable). This ensures you get fresh signals without overload.</p>
+                <p>To avoid alert spam, the same coin+type (e.g., BTC BUY) will not be sent again for <strong>5 minutes</strong> (configurable). This ensures you get fresh signals without overload.</p>
                 <p>If you miss a signal, you can always check the Live Dashboard for recent signals.</p>
             `
         },
@@ -660,7 +661,7 @@
             title: "Auto-Scan (24/7 Monitoring)",
             content: `
                 <h3>🔄 Market Scanner</h3>
-                <p>The system automatically scans all tracked pairs (BTC, ETH, BNB, SOL, XRP, ADA, DOGE, LINK, MATIC) every X minutes (default 10). If any pair meets our entry criteria, a signal is sent instantly.</p>
+                <p>The system automatically scans all tracked pairs (BTC, ETH, BNB, SOL, XRP, ADA, DOGE, LINK, MATIC, and many more) every X minutes (default 10). If any pair meets our BUY criteria or becomes overbought, a message is sent instantly.</p>
                 <p>You do not need to watch charts – the bot does the work and alerts you.</p>
                 <div style="background:#0a2a0a; padding:15px; border-radius:10px;">
                     💡 You can change the scan interval, thresholds, and filters through the admin panel (admin only).
@@ -707,13 +708,13 @@ Example: $200 risk / ($62500 - $61200) = $200 / 1300 ≈ 0.1538 BTC.
         }
     };
 
-    // Final quiz questions (practical)
+    // Final quiz questions (still valid)
     const finalQuiz = [
         { question: "When you receive a BUY signal, what should you do?", options: ["Open a SHORT (sell) position", "Open a LONG (buy) position", "Do nothing", "Close all trades"], correct: 1 },
         { question: "What does the Confidence (Quality) percentage tell you?", options: ["How much money to risk", "How many candles to wait", "Signal strength (higher = better)", "Time until next signal"], correct: 2 },
         { question: "What is the purpose of the Stop Loss (SL) suggested in the signal?", options: ["To take profit early", "To limit your maximum loss", "To automatically close at TP1", "To cancel the trade"], correct: 1 },
-        { question: "If the SELL signal shows Trend (20 candles): 📉 -2.5%, what does that mean?", options: ["Price increased 2.5%", "Price decreased 2.5%", "Market is neutral", "Signal is invalid"], correct: 1 },
-        { question: "After a signal is sent for BTC/USDT (BUY), how long before the same pair+type can send another signal (by default)?", options: ["1 minute", "5 minutes", "1 hour", "Only once per day"], correct: 1 },
+        { question: "If you see an OVERBOUGHT alert for a coin you hold, what is the recommended action?", options: ["Open a new long position", "Take profit on your long position", "Ignore it", "Short immediately"], correct: 1 },
+        { question: "After a BUY signal is sent for BTC/USDT, how long before the same pair+type can send another signal (by default)?", options: ["1 minute", "5 minutes", "1 hour", "Only once per day"], correct: 1 },
         { question: "What is the recommended maximum % of your capital to risk per trade?", options: ["10%", "25%", "1-2%", "50%"], correct: 2 }
     ];
 
@@ -858,7 +859,6 @@ Example: $200 risk / ($62500 - $61200) = $200 / 1300 ≈ 0.1538 BTC.
         }
     }
 
-    // Trial button – opens admin contact
     document.getElementById('trialBtn').addEventListener('click', () => {
         const msg = document.getElementById('trialMessage');
         msg.innerHTML = '<span style="color:#FFD700;">📩 Please contact admin via email or WhatsApp to request your 7‑day trial link.</span>';
