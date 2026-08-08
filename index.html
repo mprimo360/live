@@ -3,179 +3,195 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>FuelGuard — Live GPS & Camera Demo</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
-    </script>
+    <title>FuelGuard — Smart Fuel Security & Fleet Monitoring</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet" />
 
     <style>
-        * {
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
         }
+
         :root {
             --primary: #0b1a33;
+            --primary-light: #1a3a6b;
             --secondary: #00c853;
+            --accent: #ff6b00;
             --danger: #ff1744;
             --warning: #ffab00;
-            --bg: #0a0f1a;
-            --card: #141e30;
-            --text: #e8edf4;
-            --text-muted: #8899bb;
+            --bg: #f0f4f8;
+            --card: #ffffff;
+            --text: #1a2332;
+            --text-muted: #6b7a8f;
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.10);
             --radius: 16px;
-            --border: #1e2d45;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
+
         body {
             font-family: 'Inter', sans-serif;
             background: var(--bg);
             color: var(--text);
             min-height: 100vh;
-            padding: 16px;
+            padding: 20px;
         }
 
-        /* HEADER */
+        /* === HEADER === */
         .header {
-            background: var(--card);
-            padding: 16px 24px;
+            background: var(--primary);
+            color: #fff;
+            padding: 18px 30px;
             border-radius: var(--radius);
             display: flex;
             align-items: center;
             justify-content: space-between;
             flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+        }
+        .header-brand {
+            display: flex;
+            align-items: center;
             gap: 12px;
-            border: 1px solid var(--border);
-            margin-bottom: 20px;
         }
-        .logo {
-            font-size: 26px;
+        .header-brand .logo {
+            font-size: 28px;
             font-weight: 800;
+            letter-spacing: -0.5px;
         }
-        .logo span {
+        .header-brand .logo span {
             color: var(--secondary);
+        }
+        .header-brand .tagline {
+            font-size: 13px;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.7);
+            border-left: 1px solid rgba(255, 255, 255, 0.2);
+            padding-left: 14px;
         }
         .header-status {
             display: flex;
             align-items: center;
-            gap: 16px;
-            font-size: 13px;
+            gap: 18px;
+            font-size: 14px;
         }
-        .badge {
+        .header-status .badge {
+            background: var(--secondary);
+            color: #fff;
             padding: 4px 14px;
             border-radius: 20px;
             font-weight: 600;
             font-size: 12px;
-            background: var(--secondary);
-            color: #fff;
         }
-        .badge.danger {
+        .header-status .badge.alert {
             background: var(--danger);
-            animation: pulse 1s infinite;
+            animation: pulse-badge 1.2s infinite;
         }
-        .badge.warning {
-            background: var(--warning);
-            color: #000;
-        }
-        @keyframes pulse {
+        @keyframes pulse-badge {
             0%,
             100% {
                 transform: scale(1);
             }
             50% {
-                transform: scale(1.05);
+                transform: scale(1.06);
             }
         }
-        .dot {
-            display: inline-block;
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: var(--secondary);
-            margin-right: 4px;
-        }
-        .dot.danger {
-            background: var(--danger);
-        }
 
-        /* TEAM */
-        .team-bar {
-            background: var(--card);
-            padding: 12px 20px;
+        /* === TEAM BANNER === */
+        .team-banner {
+            background: linear-gradient(135deg, #0b1a33, #1a3a6b);
+            color: #fff;
+            padding: 16px 24px;
             border-radius: var(--radius);
-            border: 1px solid var(--border);
+            margin-bottom: 24px;
             display: flex;
             flex-wrap: wrap;
             align-items: center;
             justify-content: space-between;
-            gap: 10px;
-            margin-bottom: 20px;
+            gap: 12px;
+            box-shadow: var(--shadow);
+        }
+        .team-banner .team-label {
             font-size: 13px;
-        }
-        .team-bar .label {
-            color: var(--text-muted);
-            font-size: 11px;
-            text-transform: uppercase;
+            font-weight: 500;
+            opacity: 0.7;
             letter-spacing: 0.5px;
+            text-transform: uppercase;
         }
-        .team-members {
+        .team-banner .team-members {
             display: flex;
             flex-wrap: wrap;
-            gap: 12px 20px;
+            gap: 16px 28px;
+            font-size: 14px;
         }
-        .team-members .member {
+        .team-banner .team-members .member {
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
         }
-        .team-members .member .role {
-            color: var(--text-muted);
-            font-size: 11px;
+        .team-banner .team-members .member .role {
+            font-weight: 400;
+            opacity: 0.6;
+            font-size: 12px;
+        }
+        .team-banner .team-members .member .name {
+            font-weight: 600;
+        }
+        .team-banner .team-members .member .emoji {
+            font-size: 18px;
         }
 
-        /* GRID */
+        /* === LAYOUT === */
         .grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 20px;
+            gap: 24px;
         }
+
         .card {
             background: var(--card);
             border-radius: var(--radius);
-            padding: 20px 22px;
-            border: 1px solid var(--border);
-            transition: 0.3s;
+            padding: 22px 24px 26px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
         }
         .card:hover {
-            border-color: #2a3d5a;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
         }
         .card-title {
-            font-size: 12px;
+            font-size: 14px;
+            font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             color: var(--text-muted);
-            margin-bottom: 14px;
+            margin-bottom: 16px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
         }
 
-        /* TANK */
-        .tank-wrap {
+        /* === FUEL TANK === */
+        .tank-wrapper {
             display: flex;
             flex-direction: column;
             align-items: center;
         }
-        .tank {
-            width: 100%;
-            max-width: 220px;
-            height: 220px;
-            background: #0d1829;
-            border-radius: 24px 24px 14px 14px;
-            border: 3px solid #1e2d45;
-            overflow: hidden;
+        .tank-container {
             position: relative;
-            box-shadow: inset 0 -4px 0 rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 260px;
+            height: 260px;
+            background: #e8edf4;
+            border-radius: 30px 30px 18px 18px;
+            border: 4px solid #c8d0dc;
+            overflow: hidden;
+            box-shadow: inset 0 -6px 0 rgba(0, 0, 0, 0.06);
         }
         .tank-fuel {
             position: absolute;
@@ -183,14 +199,14 @@
             left: 0;
             width: 100%;
             background: linear-gradient(180deg, #f9d423 0%, #f7971e 100%);
-            transition: height 0.5s cubic-bezier(0.34, 1.2, 0.64, 1);
-            border-radius: 0 0 10px 10px;
+            transition: height 0.6s cubic-bezier(0.34, 1.2, 0.64, 1);
+            border-radius: 0 0 14px 14px;
             display: flex;
             align-items: center;
             justify-content: center;
+            color: rgba(0, 0, 0, 0.5);
             font-weight: 700;
-            font-size: 24px;
-            color: rgba(0, 0, 0, 0.4);
+            font-size: 28px;
         }
         .tank-fuel::after {
             content: '';
@@ -198,145 +214,182 @@
             top: 8px;
             left: 10%;
             width: 80%;
-            height: 10px;
-            background: rgba(255, 255, 255, 0.2);
+            height: 12px;
+            background: rgba(255, 255, 255, 0.25);
             border-radius: 20px;
             filter: blur(2px);
         }
         .tank-label {
-            margin-top: 12px;
-            font-weight: 700;
-            font-size: 18px;
+            margin-top: 16px;
+            font-weight: 600;
+            font-size: 20px;
         }
         .tank-label small {
             font-weight: 400;
             color: var(--text-muted);
-            font-size: 13px;
+            font-size: 14px;
         }
 
-        .stats {
+        /* === STATS ROW === */
+        .stats-row {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
-            gap: 10px;
-            margin-top: 14px;
+            gap: 12px;
+            margin-top: 18px;
         }
-        .stat {
-            background: #0d1829;
-            padding: 10px;
+        .stat-item {
+            background: #f8fafc;
+            padding: 12px 14px;
             border-radius: 10px;
             text-align: center;
         }
-        .stat .label {
-            font-size: 10px;
+        .stat-item .label {
+            font-size: 11px;
             text-transform: uppercase;
             color: var(--text-muted);
+            font-weight: 500;
+            letter-spacing: 0.3px;
         }
-        .stat .value {
-            font-size: 18px;
+        .stat-item .value {
+            font-size: 20px;
             font-weight: 700;
             margin-top: 2px;
         }
-        .stat .value.green {
+        .stat-item .value.green {
             color: var(--secondary);
         }
-        .stat .value.red {
+        .stat-item .value.red {
             color: var(--danger);
         }
+        .stat-item .value.orange {
+            color: var(--accent);
+        }
 
-        /* BUTTONS */
+        /* === CONTROLS === */
         .controls {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 14px;
+            gap: 10px;
+            margin-top: 16px;
         }
         .btn {
-            padding: 8px 16px;
+            padding: 10px 20px;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             font-weight: 600;
-            font-size: 13px;
+            font-size: 14px;
             cursor: pointer;
-            transition: 0.3s;
-            background: #1e2d45;
-            color: #fff;
-            flex: 1;
-            min-width: 70px;
+            transition: var(--transition);
+            flex: 1 1 auto;
+            min-width: 80px;
+            text-align: center;
+            background: #eef2f7;
+            color: var(--text);
         }
         .btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.10);
+        }
+        .btn:active {
+            transform: translateY(0);
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: #fff;
+        }
+        .btn-primary:hover {
+            background: var(--primary-light);
         }
         .btn-success {
             background: var(--secondary);
+            color: #fff;
+        }
+        .btn-success:hover {
+            background: #00b84a;
         }
         .btn-danger {
             background: var(--danger);
+            color: #fff;
+        }
+        .btn-danger:hover {
+            background: #e0153a;
         }
         .btn-warning {
             background: var(--warning);
-            color: #000;
+            color: #fff;
         }
-        .btn-primary {
-            background: #2a4a7a;
+        .btn-warning:hover {
+            background: #e89e00;
         }
         .btn-outline {
             background: transparent;
-            border: 2px solid #2a4a7a;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+        .btn-outline:hover {
+            background: var(--primary);
+            color: #fff;
         }
 
-        /* ALERTS */
+        /* === ALERTS === */
         .alert-feed {
-            max-height: 200px;
+            max-height: 220px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 8px;
+            padding-right: 4px;
         }
         .alert-feed::-webkit-scrollbar {
-            width: 3px;
+            width: 4px;
         }
         .alert-feed::-webkit-scrollbar-thumb {
-            background: #1e2d45;
+            background: #c8d0dc;
             border-radius: 4px;
         }
         .alert-item {
             display: flex;
             align-items: flex-start;
-            gap: 10px;
-            padding: 8px 12px;
-            border-radius: 8px;
-            background: #0d1829;
-            border-left: 3px solid var(--text-muted);
-            font-size: 12px;
-            line-height: 1.4;
-            animation: slideIn 0.3s ease;
+            gap: 12px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            background: #f8fafc;
+            border-left: 4px solid var(--text-muted);
+            font-size: 13px;
+            line-height: 1.5;
+            animation: slide-in 0.3s ease;
         }
-        .alert-item.danger {
-            border-left-color: var(--danger);
-            background: #1a0a12;
+        .alert-item .icon {
+            font-size: 18px;
+            flex-shrink: 0;
+            margin-top: 1px;
         }
-        .alert-item.warning {
-            border-left-color: var(--warning);
-            background: #1a1408;
+        .alert-item .time {
+            font-size: 11px;
+            color: var(--text-muted);
+            flex-shrink: 0;
+            margin-left: auto;
         }
         .alert-item.normal {
             border-left-color: var(--secondary);
         }
-        .alert-item.tamper {
+        .alert-item.warning {
             border-left-color: var(--warning);
-            background: #1a1208;
+            background: #fff8e1;
         }
-        .alert-item .time {
-            font-size: 10px;
-            color: var(--text-muted);
-            margin-left: auto;
-            flex-shrink: 0;
+        .alert-item.danger {
+            border-left-color: var(--danger);
+            background: #ffebee;
         }
-        @keyframes slideIn {
+        .alert-item.tamper {
+            border-left-color: var(--accent);
+            background: #fff3e0;
+        }
+
+        @keyframes slide-in {
             0% {
                 opacity: 0;
-                transform: translateX(-10px);
+                transform: translateX(-12px);
             }
             100% {
                 opacity: 1;
@@ -344,222 +397,213 @@
             }
         }
 
-        /* LIVE MAP */
-        .map-container {
+        /* === MAP === */
+        .map-placeholder {
             width: 100%;
-            height: 220px;
+            height: 140px;
+            background: #dce3ed;
             border-radius: 12px;
-            overflow: hidden;
-            border: 1px solid var(--border);
-            position: relative;
-        }
-        .map-container #map {
-            width: 100%;
-            height: 100%;
-        }
-        .map-coords {
-            text-align: center;
-            font-size: 12px;
-            color: var(--text-muted);
-            margin-top: 8px;
-            font-family: monospace;
-        }
-
-        /* Custom Map Marker */
-        .custom-marker {
-            background: var(--secondary);
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            border: 3px solid #fff;
-            box-shadow: 0 0 20px rgba(0, 200, 80, 0.6);
-            transition: 0.3s;
-        }
-        .custom-marker.theft {
-            background: var(--danger);
-            box-shadow: 0 0 30px rgba(255, 23, 68, 0.8);
-        }
-        .custom-marker.tamper {
-            background: var(--warning);
-            box-shadow: 0 0 30px rgba(255, 171, 0, 0.8);
-        }
-
-        /* LIVE CAMERA */
-        .camera-box {
-            width: 100%;
-            height: 100px;
-            border-radius: 12px;
-            background: #0a0f1a;
             display: flex;
             align-items: center;
             justify-content: center;
-            flex-direction: column;
-            gap: 4px;
-            border: 1px solid #1e2d45;
-            margin-top: 8px;
-            transition: 0.5s;
+            color: var(--text-muted);
+            font-size: 14px;
+            background-image: radial-gradient(circle at 30% 40%, #c8d4e0 1px, transparent 1px),
+                radial-gradient(circle at 70% 60%, #c8d4e0 1px, transparent 1px);
+            background-size: 40px 40px;
             position: relative;
             overflow: hidden;
         }
-        .camera-box.active {
-            border-color: var(--secondary);
-            background: #0d1a2a;
-        }
-        .camera-box .icon {
-            font-size: 32px;
-        }
-        .camera-box .label {
-            font-size: 12px;
-            color: var(--text-muted);
-        }
-        .camera-box .rec {
+        .map-placeholder .pin {
             position: absolute;
-            top: 8px;
-            right: 12px;
-            font-size: 10px;
-            color: var(--danger);
-            font-weight: 700;
-            display: none;
+            font-size: 32px;
+            animation: bounce-pin 1.8s infinite;
         }
-        .camera-box.active .rec {
-            display: block;
-            animation: pulse 1s infinite;
+        @keyframes bounce-pin {
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-8px);
+            }
+        }
+        .map-coords {
+            margin-top: 10px;
+            font-size: 13px;
+            color: var(--text-muted);
+            text-align: center;
         }
 
-        /* VEHICLE STATUS */
-        .vs-grid {
+        /* === CAMERA EVIDENCE === */
+        .camera-preview {
+            width: 100%;
+            height: 110px;
+            background: #1a2332;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 13px;
+            flex-direction: column;
+            gap: 6px;
+            transition: var(--transition);
+            margin-top: 6px;
+        }
+        .camera-preview.active {
+            background: #2a3a4a;
+            color: #fff;
+        }
+        .camera-preview .cam-icon {
+            font-size: 28px;
+        }
+        .camera-preview .cam-label {
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        /* === VEHICLE STATUS === */
+        .vehicle-status-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 6px 16px;
+            gap: 10px;
             margin-top: 6px;
         }
         .vs-item {
             display: flex;
             justify-content: space-between;
-            padding: 4px 0;
-            border-bottom: 1px solid #0d1829;
-            font-size: 13px;
+            padding: 6px 0;
+            border-bottom: 1px solid #f0f2f5;
+            font-size: 14px;
         }
-        .vs-item .lbl {
+        .vs-item .vs-label {
             color: var(--text-muted);
         }
-        .vs-item .val {
+        .vs-item .vs-value {
             font-weight: 600;
         }
 
-        /* FEEDBACK */
-        .fb-area textarea {
-            width: 100%;
-            padding: 10px 14px;
-            border-radius: 10px;
-            border: 1px solid #1e2d45;
-            background: #0d1829;
-            color: #fff;
-            font-family: 'Inter', sans-serif;
-            font-size: 13px;
-            resize: vertical;
-            min-height: 60px;
-        }
-        .fb-area textarea:focus {
-            outline: none;
-            border-color: var(--secondary);
-        }
-        .fb-actions {
-            display: flex;
-            gap: 8px;
-            margin-top: 8px;
-            flex-wrap: wrap;
-        }
-        .fb-list {
-            margin-top: 10px;
-            max-height: 120px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-        .fb-item {
-            background: #0d1829;
-            padding: 8px 12px;
-            border-radius: 8px;
-            font-size: 12px;
-            border-left: 2px solid var(--secondary);
-        }
-        .fb-item .meta {
-            font-size: 10px;
-            color: var(--text-muted);
-            margin-top: 3px;
-        }
-
-        /* HOW TO */
-        .ht-grid {
+        /* === HOW TO USE === */
+        .howto-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 8px;
-            margin-top: 6px;
+            gap: 12px;
+            margin-top: 8px;
         }
-        .ht-item {
-            background: #0d1829;
-            padding: 10px 12px;
-            border-radius: 8px;
-            font-size: 12px;
-            border-left: 2px solid var(--primary);
+        .howto-item {
+            background: #f8fafc;
+            padding: 14px 16px;
+            border-radius: 10px;
+            border-left: 3px solid var(--primary);
+            font-size: 13px;
+            line-height: 1.5;
         }
-        .ht-item .key {
+        .howto-item .key {
             font-weight: 700;
-            color: var(--secondary);
-            font-size: 11px;
+            color: var(--primary);
+            font-size: 12px;
             text-transform: uppercase;
+            letter-spacing: 0.3px;
         }
 
-        /* RESPONSIVE */
-        @media (max-width: 820px) {
+        /* === FEEDBACK === */
+        .feedback-area {
+            margin-top: 14px;
+        }
+        .feedback-area textarea {
+            width: 100%;
+            padding: 12px 14px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            resize: vertical;
+            min-height: 80px;
+            transition: var(--transition);
+        }
+        .feedback-area textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(11, 26, 51, 0.1);
+        }
+        .feedback-area .feedback-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+        .feedback-area .feedback-actions .btn {
+            flex: 0 1 auto;
+            min-width: 100px;
+        }
+        .feedback-list {
+            margin-top: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+        .feedback-item {
+            background: #f8fafc;
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: 13px;
+            border-left: 3px solid var(--secondary);
+        }
+        .feedback-item .fb-meta {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* === RESPONSIVE === */
+        @media (max-width: 960px) {
             .grid {
                 grid-template-columns: 1fr;
             }
-            .ht-grid {
+            .howto-grid {
                 grid-template-columns: 1fr;
             }
         }
-        @media (max-width: 480px) {
+        @media (max-width: 540px) {
             .header {
                 flex-direction: column;
+                align-items: stretch;
                 text-align: center;
             }
-            .team-bar {
+            .header-brand .tagline {
+                border-left: none;
+                padding-left: 0;
+            }
+            .header-status {
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            .team-banner {
                 flex-direction: column;
                 text-align: center;
             }
-            .team-members {
+            .team-banner .team-members {
                 justify-content: center;
             }
-            .stats {
+            .stats-row {
                 grid-template-columns: 1fr 1fr;
             }
-            .tank {
-                height: 160px;
-                max-width: 160px;
+            .tank-container {
+                height: 200px;
+                max-width: 200px;
             }
-            .btn {
-                font-size: 11px;
-                padding: 6px 10px;
-                min-width: 50px;
+            .controls .btn {
+                min-width: 60px;
+                font-size: 12px;
+                padding: 8px 12px;
             }
         }
 
-        .footer {
-            margin-top: 24px;
+        .text-center {
             text-align: center;
-            font-size: 12px;
-            color: var(--text-muted);
-            border-top: 1px solid #141e30;
-            padding-top: 16px;
-        }
-        .footer strong {
-            color: var(--text);
-        }
-        .text-muted {
-            color: var(--text-muted);
         }
         .mt-8 {
             margin-top: 8px;
@@ -567,11 +611,11 @@
         .mt-12 {
             margin-top: 12px;
         }
-        .flex {
-            display: flex;
-        }
         .gap-8 {
             gap: 8px;
+        }
+        .flex {
+            display: flex;
         }
         .flex-wrap {
             flex-wrap: wrap;
@@ -579,173 +623,241 @@
         .items-center {
             align-items: center;
         }
-        .leaflet-control-attribution {
-            font-size: 8px !important;
-            background: rgba(0, 0, 0, 0.6) !important;
-            color: #666 !important;
+
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 13px;
+            color: var(--text-muted);
+            border-top: 1px solid #e2e8f0;
+            padding-top: 20px;
         }
-        .leaflet-control-zoom {
-            display: none !important;
+        .footer strong {
+            color: var(--primary);
         }
-        .leaflet-tile {
-            filter: brightness(0.9) saturate(0.8);
+        .footer .version {
+            font-size: 11px;
+            opacity: 0.6;
         }
     </style>
 </head>
 <body>
 
-    <!-- HEADER -->
+    <!-- ===== HEADER ===== -->
     <header class="header">
-        <div class="logo">Fuel<span>Guard</span></div>
+        <div class="header-brand">
+            <div class="logo">Fuel<span>Guard</span></div>
+            <div class="tagline">Smart Fuel Security &amp; Fleet Monitoring</div>
+        </div>
         <div class="header-status">
-            <span><span class="dot" id="statusDot"></span><span id="statusText">Online</span></span>
+            <span id="liveStatus" style="display:flex;align-items:center;gap:6px;">
+                <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--secondary);" id="statusDot"></span>
+                <span id="statusText">Online</span>
+            </span>
             <span class="badge" id="alertBadge">✓ No Alerts</span>
-            <span style="font-size:12px;color:var(--text-muted);" id="liveTime"></span>
         </div>
     </header>
 
-    <!-- TEAM -->
-    <div class="team-bar">
-        <span class="label">🧠 FuelGuard Team</span>
+    <!-- ===== TEAM BANNER ===== -->
+    <div class="team-banner">
+        <div>
+            <div class="team-label">🧠 FuelGuard Team</div>
+        </div>
         <div class="team-members">
-            <span class="member">💡 <strong>Gurmad</strong> <span class="role">— Idea</span></span>
-            <span class="member">👨‍💻 <strong>Yasmin</strong> <span class="role">— Lead Dev</span></span>
-            <span class="member">📊 <strong>Luqman</strong> <span class="role">— Business</span></span>
-            <span class="member">👨‍💻 <strong>Mrimo</strong> <span class="role">— Dev</span></span>
+            <span class="member">
+                <span class="emoji">💡</span>
+                <span class="name">Gurmad</span>
+                <span class="role">— Idea Founder</span>
+            </span>
+            <span class="member">
+                <span class="emoji">👨‍💻</span>
+                <span class="name">Yasmin</span>
+                <span class="role">— Lead Developer</span>
+            </span>
+            <span class="member">
+                <span class="emoji">📊</span>
+                <span class="name">Luqman</span>
+                <span class="role">— Business Management</span>
+            </span>
+            <span class="member">
+                <span class="emoji">👨‍💻</span>
+                <span class="name">Mprimo</span>
+                <span class="role">— Developer</span>
+            </span>
         </div>
     </div>
 
-    <!-- GRID -->
+    <!-- ===== MAIN GRID ===== -->
     <div class="grid">
 
-        <!-- LEFT -->
+        <!-- ===== LEFT COLUMN ===== -->
         <div>
 
-            <!-- TANK -->
+            <!-- FUEL TANK CARD -->
             <div class="card">
                 <div class="card-title">
                     <span>⛽ Fuel Tank</span>
-                    <span id="fuelPct" style="font-weight:700;">84%</span>
+                    <span id="fuelPercentLabel" style="font-weight:700;color:var(--primary);">84%</span>
                 </div>
-                <div class="tank-wrap">
-                    <div class="tank">
+                <div class="tank-wrapper">
+                    <div class="tank-container">
                         <div class="tank-fuel" id="fuelBar" style="height:84%;">
-                            <span id="fuelVal">420</span>
+                            <span id="fuelValueDisplay">420</span>
                         </div>
                     </div>
                     <div class="tank-label">
-                        <span id="fuelLitres">420</span> <small>Litres</small>
+                        <span id="fuelLitresDisplay">420</span> <small>Litres</small>
                     </div>
                 </div>
-                <div class="stats">
-                    <div class="stat"><div class="label">Previous</div><div class="value" id="prevFuel">420</div></div>
-                    <div class="stat"><div class="label">Current</div><div class="value" id="currFuel">420</div></div>
-                    <div class="stat"><div class="label">Change</div><div class="value green" id="fuelChange">0 L</div></div>
+
+                <div class="stats-row">
+                    <div class="stat-item">
+                        <div class="label">Previous</div>
+                        <div class="value" id="prevFuel">420</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="label">Current</div>
+                        <div class="value" id="currentFuel">420</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="label">Change</div>
+                        <div class="value green" id="fuelChange">0 L</div>
+                    </div>
                 </div>
+
                 <div class="controls">
-                    <button class="btn btn-success" onclick="doRefuel()">⛽ Refuel</button>
-                    <button class="btn btn-danger" onclick="doTheft()">🚨 Theft</button>
-                    <button class="btn btn-warning" onclick="doTamper()">🔧 Tamper</button>
-                    <button class="btn btn-primary" onclick="doDrive()">🚚 Drive</button>
-                    <button class="btn btn-outline" onclick="doReset()">↻ Reset</button>
+                    <button class="btn btn-success" onclick="simulateRefuel()">⛽ Refuel</button>
+                    <button class="btn btn-danger" onclick="simulateTheft()">🚨 Theft</button>
+                    <button class="btn btn-warning" onclick="simulateTamper()">🔧 Tamper</button>
+                    <button class="btn btn-primary" onclick="simulateDrive()">🚚 Drive</button>
+                    <button class="btn btn-outline" onclick="resetSimulation()">↻ Reset</button>
                 </div>
-                <div style="font-size:10px;color:var(--text-muted);text-align:center;margin-top:8px;">
-                    ⌨️ 1=Refuel · 2=Theft · 3=Tamper · 4=Drive · 5=Reset
+                <div style="margin-top:10px;font-size:11px;color:var(--text-muted);text-align:center;">
+                    ⌨️ Shortcuts: 1=Refuel · 2=Theft · 3=Tamper · 4=Drive · 5=Reset
                 </div>
             </div>
 
-            <!-- VEHICLE -->
-            <div class="card" style="margin-top:18px;">
+            <!-- VEHICLE STATUS CARD -->
+            <div class="card" style="margin-top:24px;">
                 <div class="card-title">
-                    <span>🚛 Vehicle</span>
-                    <span id="vStatus" style="font-weight:600;font-size:13px;color:var(--secondary);">● Parked</span>
+                    <span>🚛 Vehicle Status</span>
+                    <span id="vehicleStatusBadge" style="font-weight:600;font-size:13px;color:var(--secondary);">● Parked</span>
                 </div>
-                <div class="vs-grid">
-                    <div class="vs-item"><span class="lbl">ID</span><span class="val">Truck-027</span></div>
-                    <div class="vs-item"><span class="lbl">Speed</span><span class="val" id="speedDisplay">0 km/h</span></div>
-                    <div class="vs-item"><span class="lbl">Engine</span><span class="val" id="engineDisplay">OFF</span></div>
-                    <div class="vs-item"><span class="lbl">Battery</span><span class="val" id="batteryDisplay">12.8 V</span></div>
+                <div class="vehicle-status-grid">
+                    <div class="vs-item"><span class="vs-label">Vehicle ID</span><span class="vs-value">Truck-027</span></div>
+                    <div class="vs-item"><span class="vs-label">Speed</span><span class="vs-value" id="speedDisplay">0 km/h</span></div>
+                    <div class="vs-item"><span class="vs-label">Engine</span><span class="vs-value" id="engineDisplay">OFF</span></div>
+                    <div class="vs-item"><span class="vs-label">GPS</span><span class="vs-value" id="gpsDisplay">51.505, -0.075</span></div>
+                    <div class="vs-item"><span class="vs-label">Battery</span><span class="vs-value" id="batteryDisplay">12.8 V</span></div>
+                    <div class="vs-item"><span class="vs-label">Last Update</span><span class="vs-value" id="lastUpdate">Just now</span></div>
                 </div>
             </div>
 
         </div>
 
-        <!-- RIGHT -->
+        <!-- ===== RIGHT COLUMN ===== -->
         <div>
 
-            <!-- ALERTS -->
+            <!-- ALERTS CARD -->
             <div class="card">
                 <div class="card-title">
                     <span>🔔 Live Alerts</span>
-                    <span style="font-size:11px;color:var(--text-muted);" id="alertCount">0 alerts</span>
+                    <span style="font-size:12px;font-weight:400;color:var(--text-muted);" id="alertCount">0 alerts</span>
                 </div>
                 <div class="alert-feed" id="alertFeed">
                     <div class="alert-item normal">
-                        <span>✅</span>
-                        <div><strong>System Ready</strong><div style="font-size:11px;color:var(--text-muted);">FuelGuard active</div></div>
+                        <span class="icon">✅</span>
+                        <div>
+                            <strong>System Ready</strong>
+                            <div style="font-size:12px;color:var(--text-muted);">FuelGuard monitoring active</div>
+                        </div>
                         <span class="time">Now</span>
                     </div>
                 </div>
             </div>
 
-            <!-- MAP + CAMERA -->
-            <div class="card" style="margin-top:18px;">
+            <!-- MAP + CAMERA CARD -->
+            <div class="card" style="margin-top:24px;">
                 <div class="card-title">
-                    <span>📍 GPS Tracking</span>
-                    <span style="font-size:11px;color:var(--text-muted);" id="gpsStatus">🟢 Live</span>
+                    <span>📍 Location &amp; Evidence</span>
+                    <span style="font-size:12px;font-weight:400;color:var(--text-muted);" id="cameraStatus">📷 Camera: Standby</span>
                 </div>
-                <div class="map-container">
-                    <div id="map"></div>
+                <div class="map-placeholder" id="mapContainer">
+                    <span class="pin">📍</span>
+                    <span style="position:absolute;bottom:12px;font-size:12px;background:rgba(255,255,255,0.85);padding:4px 12px;border-radius:20px;font-weight:500;">Hayes, UK</span>
                 </div>
                 <div class="map-coords" id="mapCoords">51.5050° N, 0.0750° W</div>
 
-                <div class="card-title" style="margin-top:14px;margin-bottom:6px;">
-                    <span>📷 Camera</span>
-                    <span style="font-size:11px;color:var(--text-muted);" id="camStatus">Standby</span>
-                </div>
-                <div class="camera-box" id="cameraBox">
-                    <span class="rec">● REC</span>
-                    <div class="icon">📷</div>
-                    <div class="label" id="camLabel">Ready — activates on theft</div>
+                <div class="camera-preview" id="cameraPreview">
+                    <div class="cam-icon">📷</div>
+                    <div class="cam-label">Camera ready — will activate on theft</div>
                 </div>
             </div>
 
         </div>
     </div>
 
-    <!-- BOTTOM ROW -->
-    <div class="grid" style="margin-top:18px;">
+    <!-- ===== HOW TO USE + FEEDBACK ===== -->
+    <div class="grid" style="margin-top:24px;">
 
-        <!-- HOW TO -->
+        <!-- HOW TO USE -->
         <div class="card">
-            <div class="card-title"><span>📖 How to Test</span></div>
-            <div class="ht-grid">
-                <div class="ht-item"><span class="key">⛽ Refuel</span> Fills tank gradually — normal</div>
-                <div class="ht-item"><span class="key">🚨 Theft</span> Instant fuel drop + alert + camera</div>
-                <div class="ht-item"><span class="key">🔧 Tamper</span> Sensor cut — tamper alert</div>
-                <div class="ht-item"><span class="key">🚚 Drive</span> Real consumption + GPS movement</div>
-                <div class="ht-item"><span class="key">📍 GPS</span> Live location updates on real map</div>
-                <div class="ht-item"><span class="key">📷 Camera</span> Activates on theft/tamper</div>
+            <div class="card-title">
+                <span>📖 How to Test FuelGuard</span>
+                <span style="font-size:11px;font-weight:400;color:var(--text-muted);">Try all scenarios</span>
             </div>
-            <div style="margin-top:10px;padding:10px;background:#0d1829;border-radius:8px;font-size:12px;color:var(--text-muted);">
-                <strong>💡 How it works:</strong> Fuel sensor + GPS + accelerometer + camera.
-                Theft = fuel drops while parked → alert + location + photo.
-                <strong>📍 Zoom in on the map to see real streets!</strong>
+            <div class="howto-grid">
+                <div class="howto-item">
+                    <div class="key">⛽ Refuel</div>
+                    <div>Simulates filling the tank. Fuel level rises gradually. System detects it as normal refuelling.</div>
+                </div>
+                <div class="howto-item">
+                    <div class="key">🚨 Theft</div>
+                    <div>Simulates fuel theft while parked. Instant drop, alert sent, camera activates, GPS location recorded.</div>
+                </div>
+                <div class="howto-item">
+                    <div class="key">🔧 Tamper</div>
+                    <div>Simulates sensor cable being cut. Tamper alert triggers, camera captures evidence, backup battery activates.</div>
+                </div>
+                <div class="howto-item">
+                    <div class="key">🚚 Drive</div>
+                    <div>Simulates driving with real-time fuel consumption, speed changes, and GPS movement. Shows normal fuel usage.</div>
+                </div>
+                <div class="howto-item">
+                    <div class="key">📸 Camera</div>
+                    <div>Camera activates automatically during theft or tamper. Captures evidence with timestamp and location.</div>
+                </div>
+                <div class="howto-item">
+                    <div class="key">🔔 Alerts</div>
+                    <div>Real-time notifications via Telegram/WhatsApp style feed. Shows what fleet owners receive instantly.</div>
+                </div>
+            </div>
+            <div style="margin-top:14px;padding:14px;background:#f8fafc;border-radius:10px;font-size:13px;color:var(--text-muted);border:1px solid #e2e8f0;">
+                <strong>💡 How It Works:</strong> The system uses a fuel-level sensor, GPS, accelerometer, and camera. It distinguishes between
+                <strong>normal consumption</strong> (driving) and <strong>suspicious fuel loss</strong> (parked with engine off).
+                When theft is detected, it sends an alert with location, fuel loss amount, and camera evidence.
             </div>
         </div>
 
         <!-- FEEDBACK -->
         <div class="card">
-            <div class="card-title"><span>💬 Your Feedback</span></div>
-            <div class="fb-area">
-                <textarea id="fbInput" placeholder="What would you add or change?"></textarea>
-                <div class="fb-actions">
-                    <button class="btn btn-success" onclick="submitFB()">📩 Send</button>
-                    <button class="btn btn-outline" onclick="clearFB()">🗑️ Clear</button>
+            <div class="card-title">
+                <span>💬 Your Feedback</span>
+                <span style="font-size:11px;font-weight:400;color:var(--text-muted);">Help us improve</span>
+            </div>
+            <div style="font-size:14px;color:var(--text-muted);margin-bottom:10px;">
+                <strong>What do you think?</strong> Share your ideas, feature requests, or questions.
+            </div>
+            <div class="feedback-area">
+                <textarea id="feedbackInput" placeholder="I would like to see..."></textarea>
+                <div class="feedback-actions">
+                    <button class="btn btn-primary" onclick="submitFeedback()">📩 Submit Feedback</button>
+                    <button class="btn btn-outline" onclick="clearFeedback()">🗑️ Clear All</button>
                 </div>
-                <div class="fb-list" id="fbList">
-                    <div class="fb-item" style="opacity:0.5;border-left-color:var(--text-muted);">
-                        <em>No feedback yet — share your thoughts!</em>
+                <div class="feedback-list" id="feedbackList">
+                    <div class="feedback-item" style="border-left-color:var(--text-muted);opacity:0.6;">
+                        <div><em>No feedback yet. Be the first to share your thoughts!</em></div>
+                        <div class="fb-meta">— FuelGuard Team</div>
                     </div>
                 </div>
             </div>
@@ -753,430 +865,433 @@
 
     </div>
 
-    <!-- FOOTER -->
+    <!-- ===== FOOTER ===== -->
     <div class="footer">
-        <strong>FuelGuard</strong> &bull; Live Demo &bull; <span id="footerTime"></span>
+        <strong>FuelGuard</strong> &bull; Smart Fuel Security System &bull; <span id="footerTime"></span>
         <br />
-        <span style="font-size:11px;">🚛 Protecting fleets from fuel theft &bull; v2.2 — Real Street Map</span>
+        <span style="font-size:12px;">🚛 Protecting fleets from fuel theft &bull; <span id="simulationStatus">Simulation running</span></span>
+        <br />
+        <span class="version">v2.0 — Prototype Demo</span>
     </div>
 
     <script>
         // ================================================================
-        // FUELGUARD v2.2 — REAL MAP (Leaflet + OpenStreetMap)
+        //  FUELGUARD — Full Simulation Engine v2.0
         // ================================================================
 
         // ---------- STATE ----------
-        const S = {
+        const state = {
             fuel: 420,
             prevFuel: 420,
             maxFuel: 500,
+            minFuel: 0,
             speed: 0,
             engine: false,
+            moving: false,
             battery: 12.8,
-            lat: 51.505,
-            lng: -0.075,
-            heading: 0,
-            alerts: 0,
-            theft: false,
-            tamper: false,
-            camActive: false,
+            location: { lat: 51.505, lng: -0.075 },
+            alerts: [],
+            alertCount: 0,
+            theftDetected: false,
+            tamperDetected: false,
+            cameraActive: false,
             isRefueling: false,
             isDriving: false,
-            lowWarn: false,
-            alertCount: 0,
+            fuelLog: [],
+            simulationInterval: null,
+            alertIdCounter: 0,
+            _lowFuelWarned: false,
         };
 
-        // ---------- DOM ----------
-        const $ = id => document.getElementById(id);
-        const fuelBar = $('fuelBar');
-        const fuelVal = $('fuelVal');
-        const fuelLitres = $('fuelLitres');
-        const fuelPct = $('fuelPct');
-        const prevFuel = $('prevFuel');
-        const currFuel = $('currFuel');
-        const fuelChange = $('fuelChange');
-        const alertFeed = $('alertFeed');
-        const alertCount = $('alertCount');
-        const alertBadge = $('alertBadge');
-        const statusDot = $('statusDot');
-        const statusText = $('statusText');
-        const speedDisplay = $('speedDisplay');
-        const engineDisplay = $('engineDisplay');
-        const batteryDisplay = $('batteryDisplay');
-        const vStatus = $('vStatus');
-        const mapCoords = $('mapCoords');
-        const gpsStatus = $('gpsStatus');
-        const camStatus = $('camStatus');
-        const camLabel = $('camLabel');
-        const cameraBox = $('cameraBox');
-        const fbInput = $('fbInput');
-        const fbList = $('fbList');
-        const footerTime = $('footerTime');
-        const liveTime = $('liveTime');
+        // ---------- DOM REFS ----------
+        const fuelBar = document.getElementById('fuelBar');
+        const fuelValueDisplay = document.getElementById('fuelValueDisplay');
+        const fuelLitresDisplay = document.getElementById('fuelLitresDisplay');
+        const fuelPercentLabel = document.getElementById('fuelPercentLabel');
+        const prevFuelEl = document.getElementById('prevFuel');
+        const currentFuelEl = document.getElementById('currentFuel');
+        const fuelChangeEl = document.getElementById('fuelChange');
+        const alertFeed = document.getElementById('alertFeed');
+        const alertCountEl = document.getElementById('alertCount');
+        const alertBadge = document.getElementById('alertBadge');
+        const statusText = document.getElementById('statusText');
+        const statusDot = document.getElementById('statusDot');
+        const speedDisplay = document.getElementById('speedDisplay');
+        const engineDisplay = document.getElementById('engineDisplay');
+        const gpsDisplay = document.getElementById('gpsDisplay');
+        const batteryDisplay = document.getElementById('batteryDisplay');
+        const lastUpdate = document.getElementById('lastUpdate');
+        const vehicleStatusBadge = document.getElementById('vehicleStatusBadge');
+        const cameraPreview = document.getElementById('cameraPreview');
+        const cameraStatus = document.getElementById('cameraStatus');
+        const mapCoords = document.getElementById('mapCoords');
+        const footerTime = document.getElementById('footerTime');
+        const feedbackInput = document.getElementById('feedbackInput');
+        const feedbackList = document.getElementById('feedbackList');
+        const simulationStatus = document.getElementById('simulationStatus');
 
         // ---------- HELPERS ----------
-        function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+        function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
 
-        function rand(a, b) { return Math.round((Math.random() * (b - a) + a) * 10) / 10; }
+        function random(min, max) { return Math.round((Math.random() * (max - min) + min) * 10) / 10; }
 
-        function time() {
-            return new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        function formatTime(d) {
+            return d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
         }
 
-        // ---------- REAL MAP (Leaflet) ----------
-        const map = L.map('map', {
-            zoomControl: false,
-            attributionControl: true,
-            center: [S.lat, S.lng],
-            zoom: 15,
-        });
+        function getTime() { return formatTime(new Date()); }
 
-        // OpenStreetMap tiles
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            minZoom: 10,
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-            opacity: 0.9,
-        }).addTo(map);
-
-        // Custom marker
-        const markerIcon = L.divIcon({
-            className: 'custom-marker',
-            iconSize: [20, 20],
-            iconAnchor: [10, 10],
-        });
-        const marker = L.marker([S.lat, S.lng], {
-            icon: markerIcon,
-            zIndexOffset: 1000,
-        }).addTo(map);
-
-        // Circle glow
-        const circle = L.circle([S.lat, S.lng], {
-            radius: 25,
-            color: '#00c853',
-            fillColor: '#00c853',
-            fillOpacity: 0.15,
-            weight: 0,
-        }).addTo(map);
-
-        // Popup with vehicle info
-        marker.bindPopup(`
-            <strong>🚛 Truck-027</strong><br>
-            Fuel: ${Math.round(S.fuel)}L<br>
-            Speed: ${Math.round(S.speed)} km/h<br>
-            Engine: ${S.engine ? 'ON' : 'OFF'}
-        `);
-
-        function updateMap() {
-            marker.setLatLng([S.lat, S.lng]);
-            circle.setLatLng([S.lat, S.lng]);
-
-            // Change marker color based on status
-            let color = '#00c853';
-            let className = 'custom-marker';
-            if (S.theft) { color = '#ff1744';
-                className = 'custom-marker theft'; }
-            if (S.tamper) { color = '#ffab00';
-                className = 'custom-marker tamper'; }
-
-            const newIcon = L.divIcon({
-                className: className,
-                iconSize: [20, 20],
-                iconAnchor: [10, 10],
-            });
-            marker.setIcon(newIcon);
-
-            circle.setStyle({
-                color: color,
-                fillColor: color,
-            });
-
-            map.panTo([S.lat, S.lng], { animate: true, duration: 1 });
-
-            marker.setPopupContent(`
-                <strong>🚛 Truck-027</strong><br>
-                Fuel: ${Math.round(S.fuel)}L<br>
-                Speed: ${Math.round(S.speed)} km/h<br>
-                Engine: ${S.engine ? 'ON' : 'OFF'}<br>
-                ${S.theft ? '🚨 THEFT DETECTED!' : ''}
-                ${S.tamper ? '🔧 TAMPER DETECTED!' : ''}
-            `);
+        function updateFooterTime() {
+            footerTime.textContent = getTime();
         }
+        setInterval(updateFooterTime, 1000);
+        updateFooterTime();
 
         // ---------- UPDATE UI ----------
         function updateUI() {
-            const pct = clamp((S.fuel / S.maxFuel) * 100, 0, 100);
+            const pct = clamp((state.fuel / state.maxFuel) * 100, 0, 100);
             fuelBar.style.height = pct + '%';
-            fuelVal.textContent = Math.round(S.fuel);
-            fuelLitres.textContent = Math.round(S.fuel);
-            fuelPct.textContent = Math.round(pct) + '%';
+            fuelValueDisplay.textContent = Math.round(state.fuel);
+            fuelLitresDisplay.textContent = Math.round(state.fuel);
+            fuelPercentLabel.textContent = Math.round(pct) + '%';
 
-            prevFuel.textContent = Math.round(S.prevFuel);
-            currFuel.textContent = Math.round(S.fuel);
-            const diff = S.fuel - S.prevFuel;
-            const dText = (diff >= 0 ? '+' : '') + Math.round(diff) + ' L';
-            fuelChange.textContent = dText;
-            fuelChange.className = 'value ' + (diff > 0 ? 'green' : diff < 0 ? 'red' : '');
+            prevFuelEl.textContent = Math.round(state.prevFuel);
+            currentFuelEl.textContent = Math.round(state.fuel);
+            const diff = state.fuel - state.prevFuel;
+            const diffText = (diff >= 0 ? '+' : '') + Math.round(diff) + ' L';
+            fuelChangeEl.textContent = diffText;
+            fuelChangeEl.className = 'value ' + (diff > 0 ? 'green' : diff < 0 ? 'red' : '');
 
-            speedDisplay.textContent = Math.round(S.speed) + ' km/h';
-            engineDisplay.textContent = S.engine ? 'ON' : 'OFF';
-            engineDisplay.style.color = S.engine ? 'var(--secondary)' : 'var(--text-muted)';
-            vStatus.textContent = S.engine ? '● Moving' : '● Parked';
-            vStatus.style.color = S.engine ? 'var(--secondary)' : 'var(--text-muted)';
+            speedDisplay.textContent = Math.round(state.speed) + ' km/h';
+            engineDisplay.textContent = state.engine ? 'ON' : 'OFF';
+            engineDisplay.style.color = state.engine ? 'var(--secondary)' : 'var(--text-muted)';
+            vehicleStatusBadge.textContent = state.engine ? '● Moving' : '● Parked';
+            vehicleStatusBadge.style.color = state.engine ? 'var(--secondary)' : 'var(--text-muted)';
 
-            batteryDisplay.textContent = S.battery.toFixed(1) + ' V';
-            mapCoords.textContent = S.lat.toFixed(6) + '° N, ' + S.lng.toFixed(6) + '° W';
+            gpsDisplay.textContent = state.location.lat.toFixed(3) + ', ' + state.location.lng.toFixed(3);
+            mapCoords.textContent = state.location.lat.toFixed(4) + '° N, ' + state.location.lng.toFixed(4) + '° W';
+            batteryDisplay.textContent = state.battery.toFixed(1) + ' V';
+            lastUpdate.textContent = 'Just now';
 
-            statusDot.className = 'dot' + (S.tamper ? ' danger' : '');
-            statusText.textContent = S.tamper ? 'Tamper Alert' : 'Online';
+            statusDot.style.background = state.tamperDetected ? 'var(--danger)' : 'var(--secondary)';
+            statusText.textContent = state.tamperDetected ? 'Tamper Alert' : 'Online';
 
-            if (S.theft) {
+            if (state.theftDetected) {
                 alertBadge.textContent = '🚨 THEFT!';
-                alertBadge.className = 'badge danger';
-            } else if (S.tamper) {
+                alertBadge.className = 'badge alert';
+            } else if (state.tamperDetected) {
                 alertBadge.textContent = '⚠️ TAMPER';
-                alertBadge.className = 'badge warning';
-            } else if (S.alertCount > 0) {
-                alertBadge.textContent = '⚠️ ' + S.alertCount + ' Alert' + (S.alertCount > 1 ? 's' : '');
-                alertBadge.className = 'badge warning';
+                alertBadge.className = 'badge alert';
+            } else if (state.alertCount > 0) {
+                alertBadge.textContent = '⚠️ ' + state.alertCount + ' Alert' + (state.alertCount > 1 ? 's' : '');
+                alertBadge.className = 'badge alert';
             } else {
                 alertBadge.textContent = '✓ No Alerts';
                 alertBadge.className = 'badge';
             }
 
-            alertCount.textContent = S.alertCount + ' alerts';
-            gpsStatus.textContent = '🟢 Live';
-
-            if (S.camActive) {
-                cameraBox.className = 'camera-box active';
-                camStatus.textContent = '🔴 Recording';
-            } else {
-                cameraBox.className = 'camera-box';
-                camStatus.textContent = 'Standby';
-            }
-
-            updateMap();
-            liveTime.textContent = time();
-            footerTime.textContent = time();
+            alertCountEl.textContent = state.alertCount + ' alerts';
+            simulationStatus.textContent = 'Simulation running — ' + Math.round(state.fuel) + 'L fuel';
         }
 
         // ---------- ADD ALERT ----------
-        function addAlert(level, title, msg, icon) {
-            const cls = { normal: 'normal', warning: 'warning', danger: 'danger', tamper: 'tamper' } [level] || 'normal';
+        function addAlert(level, title, message, icon) {
+            const colors = { normal: 'normal', warning: 'warning', danger: 'danger', tamper: 'tamper' };
             const icons = { normal: '✅', warning: '⚠️', danger: '🚨', tamper: '🔧' };
+            const cls = colors[level] || 'normal';
             const ic = icon || icons[level] || '📢';
 
-            S.alertCount++;
+            state.alertCount++;
+            state.alertIdCounter++;
+
             const el = document.createElement('div');
             el.className = 'alert-item ' + cls;
             el.innerHTML = `
-                <span>${ic}</span>
-                <div><strong>${title}</strong><div style="font-size:11px;color:var(--text-muted);">${msg}</div></div>
-                <span class="time">${time()}</span>
+                <span class="icon">${ic}</span>
+                <div>
+                    <strong>${title}</strong>
+                    <div style="font-size:12px;color:var(--text-muted);">${message}</div>
+                </div>
+                <span class="time">${getTime()}</span>
             `;
             alertFeed.prepend(el);
-            while (alertFeed.children.length > 25) alertFeed.removeChild(alertFeed.lastChild);
 
-            if (level === 'danger') S.theft = true;
-            if (level === 'tamper') S.tamper = true;
+            while (alertFeed.children.length > 25) {
+                alertFeed.removeChild(alertFeed.lastChild);
+            }
+
+            if (level === 'danger') state.theftDetected = true;
+            if (level === 'tamper') state.tamperDetected = true;
+
             updateUI();
         }
 
-        // ---------- CAMERA ----------
-        function activateCam(evidence) {
-            S.camActive = true;
-            camLabel.textContent = '📸 ' + evidence;
-            camStatus.textContent = '🔴 Recording';
-            cameraBox.className = 'camera-box active';
-            updateUI();
+        // ---------- SIMULATION ACTIONS ----------
+        function simulateRefuel() {
+            if (state.isRefueling) return;
+            state.isRefueling = true;
 
-            setTimeout(() => {
-                S.camActive = false;
-                camLabel.textContent = 'Ready — activates on theft';
-                camStatus.textContent = 'Standby';
-                cameraBox.className = 'camera-box';
-                updateUI();
-            }, 12000);
-        }
-
-        // ---------- ACTIONS ----------
-        function doRefuel() {
-            if (S.isRefueling) return;
-            S.isRefueling = true;
-            const target = Math.min(S.fuel + rand(80, 180), S.maxFuel);
+            const target = Math.min(state.fuel + random(80, 180), state.maxFuel);
             const steps = 12;
-            let cur = S.fuel;
-            const inc = (target - cur) / steps;
-            let i = 0;
-            const iv = setInterval(() => {
-                i++;
-                cur += inc;
-                if (i >= steps) {
-                    cur = target;
-                    clearInterval(iv);
-                    S.isRefueling = false;
-                    S.prevFuel = S.fuel;
-                    S.fuel = Math.round(cur);
-                    addAlert('normal', '⛽ Refuelled', 'Tank at ' + Math.round(S.fuel) + 'L', '⛽');
+            let current = state.fuel;
+            const increment = (target - current) / steps;
+
+            let step = 0;
+            const interval = setInterval(() => {
+                step++;
+                current += increment;
+                if (step >= steps) {
+                    current = target;
+                    clearInterval(interval);
+                    state.isRefueling = false;
+                    state.prevFuel = state.fuel;
+                    state.fuel = Math.round(current);
+                    addAlert('normal', '⛽ Refuelling Complete',
+                        'Tank filled to ' + Math.round(state.fuel) + ' litres', '⛽');
                     updateUI();
                     return;
                 }
-                S.fuel = Math.round(cur);
+                state.fuel = Math.round(current);
                 updateUI();
-            }, 140);
+            }, 150);
         }
 
-        function doTheft() {
-            if (S.isRefueling || S.isDriving) {
-                addAlert('warning', '⛔ Blocked', 'Can\'t steal while driving/refuelling', '⛔');
+        function simulateTheft() {
+            if (state.isRefueling || state.isDriving) {
+                addAlert('warning', '⛔ Action Blocked', 'Cannot simulate theft while driving or refuelling.', '⛔');
                 return;
             }
-            const stolen = rand(40, 90);
-            S.prevFuel = S.fuel;
-            S.fuel = Math.max(0, S.fuel - stolen);
-            addAlert('danger', '🚨 FUEL THEFT!', Math.round(stolen) + 'L removed. Location: ' + S.lat.toFixed(5) + ', ' +
-                S.lng.toFixed(5), '🚨');
-            activateCam('🚨 Theft: ' + Math.round(stolen) + 'L removed at ' + time());
-            S.lat += (Math.random() - 0.5) * 0.0003;
-            S.lng += (Math.random() - 0.5) * 0.0003;
+
+            const stolen = random(40, 90);
+            const newFuel = Math.max(0, state.fuel - stolen);
+
+            state.prevFuel = state.fuel;
+            state.fuel = Math.round(newFuel);
+
+            addAlert('danger', '🚨 FUEL THEFT DETECTED!',
+                Math.round(stolen) + ' litres removed while vehicle was parked. Location: ' +
+                state.location.lat.toFixed(3) + ', ' + state.location.lng.toFixed(3),
+                '🚨'
+            );
+
+            activateCamera('🚨 Theft evidence — ' + Math.round(stolen) + 'L fuel removed at ' + getTime());
+
+            state.location.lat += (Math.random() - 0.5) * 0.001;
+            state.location.lng += (Math.random() - 0.5) * 0.001;
+
             updateUI();
         }
 
-        function doTamper() {
-            if (S.tamper) {
-                addAlert('warning', '🔧 Already Tampered', 'System in tamper mode', '🔧');
+        function simulateTamper() {
+            if (state.tamperDetected) {
+                addAlert('warning', '🔧 Tamper Already Detected', 'System is already in tamper mode.', '🔧');
                 return;
             }
-            S.tamper = true;
-            addAlert('tamper', '🔧 TAMPER DETECTED!', 'Sensor cable cut. Backup battery active.', '🔧');
-            activateCam('🔧 Tamper: sensor disconnected at ' + time());
+
+            state.tamperDetected = true;
+            addAlert('tamper', '🔧 TAMPER DETECTED!',
+                'Fuel sensor cable was disconnected. Backup battery active.', '🔧');
+
+            activateCamera('🔧 Tamper attempt — sensor cable cut at ' + getTime());
+
             updateUI();
         }
 
-        function doDrive() {
-            if (S.isDriving || S.isRefueling) {
-                addAlert('warning', '⛔ Blocked', 'Already driving or refuelling', '⛔');
+        function simulateDrive() {
+            if (state.isDriving || state.isRefueling) {
+                addAlert('warning', '⛔ Action Blocked', 'Vehicle is already driving or refuelling.', '⛔');
                 return;
             }
-            S.isDriving = true;
-            S.engine = true;
-            S.speed = rand(30, 85);
-            S.theft = false;
-            S.tamper = false;
-            addAlert('normal', '🚚 Trip Started', 'Fuel monitoring active', '🚚');
 
-            const startFuel = S.fuel;
-            const duration = 16;
+            state.isDriving = true;
+            state.engine = true;
+            state.moving = true;
+            state.speed = random(30, 85);
+
+            state.theftDetected = false;
+            state.tamperDetected = false;
+
+            addAlert('normal', '🚚 Trip Started',
+                'Vehicle moving. Fuel consumption monitoring active.', '🚚');
+
+            const startFuel = state.fuel;
+            const duration = 18;
             let steps = 0;
-            const iv = setInterval(() => {
+
+            const interval = setInterval(() => {
                 steps++;
-                S.fuel = Math.max(0, S.fuel - rand(0.8, 2.5));
-                S.speed = clamp(S.speed + rand(-6, 8), 5, 90);
-                S.lat += (Math.random() - 0.48) * 0.0006;
-                S.lng += (Math.random() - 0.48) * 0.0006;
-                S.battery = clamp(S.battery + rand(-0.04, 0.04), 11.8, 13.2);
+
+                const consumption = random(0.8, 2.5);
+                state.fuel = Math.max(0, state.fuel - consumption);
+
+                state.speed = clamp(state.speed + random(-6, 8), 5, 90);
+
+                state.location.lat += (Math.random() - 0.48) * 0.002;
+                state.location.lng += (Math.random() - 0.48) * 0.002;
+
+                state.battery = clamp(state.battery + random(-0.05, 0.05), 11.8, 13.2);
+
                 updateUI();
-                if (steps >= duration || S.fuel < 10) {
-                    clearInterval(iv);
-                    S.isDriving = false;
-                    S.engine = false;
-                    S.speed = 0;
-                    const used = Math.round(startFuel - S.fuel);
-                    addAlert('normal', '🛑 Trip Ended', 'Used ' + used + 'L, ' + Math.round(steps * 1.1) + ' km', '🛑');
+
+                if (steps >= duration || state.fuel < 10) {
+                    clearInterval(interval);
+                    state.isDriving = false;
+                    state.engine = false;
+                    state.moving = false;
+                    state.speed = 0;
+
+                    const used = Math.round(startFuel - state.fuel);
+                    addAlert('normal', '🛑 Trip Ended',
+                        'Drove ' + Math.round(steps * 1.2) + ' km. Used ' + used + ' litres. Avg ' +
+                        (used / (steps * 1.2) * 100).toFixed(1) + ' L/100km', '🛑');
+
                     updateUI();
                 }
-            }, 350);
+            }, 400);
         }
 
-        function doReset() {
-            S.fuel = 420;
-            S.prevFuel = 420;
-            S.speed = 0;
-            S.engine = false;
-            S.battery = 12.8;
-            S.lat = 51.505;
-            S.lng = -0.075;
-            S.theft = false;
-            S.tamper = false;
-            S.camActive = false;
-            S.isRefueling = false;
-            S.isDriving = false;
-            S.alertCount = 0;
-            S.lowWarn = false;
+        function activateCamera(evidence) {
+            state.cameraActive = true;
+            cameraPreview.className = 'camera-preview active';
+            cameraPreview.innerHTML = `
+                <div class="cam-icon">📸</div>
+                <div class="cam-label" style="color:#fff;">${evidence}</div>
+                <div style="font-size:10px;color:rgba(255,255,255,0.5);">Evidence captured at ${getTime()}</div>
+            `;
+            cameraStatus.textContent = '📷 Camera: Active — Evidence captured';
+
+            setTimeout(() => {
+                state.cameraActive = false;
+                cameraPreview.className = 'camera-preview';
+                cameraPreview.innerHTML = `
+                    <div class="cam-icon">📷</div>
+                    <div class="cam-label">Camera ready — will activate on theft</div>
+                `;
+                cameraStatus.textContent = '📷 Camera: Standby';
+            }, 15000);
+        }
+
+        function resetSimulation() {
+            state.fuel = 420;
+            state.prevFuel = 420;
+            state.speed = 0;
+            state.engine = false;
+            state.moving = false;
+            state.battery = 12.8;
+            state.location = { lat: 51.505, lng: -0.075 };
+            state.theftDetected = false;
+            state.tamperDetected = false;
+            state.cameraActive = false;
+            state.isRefueling = false;
+            state.isDriving = false;
+            state.alertCount = 0;
+            state.alertIdCounter = 0;
+            state._lowFuelWarned = false;
 
             alertFeed.innerHTML = `
                 <div class="alert-item normal">
-                    <span>✅</span>
-                    <div><strong>System Ready</strong><div style="font-size:11px;color:var(--text-muted);">FuelGuard active</div></div>
+                    <span class="icon">✅</span>
+                    <div>
+                        <strong>System Ready</strong>
+                        <div style="font-size:12px;color:var(--text-muted);">FuelGuard monitoring active</div>
+                    </div>
                     <span class="time">Now</span>
                 </div>
             `;
-            camLabel.textContent = 'Ready — activates on theft';
-            camStatus.textContent = 'Standby';
-            cameraBox.className = 'camera-box';
+
+            cameraPreview.className = 'camera-preview';
+            cameraPreview.innerHTML = `
+                <div class="cam-icon">📷</div>
+                <div class="cam-label">Camera ready — will activate on theft</div>
+            `;
+            cameraStatus.textContent = '📷 Camera: Standby';
+
             updateUI();
-            addAlert('normal', '🔄 Reset', 'System re-initialized', '🔄');
+            addAlert('normal', '🔄 System Reset', 'FuelGuard re-initialized successfully.', '🔄');
         }
 
         // ---------- FEEDBACK ----------
-        function submitFB() {
-            const t = fbInput.value.trim();
-            if (!t) { alert('Write your feedback first!'); return; }
-            const ph = fbList.querySelector('.fb-item:first-child');
-            if (ph && ph.querySelector('em')) ph.remove();
+        function submitFeedback() {
+            const text = feedbackInput.value.trim();
+            if (!text) {
+                alert('Please write your feedback before submitting.');
+                return;
+            }
+
+            // Remove placeholder
+            const placeholder = feedbackList.querySelector('.feedback-item:first-child');
+            if (placeholder && placeholder.querySelector('em')) {
+                placeholder.remove();
+            }
+
             const el = document.createElement('div');
-            el.className = 'fb-item';
-            el.innerHTML = `<div>${t}</div><div class="meta">— ${time()}</div>`;
-            fbList.prepend(el);
-            fbInput.value = '';
-            addAlert('normal', '💬 Feedback', 'Thank you!', '💬');
+            el.className = 'feedback-item';
+            const now = getTime();
+            el.innerHTML = `
+                <div>${text}</div>
+                <div class="fb-meta">— Submitted at ${now}</div>
+            `;
+            feedbackList.prepend(el);
+
+            feedbackInput.value = '';
+            addAlert('normal', '💬 Feedback Received', 'Thank you for your feedback!', '💬');
         }
 
-        function clearFB() {
-            if (!confirm('Delete all feedback?')) return;
-            fbList.innerHTML =
-                `<div class="fb-item" style="opacity:0.5;border-left-color:var(--text-muted);"><em>No feedback yet — share your thoughts!</em></div>`;
-            addAlert('normal', '🗑️ Cleared', 'Feedback removed', '🗑️');
+        function clearFeedback() {
+            if (confirm('Delete all feedback?')) {
+                feedbackList.innerHTML = `
+                    <div class="feedback-item" style="border-left-color:var(--text-muted);opacity:0.6;">
+                        <div><em>No feedback yet. Be the first to share your thoughts!</em></div>
+                        <div class="fb-meta">— FuelGuard Team</div>
+                    </div>
+                `;
+                addAlert('normal', '🗑️ Feedback Cleared', 'All feedback has been removed.', '🗑️');
+            }
         }
 
-        // ---------- AUTO GPS ----------
-        function autoUpdate() {
-            if (!S.isDriving && !S.isRefueling) {
-                S.lat += (Math.random() - 0.5) * 0.00005;
-                S.lng += (Math.random() - 0.5) * 0.00005;
+        // ---------- AUTO SIMULATION ----------
+        function autoSimulate() {
+            if (!state.isDriving && !state.isRefueling) {
+                state.location.lat += (Math.random() - 0.5) * 0.0002;
+                state.location.lng += (Math.random() - 0.5) * 0.0002;
                 updateUI();
             }
-            if (!S.engine && !S.isRefueling) {
-                S.battery = clamp(S.battery - rand(0.002, 0.007), 11.8, 13.2);
+
+            if (!state.engine && !state.isRefueling) {
+                state.battery = clamp(state.battery - random(0.002, 0.008), 11.8, 13.2);
                 updateUI();
             }
-            if (S.fuel < 30 && S.fuel > 10 && !S.isRefueling) {
-                if (!S.lowWarn) {
-                    S.lowWarn = true;
-                    addAlert('warning', '⛽ Low Fuel', 'Below 30L — refuel soon', '⛽');
+
+            if (state.fuel < 30 && state.fuel > 10 && !state.isRefueling) {
+                if (!state._lowFuelWarned) {
+                    state._lowFuelWarned = true;
+                    addAlert('warning', '⛽ Low Fuel Warning',
+                        'Fuel level below 30 litres. Refuel soon.', '⛽');
                 }
-            } else if (S.fuel >= 50) S.lowWarn = false;
+            } else if (state.fuel >= 50) {
+                state._lowFuelWarned = false;
+            }
         }
+
+        setInterval(autoSimulate, 3000);
+
+        // ---------- KEYBOARD SHORTCUTS ----------
+        document.addEventListener('keydown', (e) => {
+            if (e.key === '1') simulateRefuel();
+            if (e.key === '2') simulateTheft();
+            if (e.key === '3') simulateTamper();
+            if (e.key === '4') simulateDrive();
+            if (e.key === '5') resetSimulation();
+        });
 
         // ---------- INIT ----------
         updateUI();
-        addAlert('normal', '🛡️ FuelGuard Active', Math.round(S.fuel) + 'L monitored', '🛡️');
-        setInterval(autoUpdate, 2500);
-        setInterval(() => { updateUI(); }, 1000);
+        addAlert('normal', '🛡️ FuelGuard Active',
+            'System online. Monitoring ' + Math.round(state.fuel) + 'L fuel.', '🛡️');
 
-        // Keyboard shortcuts
-        document.addEventListener('keydown', e => {
-            if (e.key === '1') doRefuel();
-            if (e.key === '2') doTheft();
-            if (e.key === '3') doTamper();
-            if (e.key === '4') doDrive();
-            if (e.key === '5') doReset();
-        });
-
-        console.log('🚛 FuelGuard v2.2 — REAL STREET MAP');
-        console.log('👥 Team: Gurmad, Yasmin, Luqman, Mrimo');
-        console.log('⌨️  1=Refuel  2=Theft  3=Tamper  4=Drive  5=Reset');
-        console.log('🗺️  Zoom in on the map to see real streets!');
+        console.log('🚛 FuelGuard Simulation v2.0 loaded.');
+        console.log('💡 Try: Refuel (1), Theft (2), Tamper (3), Drive (4), Reset (5)');
+        console.log('👥 Team: Gurmad (Idea), Yasmin (Dev), Luqman (Business), Mprimo (Dev)');
     </script>
 
 </body>
